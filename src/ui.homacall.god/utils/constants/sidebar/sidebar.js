@@ -26,7 +26,7 @@ const items = [
   {
     id: 5,
     label: 'تعریف کاربر و سطح دسترسی',
-    url:`${sidebar.tag}`
+    url:`${sidebar.users}`
 
   },
   {
