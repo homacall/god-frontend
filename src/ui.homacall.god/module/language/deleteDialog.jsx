@@ -8,8 +8,8 @@ const DeleteDialog = ({visible,onHide}) => {
     const footer = () => {
         return (
         <>
-            <Button label='بلی'  className='relative right-[70%] text-xs mt-3 h-10'/>
-            <Button label='خیر'  className='relative right-[65%] text-xs mt-3 h-10'/>
+            <Button label='بلی'  className='p-button-outlined  p-button-success relative right-[70%] text-xs mt-3 h-10'/>
+            <Button label='خیر'  className='p-button-outlined p-button-danger right-[65%] text-xs mt-3 h-10'/>
         </>
         )
        

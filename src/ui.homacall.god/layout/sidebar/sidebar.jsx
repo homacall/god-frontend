@@ -16,9 +16,9 @@ const Sidebar = () => {
                     {items.map((items) => (
                         <li key={items.id} onClick={() => setId(items.id)}
                             className={`${id === items.id &&
-                            'text-cyan-500 border-r-8 border-cyan-500 rounded-sm'}
-                             py-4 shadow-sm cursor-pointer hover:text-cyan-500 sidebarFont`}>
-                            <Link to='/language' className='w-full h-full'>
+                            'text-indigo-600 border-r-8 border-indigo-600 rounded-sm'}
+                             py-4 shadow-sm cursor-pointer hover:text-indigo-600 sidebarFont`}>
+                            <Link to={items.url} className='w-full h-full'>
                                 {items.label}
                             </Link>
                         </li>
