@@ -25,7 +25,7 @@ const ActionBodyTemplate = () => {
                 onClick={handleDeleteDialog}
             />
             <Button label="ویرایش"
-                icon="pi pi-refresh text-xs"
+                icon="pi pi-pencil text-xs"
                 className='p-button-outlined p-button-warning text-xs rtl h-10'
                 onClick={handleUpdateDialog}
             />
