@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+    
+@font-face {
+    font-family: "vazir";
+    src: url(../style/font/Vazir.ttf);
+}
+
+:root{
+    --vazir:"vazir"
+}
+body{
+    font-family: var(--vazir);
+    background: #f1f5f9;
+}
+
+.rtl {
+    direction: rtl;
+}
+.p-datatable .p-column-header-content{
+    display: block !important;
+    text-align: center;
+}
+.p-datatable .p-datatable-tbody>tr>td{
+    text-align: center !important;
+}
+.p-button .p-button-icon-left {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+.p-inputtext:enabled:hover {
+    border-color: #06b6d4;
+}
+.p-inputtext:enabled:focus {
+    box-shadow: none;
+    border-color: #06b6d4;
+}
+.p-button{
+    background: #06b6d4;
+    border: 1px solid #06b6d4;
+}
+.p-button:enabled:focus{
+    box-shadow: none;
+    border-color: none;
+}
+.p-button:enabled:hover{
+    background: #0891b2;
+    border: 1px solid #0891b2;
+}
+
+.p-radiobutton .p-radiobutton-box:hover{
+    border-color: #06b6d4 !important;
+}
+.p-radiobutton .p-radiobutton-box.p-highlight{
+    background: #06b6d4;
+    border-color: #06b6d4 !important;
+}
+.p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover{
+    background: #0891b2;
+    border-color: #0891b2;
+}
+.p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus{
+    box-shadow: none;
+}
+.p-password-input{
+    width: 100%;
+}
