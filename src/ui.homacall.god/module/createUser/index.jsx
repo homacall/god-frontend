@@ -24,7 +24,7 @@ export const CreateUser =()=>{
         return (
             <>
                 <Link to='/language/new-form'>
-                    <Button label="ثبت زبان جدید"
+                    <Button label="ثبت کاربر جدید"
                         icon="pi pi-plus text-sm"
                         className='p-button ml-2 text-sm rtl h-10' />
                 </Link>
