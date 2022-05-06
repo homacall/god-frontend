@@ -5,7 +5,7 @@ import DeleteDialog from './deleteDialog';
 
 
 
-const ActionBodyTemplate = () => {
+const TableActions = ({deleteAction,updateAction,hasDelete, hasUpdate, updateView}) => {
   
     const [openDeleteDialog,setOpenDeleteDialog]=useState(false)
     const [openUpdateDialog,setOpenUpdateDialog]=useState(false)
@@ -19,19 +19,22 @@ const ActionBodyTemplate = () => {
 
     return (
         <>
-            <Button label="حذف"
+           {hasDelete && <Button label="حذف"
                 icon="pi pi-trash text-xs"
                 className='p-button-outlined p-button-danger ml-2 text-xs rtl h-10'
-                onClick={handleDeleteDialog}
-            />
-            <Button label="ویرایش"
+                onClick={()=>{
+                    
+                    handleDeleteDialog()}}
+            />}
+           {hasUpdate&& <Button label="ویرایش"
                 icon="pi pi-pencil text-xs"
                 className='p-button-outlined p-button-warning text-xs rtl h-10'
-                onClick={handleUpdateDialog}
-            />
-            <DeleteDialog visible={openDeleteDialog} onHide={handleDeleteDialog}/>
-            <UpdateDialog visible={openUpdateDialog} onHide={handleUpdateDialog }/>
+                onClick={()=>{
+                    handleUpdateDialog()}}
+            />}
+            {hasDelete &&<DeleteDialog visible={openDeleteDialog} onHide={handleDeleteDialog} deleteAction={deleteAction} />}
+           {hasUpdate&& <UpdateDialog visible={openUpdateDialog} onHide={handleUpdateDialog } updateAction={updateAction} UpdateView={updateView} />}
         </>
     );
 }
-export default ActionBodyTemplate;
+export default TableActions;

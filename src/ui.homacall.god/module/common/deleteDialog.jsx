@@ -3,13 +3,13 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 
 
-const DeleteDialog = ({visible,onHide}) => {
+const DeleteDialog = ({visible,onHide,deleteAction}) => {
 
     const footer = () => {
         return (
         <>
-            <Button label='بلی'  className='p-button-outlined  p-button-success relative right-[70%] text-xs mt-3 h-10'/>
-            <Button label='خیر'  className='p-button-outlined p-button-danger right-[65%] text-xs mt-3 h-10'/>
+            <Button label='بلی' onClick={deleteAction}  className='p-button-outlined  p-button-success relative right-[70%] text-xs mt-3 h-10'/>
+            <Button label='خیر' onClick={onHide}  className='p-button-outlined p-button-danger right-[65%] text-xs mt-3 h-10'/>
         </>
         )
        
