@@ -7,6 +7,7 @@ export const sidebar = {
   tagTable: '/tag',
   users: '/create-user',
   home: '/',
+  roll:'/roll'
 }
 export const language = {
   languageTable: '/language',
@@ -17,4 +18,7 @@ export const users = {
 }
 export const home = {
   home: '/',
+}
+export const rolls = {
+  roll: '/roll',
 }

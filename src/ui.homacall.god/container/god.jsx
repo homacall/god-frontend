@@ -4,7 +4,8 @@ import LoginForm from '../module/auth/login/loginForm'
 import { CreateUser } from '../module/createUser'
 import Language from '../module/language/language'
 import NewLanguage from '../module/language/newLanguage'
-import { authRoutes, language, users } from '../utils/constants/routes/publicRoute'
+import { Roll } from '../module/roll'
+import { authRoutes, language, users, rolls } from '../utils/constants/routes/publicRoute'
 
 function God() {
   return (
@@ -16,6 +17,7 @@ function God() {
           <Route path={`${language.newForm}`} element={<NewLanguage />} />
           <Route path={`${users.createUser}`} element={<CreateUser />} />
           <Route path="/" element={<h1 style={{ textAlign: 'center', marginTop: 100 }}>سلام، به پنل اصلی خوش آمدید</h1>} />
+          <Route path={rolls.roll} element={<Roll />} />
         </Routes>
       </MainLayout>
     </div>
