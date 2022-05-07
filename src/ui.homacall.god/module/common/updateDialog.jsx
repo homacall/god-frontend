@@ -15,7 +15,7 @@ const UpdateDialog = ({visible,onHide,updateAction, UpdateView}) => {
     }
     return (
         <Dialog visible={visible} onHide={onHide} footer={footer}>
-           <UpdateView/>
+           {UpdateView}
         </Dialog>
     );
 }
