@@ -5,16 +5,17 @@ export const authRoutes = {
 export const sidebar = {
   language: '/language',
   tagTable: '/tag',
-  users: '/create-user',
+  users: '/users',
   home: '/',
-  roll:'/roll'
+  roll: '/roll',
 }
 export const language = {
   languageTable: '/language',
   newForm: '/language/new-form',
 }
 export const users = {
-  createUser: '/create-user',
+  users: '/users',
+  createUser: '/users/create-user',
 }
 export const home = {
   home: '/',

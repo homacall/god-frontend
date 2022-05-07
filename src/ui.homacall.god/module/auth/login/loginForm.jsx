@@ -2,17 +2,17 @@ import React, { useState } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Password } from 'primereact/password'
 import { Button } from 'primereact/button'
-// import { loginUser } from '../../../service/userService';
+import { loginUser } from '../../../service/userService'
 // import axios from 'axios';
 
 const NewLanguage = ({ history }) => {
   const [UserName, setUserName] = useState('')
   const [PassWord, setPassword] = useState('')
 
-  // const reset = () => {
-  //     setUserName('');
-  //     setPassword('');
-  // }
+  const reset = () => {
+    setUserName('')
+    setPassword('')
+  }
   // useEffect(() => {
   //     axios({
   //         method: 'Post',
@@ -31,27 +31,28 @@ const NewLanguage = ({ history }) => {
 
   // }, []);
 
-  // const handleSubmit = async (event) => {
-  //     event.preventDefault();
-  //     const user = { UserName, PassWord }
-  //     try {
-  //         const { data } = await loginUser(user);
-  //         // if (status === 200) {
-  //             console.log(data);
-  //             localStorage.setItem("token", data.token);
-  //             history.replace("/");
-  //             reset();
-  //         //}
-  //     } catch (error) {
-  //         console.log(error);
-
-  //     }
-  // }
+  const handleSubmit = async event => {
+    event.preventDefault()
+    const formData = new FormData()
+    formData.append('UserName', UserName)
+    formData.append('PassWord', PassWord)
+    try {
+      const { data, status } = await loginUser(formData)
+      if (status === 200) {
+        console.log(data)
+        localStorage.setItem('token', data.token)
+        history.replace('/')
+        reset()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <>
       <div className=" w-[30%] pb-5 bg-white m-auto shadow-lg rounded-md my-40">
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="border-b border-slate-400 h-10">
             <span className="inline-block  float-right mr-5 leading-9">ورود</span>
           </div>

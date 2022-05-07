@@ -3,7 +3,22 @@ import { Button } from 'primereact/button'
 import UpdateDialog from './updateDialog'
 import DeleteDialog from './deleteDialog'
 
-const TableActions = ({ deleteAction, updateAction, hasDelete, hasUpdate, updateView, deleteButtonClassName, updateButtonClassName }) => {
+const TableActions = ({
+  deleteAction,
+  updateAction,
+  hasDelete,
+  hasUpdate,
+  updateView,
+  deleteButtonClassName,
+  updateButtonClassName,
+  deleteLabel,
+  updateLabel,
+  deleteStyle,
+  updateStyle,
+  children,
+  deleteIcon,
+  updateIcon,
+}) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
 
@@ -18,28 +33,31 @@ const TableActions = ({ deleteAction, updateAction, hasDelete, hasUpdate, update
     <>
       {hasDelete && (
         <Button
-          label="حذف"
-          icon="pi pi-trash text-xs"
+          label={deleteLabel}
+          icon={deleteIcon && 'pi pi-trash text-xs'}
           className={`${deleteButtonClassName} `}
           onClick={() => {
             handleDeleteDialog()
           }}
+          style={deleteStyle}
         />
       )}
       {hasUpdate && (
         <Button
-          label="ویرایش"
-          icon="pi pi-pencil text-xs"
+          label={updateLabel}
+          icon={updateIcon && 'pi pi-pencil text-xs'}
           className={updateButtonClassName}
           onClick={() => {
             handleUpdateDialog()
           }}
+          style={updateStyle}
         />
       )}
       {hasDelete && <DeleteDialog visible={openDeleteDialog} onHide={handleDeleteDialog} deleteAction={deleteAction} />}
       {hasUpdate && (
         <UpdateDialog visible={openUpdateDialog} onHide={handleUpdateDialog} updateAction={updateAction} UpdateView={updateView} />
       )}
+      {children}
     </>
   )
 }
