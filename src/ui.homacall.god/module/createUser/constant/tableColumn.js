@@ -2,56 +2,61 @@ export const userColumns = [
   {
     header: 'نام',
     field: 'name',
-    className: 'text-sm',
+    className: 'text-xs ',
   },
   {
     header: 'نام خانوادگی',
     field: 'lastName',
-    className: 'text-sm',
+    className: 'text-xs',
   },
   {
     header: 'کدملی',
     field: 'userIdNumber',
-    className: 'text-sm',
+    className: 'text-xs',
   },
   {
     header: 'جنسیت',
     field: 'gender',
-    className: 'text-sm',
+    className: 'text-xs',
   },
   {
     header: 'ایمیل',
     field: 'email',
-    className: 'text-sm',
+    className: 'text-xs',
   },
   {
     header: 'تاریخ ثبت نام',
     field: 'registerDate',
-    className: 'text-sm',
+    className: 'text-xs',
   },
   {
     header: 'نام کاربری',
     field: 'username',
-    className: 'text-sm',
+    className: 'text-xs',
   },
   {
     header: 'سطح  دسترسی',
     field: 'permission',
-    className: 'text-sm',
+    className: 'text-xs',
   },
   {
     header: 'نقش',
     field: 'roll',
-    className: 'text-sm',
+    className: 'text-xs',
   },
   {
     header: 'عکس',
     field: 'image',
-    className: 'text-sm',
+    className: 'text-xs',
   },
   {
     header: 'وضعیت',
     field: 'status',
-    className: 'text-sm',
+    className: 'text-xs',
+  },
+  {
+    header: 'عملیات',
+    field: 'action',
+    className: 'text-xs',
   },
 ]

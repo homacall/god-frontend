@@ -37,7 +37,7 @@ const NewLanguage = ({ history }) => {
     formData.append('UserName', UserName)
     formData.append('PassWord', PassWord)
     try {
-      const { data } = await loginUser(formData)
+      const { data, status } = await loginUser(formData)
       if (status === 200) {
         console.log(data)
         localStorage.setItem('token', data.token)
