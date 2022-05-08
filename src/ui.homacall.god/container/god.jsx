@@ -1,4 +1,5 @@
-import { Route, Routes } from 'react-router'
+import { Route, Routes, useLocation } from 'react-router'
+import { Navigate } from "react-router-dom";
 import MainLayout from '../layout/mainLayout'
 import LoginForm from '../module/auth/login/loginForm'
 import { UsersPage } from '../module/createUser'
@@ -9,6 +10,10 @@ import { Roll } from '../module/roll'
 import { authRoutes, language, users, rolls } from '../utils/constants/routes/publicRoute'
 
 function God() {
+
+  const token = localStorage.getItem("token");
+  const location = useLocation();
+
   return (
     <div className="God">
       <MainLayout>
@@ -18,8 +23,8 @@ function God() {
           <Route path={`${language.newForm}`} element={<NewLanguage />} />
           <Route path={`${users.users}`} element={<UsersPage />} />
           <Route path={`${users.createUser}`} element={<CreateUser />} />
-          <Route path="/" element={<h1 style={{ textAlign: 'center', marginTop: 100 }}>سلام، به پنل اصلی خوش آمدید</h1>} />
           <Route path={rolls.roll} element={<Roll />} />
+          <Route path="/" element={token ? <h1 style={{ textAlign: 'center', marginTop: 100 }}>سلام، به پنل اصلی خوش آمدید</h1> : <Navigate to="/" replace state={{ from: location }} />} />
         </Routes>
       </MainLayout>
     </div>
