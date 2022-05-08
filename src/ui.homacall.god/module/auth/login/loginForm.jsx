@@ -1,16 +1,23 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Password } from 'primereact/password'
 import { Button } from 'primereact/button'
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 import { loginUser } from '../../../service/userService'
+import { useSetRecoilState } from 'recoil'
+import { userData } from '../../../store/atom'
 
 const NewLanguage = () => {
   const [UserName, setUserName] = useState('')
   const [PassWord, setPassword] = useState('')
-
-  console.log('kkk');
-  const navigate = useNavigate();
+  const setToken = useSetRecoilState(userData)
+  const navigate = useNavigate()
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      return navigate('/')
+    }
+  }, [navigate])
   const reset = () => {
     setUserName('')
     setPassword('')
@@ -23,9 +30,9 @@ const NewLanguage = () => {
     try {
       const { data, status } = await loginUser(formData)
       if (status === 200) {
-        console.log(data)
         localStorage.setItem('token', data.token)
-        navigate('/');
+        setToken(data.token)
+        navigate('/')
         reset()
       }
     } catch (error) {
@@ -35,7 +42,7 @@ const NewLanguage = () => {
 
   return (
     <>
-      <div className="ml-[45%] w-[30%] pb-5 bg-white m-auto shadow-lg rounded-md my-40">
+      <div className="mx-auto w-[30%] pb-5 bg-white m-auto shadow-lg rounded-md my-40">
         <form onSubmit={handleSubmit}>
           <div className="border-b border-slate-400 h-10">
             <span className="inline-block  float-right mr-5 leading-9">ورود</span>
