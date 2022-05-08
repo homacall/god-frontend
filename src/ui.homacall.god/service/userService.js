@@ -1,6 +1,5 @@
 import http from './httpService'
-import config from './config.json'
-
+import { apiUrls } from './urls'
 export const loginUser = user => {
-  return http.post(`${config.godapi}/api/LoginGod/Login`, user)
+  return http.post(apiUrls.createLanguage, user)
 }
