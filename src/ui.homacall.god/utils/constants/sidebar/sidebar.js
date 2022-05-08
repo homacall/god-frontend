@@ -1,39 +1,36 @@
-import {sidebar} from '../routes/publicRoute'
-
+import { sidebar } from '../routes/publicRoute'
 
 const items = [
   {
     id: 1,
     label: 'مدیریت زبان',
-    url:`${sidebar.language}`
+    url: `${sidebar.language}`,
   },
   {
     id: 2,
     label: 'مدیریت تگ',
-    url:`${sidebar.tag}`
-
+    url: `${sidebar.tag}`,
   },
   {
     id: 3,
     label: 'راهبری مدیریت نقش',
-    url:`${sidebar.tag}`
+    url: `${sidebar.roll}`,
   },
   {
     id: 4,
     label: 'مدیریت شرکت',
-    url:`${sidebar.tag}`
+    url: `${sidebar.tag}`,
   },
   {
     id: 5,
     label: 'تعریف کاربر و سطح دسترسی',
-    url:`${sidebar.users}`
-
+    url: `${sidebar.users}`,
   },
   {
     id: 6,
     label: 'انتصاب مسیر',
-    url:`${sidebar.tag}`
+    url: `${sidebar.tag}`,
   },
-];
+]
 
-export default items;
+export default items

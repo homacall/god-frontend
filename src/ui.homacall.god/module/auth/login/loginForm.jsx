@@ -1,57 +1,49 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Password } from 'primereact/password'
 import { Button } from 'primereact/button'
-// import { loginUser } from '../../../service/userService';
-// import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
+import { loginUser } from '../../../service/userService'
+import { useSetRecoilState } from 'recoil'
+import { userData } from '../../../store/atom'
 
-const NewLanguage = ({ history }) => {
+const NewLanguage = () => {
   const [UserName, setUserName] = useState('')
   const [PassWord, setPassword] = useState('')
-
-  // const reset = () => {
-  //     setUserName('');
-  //     setPassword('');
-  // }
-  // useEffect(() => {
-  //     axios({
-  //         method: 'Post',
-  //         url: 'http://192.168.50.34:8080/api/LoginGod/Login',
-  //         data: { UserName: 'god', PassWord: '123' },
-  //         headers: {
-  //              "Access-Control-Allow-Origin": "*",
-  //               "Access-Control-Allow-Methods": "*",
-  //              "Content-Type": "application/json",
-  //         },
-  //     }).then(function (response) {
-  //         console.log(response);
-  //     }).catch(function (error) {
-  //         console.log('Error', error.message, 'config',error.response.headers);
-  //     });
-
-  // }, []);
-
-  // const handleSubmit = async (event) => {
-  //     event.preventDefault();
-  //     const user = { UserName, PassWord }
-  //     try {
-  //         const { data } = await loginUser(user);
-  //         // if (status === 200) {
-  //             console.log(data);
-  //             localStorage.setItem("token", data.token);
-  //             history.replace("/");
-  //             reset();
-  //         //}
-  //     } catch (error) {
-  //         console.log(error);
-
-  //     }
-  // }
+  const setToken = useSetRecoilState(userData)
+  const navigate = useNavigate()
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      return navigate('/')
+    }
+  }, [navigate])
+  const reset = () => {
+    setUserName('')
+    setPassword('')
+  }
+  const handleSubmit = async event => {
+    event.preventDefault()
+    const formData = new FormData()
+    formData.append('UserName', UserName)
+    formData.append('PassWord', PassWord)
+    try {
+      const { data, status } = await loginUser(formData)
+      if (status === 200) {
+        localStorage.setItem('token', data.token)
+        setToken(data.token)
+        navigate('/')
+        reset()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <>
-      <div className=" w-[30%] pb-5 bg-white m-auto shadow-lg rounded-md my-40">
-        <form>
+      <div className="mx-auto w-[30%] pb-5 bg-white m-auto shadow-lg rounded-md my-40">
+        <form onSubmit={handleSubmit}>
           <div className="border-b border-slate-400 h-10">
             <span className="inline-block  float-right mr-5 leading-9">ورود</span>
           </div>
