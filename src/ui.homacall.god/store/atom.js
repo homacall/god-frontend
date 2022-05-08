@@ -6,7 +6,4 @@ export const showSidebar = atom({
   default: true
 });
 
-export const handleId = atom({
-  key: 'isId',
-  default: null
-});
+

@@ -16,7 +16,7 @@ export const UserTable = ({ data }) => {
         ...item,
         action: (
           <TableActions
-            deleteAction={() => {}}
+            deleteAction={() => { }}
             hasDelete={true}
             hasUpdate={true}
             updateAction={() => {
