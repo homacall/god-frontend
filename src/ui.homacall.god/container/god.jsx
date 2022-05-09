@@ -1,4 +1,3 @@
-// <<<<<<< Updated upstream
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { PrivateRoutes } from './privateRoutes'
