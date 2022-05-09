@@ -8,6 +8,7 @@ export const sidebar = {
   users: '/users',
   home: '/',
   roll: '/roll',
+  tag: '/tag',
 }
 export const language = {
   languageTable: '/language',
@@ -23,4 +24,9 @@ export const home = {
 export const rolls = {
   roll: '/roll',
   newRoll: '/roll/new-roll',
+}
+
+export const tags = {
+  tag: '/tag',
+  newTag: '/tag/new-tag',
 }
