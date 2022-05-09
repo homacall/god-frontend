@@ -1,10 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
-import axios from "axios";
+import axios from 'axios'
 
-axios.defaults.headers.post["Content-Type"] = "multipart/form-data";
-
-
+axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
 
 export default {
-    post: axios.post,
-};
+  post: axios.post,
+  get: axios.get,
+}

@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { Password } from 'primereact/password'
+import { InputImage } from '../../common/fileUploader'
+import { ProvinceServiceGetAll } from '../../../service/province'
+import { useRecoilValue } from 'recoil'
+import { userData } from '../../../store/atom'
 
 const CreateUser = () => {
   const [user, setUser] = useState({
@@ -11,7 +15,6 @@ const CreateUser = () => {
     Usr_IdentNum: '',
     Usr_Gender: '',
     Usr_mail: '',
-    Usr_DateReg: '',
     Usr_UName: '',
     Usr_HPass: '',
     Usr_Img: '',
@@ -19,10 +22,18 @@ const CreateUser = () => {
     Usr_Cty_ID: '',
     Usr_Address: '',
   })
+  const token = localStorage.getItem('token')
+  useEffect(() => {
+    console.log(token)
+    if (token) {
+      ProvinceServiceGetAll(token)
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+    }
+  }, [token])
   const changeHandler = e => {
     const name = e.target.name
     const value = e.target.value
-    // user[name] = value
     setUser(perv => ({ ...perv, [name]: value }))
   }
   const item = [
@@ -33,7 +44,6 @@ const CreateUser = () => {
     e.preventDefault()
     console.log({ user })
   }
-
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={item} />
@@ -69,12 +79,6 @@ const CreateUser = () => {
           </label>
         </span>
         <span className="p-float-label">
-          <InputText id="Usr_DateReg" value={user.Usr_DateReg} onChange={changeHandler} name="Usr_DateReg" className="w-full" />
-          <label htmlFor="Usr_DateReg" className="right-2 text-sm">
-            تاریخ عضویت
-          </label>
-        </span>
-        <span className="p-float-label">
           <InputText id="Usr_UName" value={user.Usr_UName} onChange={changeHandler} name="Usr_UName" className="w-full" />
           <label htmlFor="Usr_UName" className="right-2 text-sm">
             نام کاربری
@@ -86,12 +90,7 @@ const CreateUser = () => {
             رمز عبور
           </label>
         </span>
-        <span className="p-float-label">
-          <InputText id="Usr_Img" value={user.Usr_Img} onChange={changeHandler} name="Usr_Img" className="w-full" />
-          <label htmlFor="Usr_Img" className="right-2 text-sm">
-            عکس
-          </label>
-        </span>
+
         <span className="p-float-label">
           <InputText id="Usr_Prov_ID" value={user.Usr_Prov_ID} onChange={changeHandler} name="Usr_Prov_ID" className="w-full" />
           <label htmlFor="Usr_Prov_ID" className="right-2 text-sm">
@@ -110,6 +109,26 @@ const CreateUser = () => {
             آدرس
           </label>
         </span>
+
+        <div className="col-span-3 flex items-center">
+          {/* <InputText id="Usr_Img" value={user.Usr_Img} onChange={changeHandler} name="Usr_Img" className="w-full" />
+          <label htmlFor="Usr_Img" className="right-2 text-sm">
+            عکس
+          </label> */}
+
+          {/* <InputText
+            type={'file'}
+            id="fileUpload"
+            className="mr-2"
+            name="demo"
+            chooseLabel="انتخاب تصویر"
+            uploadLabel="آپلود تصویر"
+            chooseOptions={{ className: 'text-sm' }}
+            multiple={false}
+          /> */}
+          <InputImage />
+        </div>
+        <br />
         <Button label="ثبت" className="p-button-success relative right-[86%] text-sm mt-3 h-10" />
       </form>
     </div>
