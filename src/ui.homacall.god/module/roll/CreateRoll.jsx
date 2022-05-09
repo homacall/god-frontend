@@ -3,7 +3,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import Breadcrumb from '../../component/breadcrumb/breadcrumb';
 
-const CreateRoll = () => {
+export const CreateRoll = () => {
   
     const [value, setValue] = useState('');
 
@@ -27,4 +27,3 @@ const CreateRoll = () => {
             </div>
     );
 }
-export default CreateRoll
