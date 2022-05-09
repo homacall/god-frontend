@@ -3,7 +3,6 @@ import { Button } from 'primereact/button'
 import UpdateDialog from './updateDialog'
 import DeleteDialog from './deleteDialog'
 
-<<<<<<< Updated upstream
 const TableActions = ({
   deleteAction,
   updateAction,
@@ -20,9 +19,6 @@ const TableActions = ({
   deleteIcon,
   updateIcon,
 }) => {
-=======
-const TableActions = ({ deleteAction, updateAction, hasDelete, hasUpdate, updateView, deleteButtonClassName, updateButtonClassName, rollName }) => {
->>>>>>> Stashed changes
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
 
