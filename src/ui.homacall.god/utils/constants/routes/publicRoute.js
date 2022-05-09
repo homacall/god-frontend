@@ -22,4 +22,5 @@ export const home = {
 }
 export const rolls = {
   roll: '/roll',
+  newRoll: '/roll/new-roll',
 }

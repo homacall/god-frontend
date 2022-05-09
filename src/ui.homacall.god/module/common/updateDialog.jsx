@@ -4,7 +4,7 @@ import { Dialog } from 'primereact/dialog';
 
 
 const UpdateDialog = ({visible,onHide,updateAction, UpdateView}) => {
-
+    
     const footer = () => {
         return (
         <>
