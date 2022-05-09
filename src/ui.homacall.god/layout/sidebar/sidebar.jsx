@@ -8,8 +8,9 @@ const Sidebar = () => {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
 
   const location = useLocation()
+  const path = location.pathname.split('/')
+  const url = '/' + path[1]
   const handleLogoutDialog = () => {
-    console.log('hi')
     setShowLogoutDialog(!showLogoutDialog)
   }
 
@@ -20,8 +21,8 @@ const Sidebar = () => {
           {items.map((items, index) => (
             <Link to={items.url} key={index}>
               <li
-                className={`${location.pathname === items.url && 'text-indigo-600 border-r-8 border-indigo-600 rounded-sm'}
-                             py-4 shadow-sm cursor-pointer hover:text-indigo-600 sidebarFont w-full h-full`}
+                className={`${url === items.url && 'text-indigo-600 border-r-8 border-indigo-600 rounded-sm'}
+                py-4 shadow-sm cursor-pointer hover:text-indigo-600 sidebarFont w-full h-full`}
               >
                 <span to={items.url} className="inline-block w-full">
                   {items.label}

@@ -10,6 +10,9 @@ import { userData } from '../../../store/atom'
 const NewLanguage = () => {
   const [UserName, setUserName] = useState('')
   const [PassWord, setPassword] = useState('')
+  const [loading, setLoading] = useState(false);
+
+
   const setToken = useSetRecoilState(userData)
   const navigate = useNavigate()
   useEffect(() => {
@@ -27,6 +30,7 @@ const NewLanguage = () => {
     const formData = new FormData()
     formData.append('UserName', UserName)
     formData.append('PassWord', PassWord)
+    setLoading(true)
     try {
       const { data, status } = await loginUser(formData)
       if (status === 200) {
@@ -36,6 +40,7 @@ const NewLanguage = () => {
         reset()
       }
     } catch (error) {
+      setLoading(false)
       console.log(error)
     }
   }
@@ -64,7 +69,7 @@ const NewLanguage = () => {
             </span>
           </div>
 
-          <Button label="ورود" className="relative left-[8%] text-sm mt-7 h-10" />
+          <Button label="ورود" className="relative left-[8%] text-sm mt-7 h-10" loading={loading} />
         </form>
       </div>
     </>
