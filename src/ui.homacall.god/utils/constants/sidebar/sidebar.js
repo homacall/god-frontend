@@ -19,7 +19,7 @@ const items = [
   {
     id: 4,
     label: 'مدیریت شرکت',
-    url: `${sidebar.tag}`,
+    url: `${sidebar.manage}`,
   },
   {
     id: 5,
@@ -29,7 +29,7 @@ const items = [
   {
     id: 6,
     label: 'انتصاب مسیر',
-    url: `${sidebar.tag}`,
+    url: `${sidebar.path}`,
   },
 ]
 
