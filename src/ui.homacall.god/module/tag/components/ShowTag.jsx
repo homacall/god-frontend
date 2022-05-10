@@ -10,6 +10,22 @@ import { showTagTableColumns } from './constant/showTableColumn';
 import TranslateTag from './TranslateTag';
 import UpdateTranslateTag from './UpdateTranslateTag';
 
+//Get one tag translations list from server with api
+const dataL = [
+  {
+    id: 1,
+    name: 'اضافه',
+    language: 'fa',
+    lang_id: 1
+  },
+  {
+    id: 2,
+    name: 'add',
+    language: 'en',
+    lang_id: 2
+  },
+]
+
 const ShowTag = ({visible, tagId, onHide}) => {
 
   const [globalFilter, setGlobalFilter] = useState(null);
@@ -18,21 +34,58 @@ const ShowTag = ({visible, tagId, onHide}) => {
   const [oldName, setOldName] = useState(false);
   const [oldLang, setOpldLang] = useState(false);
   const [id, setId] = useState(0);
-
-  const dataL = [
+  const [data, setData] = useState(dataL);
+  
+  // Get languages list from server with api
+  const languages = [
     {
       id: 1,
-      name: 'اضافه',
-      language: 'fa'
+      name: 'fa'
     },
     {
       id: 2,
-      name: 'add',
-      language: 'en'
+      name: 'en',
+     
     },
+    {
+      id: 3,
+      name: 'kr',
+     
+    },
+    {
+      id: 4,
+      name: 'ch',
+     
+    },
+    
   ]
 
-  const openTranslateTag =() => { setOpenTranslate(true); }
+var props = ['id', 'name'];
+
+var result = languages.filter(function(lang){
+    // filter out (!) items in result2
+    return !dataL.some(function(data){
+        return lang.id === data.lang_id;          // assumes unique id
+    });
+}).map(function(o){
+    // use reduce to make objects with only the required properties
+    // and map to apply this to the filtered array as a whole
+    return props.reduce(function(newo, name){
+        newo[name] = o[name];
+        
+        return newo;
+    }, {});
+});
+
+const languagesToTranslate = [];
+
+result.forEach(val=>{
+  const obj = {label: val.name, value: val.id};
+  languagesToTranslate.push(obj);
+  
+})
+
+ const openTranslateTag =() => { setOpenTranslate(true); }
 
   const closeTranslateTag =(val) => { setOpenTranslate(false); }
 
@@ -49,9 +102,11 @@ const ShowTag = ({visible, tagId, onHide}) => {
   const rightToolbarTemplate = () => {
     return (
       <>
-       
-         <Button onClick={openTranslateTag} label="افزودن ترجمه" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
-       
+      {languagesToTranslate.length > 0 ?
+         <Button onClick={openTranslateTag} label="افزودن ترجمه" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" /> 
+        :
+         <h2 className="text-[#00dd00]">تگ به تمام زبانها ترجمه شده است.</h2>
+      }
       </>
     )
   }
@@ -67,15 +122,15 @@ const ShowTag = ({visible, tagId, onHide}) => {
       
     return (
       <>
-       <TranslateTag visible={openTranslate} tagId={tagId} onHide={closeTranslateTag} />
-       <UpdateTranslateTag visible={openUpdateTranslate} tagId={id} oldVal={oldName} langId={oldLang} onHide={closeUpdateTranslateTag} />
+       <TranslateTag visible={openTranslate} tagId={tagId} onHide={closeTranslateTag} data={data} setData={setData} languages={languagesToTranslate} />
+       <UpdateTranslateTag visible={openUpdateTranslate} tagId={id} oldVal={oldName} langId={oldLang} onHide={closeUpdateTranslateTag} data={data} setData={setData}/>
        <Dialog visible={visible} onHide={onHide}>
-         <div className="w-[600px] pb-4 rounded-md m-auto container bg-white rtl">
+         <div className="w-[60vw] pb-4 rounded-md m-auto container bg-white rtl">
          <div className="card">
         <Toolbar className="mb-4" left={rightToolbarTemplate}></Toolbar>
 
         <DataTable
-          value={dataL}
+          value={data}
           paginator
           rows={10}
           rowsPerPageOptions={[5, 10, 25]}

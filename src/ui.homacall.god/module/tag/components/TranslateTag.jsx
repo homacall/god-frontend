@@ -4,25 +4,31 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 
-const languages = [
-  {label: 'فارسی', value: 1},
-  {label: 'انگلیسی', value: 2},
-  {label: 'عربی', value: 3},
-];
+import '../style/translatetag.css';
 
-const TranslateTag= ({ visible, onHide, tagId }) => {
+const TranslateTag= ({ visible, onHide, tagId, languages, data, setData }) => {
   const [translateValue, setTranslateValue] = useState('');
-  const [languageValue, setLanguageValue] = useState('');
+  const [languageId, setLanguageId] = useState('');
+  const [languageList, setLanguageList] = useState(languages);
 
   const registerTranslate = () =>  {
-    setLanguageValue('');
+    const newList = languageList.filter(lang=>lang.value !== languageId);
+    setLanguageList(newList);
+    setData(
+      [...data,
+         {id: data.length+1, name: translateValue, language: languageId, lang_id: languageId}
+      ]
+    );
+    setLanguageId('');
     setTranslateValue('');
-    alert(tagId+" "+translateValue+" "+languageValue); onHide(); setTranslateValue(''); }
-
+    alert(tagId+" "+translateValue+" "+languageId); 
+    if(languageList.length === 1){ onHide();  }
+     
+  }
   const footer = () => {
     return (
       <>
-        <Button label="ثبت" onClick={registerTranslate} disabled={translateValue && languageValue ? false:true} className="relative right-[70%] text-xs mt-3 h-10" />
+        <Button label="ثبت" onClick={registerTranslate} disabled={translateValue && languageId ? false:true} className="relative right-[70%] text-xs mt-3 h-10" />
       </>
     )
   }
@@ -36,7 +42,7 @@ const TranslateTag= ({ visible, onHide, tagId }) => {
         </span>
       </div>
       <div className="w-[400px] pb-4 rounded-md m-auto container bg-white rtl">
-      <Dropdown value={languageValue} options={languages} onChange={(e) => {setLanguageValue(e.value); }} optionLabel="label" filter showClear  filterBy="label"
+      <Dropdown value={languageId} options={languageList} onChange={(e) => {setLanguageId(e.value); }} optionLabel="label" filter showClear  filterBy="label"
          placeholder="انتخاب زبان" className="right-1 w-[95%] text-sm" />
       </div>
     </Dialog>
