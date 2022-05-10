@@ -6,10 +6,9 @@ import { LogoutDialog } from './logOutDialog'
 
 const Sidebar = () => {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
-
   const location = useLocation()
+
   const handleLogoutDialog = () => {
-    console.log('hi')
     setShowLogoutDialog(!showLogoutDialog)
   }
 

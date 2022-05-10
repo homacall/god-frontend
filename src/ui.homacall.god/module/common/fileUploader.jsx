@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export function InputImage() {
+export function InputImage({ setImageUrl }) {
   const uploadedImage = React.useRef(null)
   const imageUploader = React.useRef(null)
   const [state, setState] = useState({ url: false })
@@ -15,6 +15,7 @@ export function InputImage() {
         current.src = e.target.result
       }
       reader.readAsDataURL(file)
+      setImageUrl(file.name)
     }
   }
 
