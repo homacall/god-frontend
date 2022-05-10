@@ -5,8 +5,6 @@ import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { Password } from 'primereact/password'
 import { InputImage } from '../../common/fileUploader'
 import { ProvinceServiceGetAll } from '../../../service/province'
-import { useRecoilValue } from 'recoil'
-import { userData } from '../../../store/atom'
 
 const CreateUser = () => {
   const [user, setUser] = useState({
@@ -24,7 +22,6 @@ const CreateUser = () => {
   })
   const token = localStorage.getItem('token')
   useEffect(() => {
-    console.log(token)
     if (token) {
       ProvinceServiceGetAll(token)
         .then(res => console.log(res))
