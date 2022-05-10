@@ -9,6 +9,13 @@ const TranslateAlert = ({ visibleAlert, onHide, tagId }) => {
   const openTranslateDialog = () => { onHide(); setVisibleTranslateDialog(true) }
   const closeTranslateDialog = () => { setVisibleTranslateDialog(false) }
 
+  const languages = [
+    {label: 'فارسی', value: 1},
+    {label: 'انگلیسی', value: 2},
+    {label: 'kr', value: 3},
+    {label: 'ch', value: 4},
+  ];
+
   const footer = () => {
     return (
       <>
@@ -20,7 +27,7 @@ const TranslateAlert = ({ visibleAlert, onHide, tagId }) => {
 
   return (
     <>
-      <TranslateTag visible={visibleTranslateDialog} onHide={closeTranslateDialog} tagId={tagId} />
+      <TranslateTag visible={visibleTranslateDialog} onHide={closeTranslateDialog} tagId={tagId} languages={languages} />
       <Dialog visible={visibleAlert} onHide={onHide} footer={footer}>
          <div className="w-[400px] pb-4 rounded-md m-auto container bg-white rtl">آیا مایل به ترجمه این تگ هستید؟</div>
       </Dialog>

@@ -3,16 +3,9 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 
-// const languages = [
-//   {label: 'فارسی', value: 1},
-//   {label: 'انگلیسی', value: 2},
-//   {label: 'عربی', value: 3},
-// ];
-
-const UpdateTranslateTag= ({ visible, onHide, tagId, oldVal, langId }) => {
+const UpdateTranslateTag= ({ visible, onHide, tagId, oldVal, langId, data, setData }) => {
  
   const [translateValue, setTranslateValue] = useState('');
-  //const [languageValue, setLanguageValue] = useState('');
 
   useEffect(()=>{
     setTranslateValue(oldVal)
@@ -20,7 +13,15 @@ const UpdateTranslateTag= ({ visible, onHide, tagId, oldVal, langId }) => {
   
   const updateTranslate = () =>  {
     alert(tagId+" "+translateValue+" "+langId);
+
+    const newTranslate = data.map(obj => {
+      if (obj.id === tagId) {
+        return {...obj, name: translateValue};
+      }
     
+      return obj;
+    });
+    setData(newTranslate);
     onHide();
     }
 
@@ -40,10 +41,7 @@ const UpdateTranslateTag= ({ visible, onHide, tagId, oldVal, langId }) => {
             <label htmlFor="inputtext" className='right-2 text-sm'>ترجمه</label>
         </span>
       </div>
-      {/* <div className="w-[400px] pb-4 rounded-md m-auto container bg-white rtl">
-      <Dropdown value={oldLang} options={languages} onChange={(e) => {setLanguageValue(e.value); }} optionLabel="label" filter showClear  filterBy="label"
-         placeholder="انتخاب زبان" className="right-1 w-[95%] text-sm" />
-      </div> */}
+     
     </Dialog>
   )
 }

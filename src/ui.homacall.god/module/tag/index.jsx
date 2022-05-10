@@ -19,6 +19,7 @@ export const Tag = () => {
   const [id, setId] = useState(0);
   // const [openTranslate, setOpenTranslate] = useState(false);
 
+  //Get Tags List from server with api
   const dataL = [
     {
       id: 1,
@@ -43,7 +44,7 @@ export const Tag = () => {
     <div className="table-header">
         <span className="p-input-icon-left">
             <i className="pi pi-search text-sm" />
-            <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value) } placeholder="جستوجو ..." className='h-10 text-sm' />
+            <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value) } placeholder="جستجو ..." className='h-10 text-sm' />
         </span>
     </div>
 );
