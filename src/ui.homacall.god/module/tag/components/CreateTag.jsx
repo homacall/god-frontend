@@ -3,6 +3,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb';
 import TranslateAlert from './alert/TranslateAlert';
+import { item } from './constant/BreadcampItem';
 
 
 export const CreateTag = () => {
@@ -10,11 +11,6 @@ export const CreateTag = () => {
     const [value, setValue] = useState('');
     const [visibleAlert, setVisibleAlert] = useState(false);
     const [tagId, setTagId] = useState(0);
-
-    const item = [
-            {id:1, label: 'مدیریت تگ' ,url:'/tag' },
-            {id:2, label: 'ثبت تگ جدید' ,url:'/tag/new-tag' },
-    ];
 
     const createTag = () => { 
         alert(value); 

@@ -45,7 +45,7 @@ const languagesToTranslate = GetTranslateLanguage(...dataL);
 
 const openTranslateTag =() => { setOpenTranslate(true); }
 
-const closeTranslateTag =(val) => { setOpenTranslate(false); }
+const closeTranslateTag =() => { setOpenTranslate(false); }
 
 const openUpdateTranslateTag =(tagId, name, lang) => { 
     setId(tagId);
@@ -55,7 +55,7 @@ const openUpdateTranslateTag =(tagId, name, lang) => {
    
 }
 
-const closeUpdateTranslateTag =(val) => { setOpenUpdateTranslate(false); }
+const closeUpdateTranslateTag =() => { setOpenUpdateTranslate(false); }
 
 const rightToolbarTemplate = () => {
     return (
