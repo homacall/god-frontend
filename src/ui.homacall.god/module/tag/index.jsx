@@ -5,30 +5,34 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Toolbar } from 'primereact/toolbar'
-import { UpdateRoll } from './components/updateRoll'
+import { UpdateTag } from './components/UpdateTag'
 
 import TableActions from '../common/actionBody'
-import { userColumns } from './constant/tableColumn'
+import { tagColumns } from './constant/tableColumn'
+import ShowTag from './components/ShowTag'
 
-export const Roll = () => {
-  const [rollName, setRollName] = useState('');
+export const Tag = () => {
+  const [tagName, setTagName] = useState('');
   const [globalFilter, setGlobalFilter] = useState(null);
-
+  const [openShow, setOpenShow] = useState(false);
+  const [id, setId] = useState(0);
+ 
+  //Get Tags List from server with api
   const dataL = [
     {
       id: 1,
-      name: 'Admin',
+      title: 'tag-1',
     },
     {
       id: 2,
-      name: 'Employee',
+      title: 'tag-2',
     },
   ]
   const rightToolbarTemplate = () => {
     return (
       <>
-        <Link to="/roll/new-roll">
-          <Button label="ثبت نقش جدید" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
+        <Link to="/tag/new-tag">
+          <Button label="ثبت تگ جدید" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
         </Link>
       </>
     )
@@ -43,8 +47,14 @@ export const Roll = () => {
     </div>
 );
 
+const openShowTag =(valId, valName) => { setId(valId); setTagName(valName); setOpenShow(true);  }
+
+const closeShowTag =(val) => { setOpenShow(false); }
+
   return (
-    <div className="w-[95%] mt-4 m-auto container">
+    <>
+     <ShowTag visible={openShow} tagId={id} onHide={closeShowTag} tagName={tagName} />
+     <div className="w-[95%] mt-4 m-auto container">
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
 
@@ -60,7 +70,7 @@ export const Roll = () => {
           responsiveLayout="scroll"
           className="rtl"
         >
-          {userColumns.map((col, index) => (
+          {tagColumns.map((col, index) => (
             <Column field={col.field} header={col.header} sortable key={index} filterBy="#{data.name}" className={col.className}></Column>
             ))}
           
@@ -68,23 +78,28 @@ export const Roll = () => {
             field="image"
             header="عملیات"
             body={(data) => (
+              <>
               <TableActions
                 deleteAction={() => { alert(data.id); }}
                 hasDelete={true}
                 hasUpdate={true}
                 updateAction={() => {
-                  alert(rollName+" "+data.id)
+                  alert(tagName+" "+data.id)
                 }}
                 deleteLabel="حذف"
                 updateLabel="ویرایش"
-                updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data.name} />}
-                deleteButtonClassName={'p-button-outlined p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
-                updateButtonClassName={'p-button-outlined p-button-warning text-xs rtl h-10 w-25 p-1'}
+                updateView={<UpdateTag tagName={tagName} setTagName={setTagName} oldVal={data.title} />}
+                deleteButtonClassName={'p-button-outlined p-button-danger ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
+                updateButtonClassName={'p-button-outlined p-button-warning ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
               />
+              <Button onClick={()=>openShowTag(data.id, data.title)} className="p-button-outlined p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2">ترجمه</Button>
+             </>
             )}
+            
           ></Column>
         </DataTable>
       </div>
     </div>
+    </>
   )
 }
