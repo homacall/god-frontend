@@ -14,11 +14,13 @@ const TranslateTag= ({ visible, onHide, tagId, languages, data, setData, tagName
   const registerTranslate = () =>  {
     const newList = languageList.filter(lang=>lang.value !== languageId);
     setLanguageList(newList);
-    setData(
-      [...data,
-         {id: data.length+1, name: translateValue, language: languageId, lang_id: languageId}
-      ]
-    );
+    if(data){
+      setData(
+        [...data,
+           {id: data.length+1, name: translateValue, language: languageId, lang_id: languageId}
+        ]
+      );
+    }
     setLanguageId('');
     setTranslateValue('');
     alert(tagId+" "+translateValue+" "+languageId); 
