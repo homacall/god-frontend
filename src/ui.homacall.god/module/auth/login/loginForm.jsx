@@ -33,7 +33,8 @@ const NewLanguage = () => {
     setLoading(true)
     try {
       const { data, status } = await loginUser(formData)
-      if (status === 200) {
+
+      if (status === 200 || data) {
         localStorage.setItem('token', data.token)
         setToken(data.token)
         navigate('/')
