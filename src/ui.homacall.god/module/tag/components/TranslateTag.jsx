@@ -6,7 +6,7 @@ import { Dropdown } from 'primereact/dropdown';
 
 import '../style/translatetag.css';
 
-const TranslateTag= ({ visible, onHide, tagId, languages, data, setData }) => {
+const TranslateTag= ({ visible, onHide, tagId, languages, data, setData, tagName }) => {
   const [translateValue, setTranslateValue] = useState('');
   const [languageId, setLanguageId] = useState('');
   const [languageList, setLanguageList] = useState(languages);
@@ -33,8 +33,17 @@ const TranslateTag= ({ visible, onHide, tagId, languages, data, setData }) => {
     )
   }
 
+  const header = () => {
+    return (
+      <>
+        <div dir='rtl'><p className='text-base'>افزودن ترجمه برای تگ <spann className="text-red-600">{tagName}</spann></p></div>
+      </>
+    )
+  }
+
   return (
-    <Dialog visible={visible} onHide={onHide} footer={footer}>
+    <Dialog visible={visible} onHide={onHide} footer={footer} header={header} dir="rtl">
+      
       <div className="w-[400px] pb-4 rounded-md m-auto container bg-white rtl">
         <span className="p-float-label">
             <InputText id="inputtext" value={translateValue} onChange={(e) => setTranslateValue(e.target.value)} className='h-9 w-96'/>

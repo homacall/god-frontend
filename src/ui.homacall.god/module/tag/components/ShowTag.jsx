@@ -10,6 +10,8 @@ import { showTagTableColumns } from './constant/showTableColumn';
 import TranslateTag from './TranslateTag';
 import UpdateTranslateTag from './UpdateTranslateTag';
 
+import GetTranslateLanguage from './utils/getLanguages';
+
 //Get one tag translations list from server with api
 const dataL = [
   {
@@ -26,7 +28,7 @@ const dataL = [
   },
 ]
 
-const ShowTag = ({visible, tagId, onHide}) => {
+const ShowTag = ({visible, tagId, onHide, tagName}) => {
 
   const [globalFilter, setGlobalFilter] = useState(null);
   const [openTranslate, setOpenTranslate] = useState(false);
@@ -36,70 +38,26 @@ const ShowTag = ({visible, tagId, onHide}) => {
   const [id, setId] = useState(0);
   const [data, setData] = useState(dataL);
   
-  // Get languages list from server with api
-  const languages = [
-    {
-      id: 1,
-      name: 'fa'
-    },
-    {
-      id: 2,
-      name: 'en',
-     
-    },
-    {
-      id: 3,
-      name: 'kr',
-     
-    },
-    {
-      id: 4,
-      name: 'ch',
-     
-    },
-    
-  ]
 
-var props = ['id', 'name'];
+const languagesToTranslate = GetTranslateLanguage(...dataL);
 
-var result = languages.filter(function(lang){
-    // filter out (!) items in result2
-    return !dataL.some(function(data){
-        return lang.id === data.lang_id;          // assumes unique id
-    });
-}).map(function(o){
-    // use reduce to make objects with only the required properties
-    // and map to apply this to the filtered array as a whole
-    return props.reduce(function(newo, name){
-        newo[name] = o[name];
-        
-        return newo;
-    }, {});
-});
 
-const languagesToTranslate = [];
 
-result.forEach(val=>{
-  const obj = {label: val.name, value: val.id};
-  languagesToTranslate.push(obj);
-  
-})
+const openTranslateTag =() => { setOpenTranslate(true); }
 
- const openTranslateTag =() => { setOpenTranslate(true); }
+const closeTranslateTag =(val) => { setOpenTranslate(false); }
 
-  const closeTranslateTag =(val) => { setOpenTranslate(false); }
-
-  const openUpdateTranslateTag =(tagId, name, lang) => { 
+const openUpdateTranslateTag =(tagId, name, lang) => { 
     setId(tagId);
     setOldName(name);
     setOpldLang(lang);
     setOpenUpdateTranslate(true); 
    
-  }
+}
 
-  const closeUpdateTranslateTag =(val) => { setOpenUpdateTranslate(false); }
+const closeUpdateTranslateTag =(val) => { setOpenUpdateTranslate(false); }
 
-  const rightToolbarTemplate = () => {
+const rightToolbarTemplate = () => {
     return (
       <>
       {languagesToTranslate.length > 0 ?
@@ -109,20 +67,20 @@ result.forEach(val=>{
       }
       </>
     )
-  }
+}
 
-  const header = (
+const header = (
     <div className="table-header">
         <span className="p-input-icon-left">
             <i className="pi pi-search text-sm" />
             <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value) } placeholder="جستوجو ..." className='h-10 text-sm' />
         </span>
     </div>
-  );
+);
       
-    return (
+return (
       <>
-       <TranslateTag visible={openTranslate} tagId={tagId} onHide={closeTranslateTag} data={data} setData={setData} languages={languagesToTranslate} />
+       <TranslateTag visible={openTranslate} tagId={tagId} onHide={closeTranslateTag} data={data} setData={setData} languages={languagesToTranslate} tagName={tagName} />
        <UpdateTranslateTag visible={openUpdateTranslate} tagId={id} oldVal={oldName} langId={oldLang} onHide={closeUpdateTranslateTag} data={data} setData={setData}/>
        <Dialog visible={visible} onHide={onHide}>
          <div className="w-[60vw] pb-4 rounded-md m-auto container bg-white rtl">

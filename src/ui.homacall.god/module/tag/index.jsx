@@ -9,7 +9,6 @@ import { UpdateTag } from './components/UpdateTag'
 
 import TableActions from '../common/actionBody'
 import { tagColumns } from './constant/tableColumn'
-//import TranslateTag from './components/TranslateTag'
 import ShowTag from './components/ShowTag'
 
 export const Tag = () => {
@@ -17,8 +16,7 @@ export const Tag = () => {
   const [globalFilter, setGlobalFilter] = useState(null);
   const [openShow, setOpenShow] = useState(false);
   const [id, setId] = useState(0);
-  // const [openTranslate, setOpenTranslate] = useState(false);
-
+ 
   //Get Tags List from server with api
   const dataL = [
     {
@@ -49,18 +47,13 @@ export const Tag = () => {
     </div>
 );
 
-// const openTranslateTag =(val) => { setOpenTranslate(true); setId(val) }
-
-// const closeTranslateTag =(val) => { setOpenTranslate(false); }
-
-const openShowTag =(val) => { setOpenShow(true); setId(val) }
+const openShowTag =(valId, valName) => { setId(valId); setTagName(valName); setOpenShow(true);  }
 
 const closeShowTag =(val) => { setOpenShow(false); }
 
   return (
     <>
-     {/* <TranslateTag visible={openTranslate} tagId={id} onHide={closeTranslateTag} /> */}
-     <ShowTag visible={openShow} tagId={id} onHide={closeShowTag} />
+     <ShowTag visible={openShow} tagId={id} onHide={closeShowTag} tagName={tagName} />
      <div className="w-[95%] mt-4 m-auto container">
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
@@ -99,8 +92,7 @@ const closeShowTag =(val) => { setOpenShow(false); }
                 deleteButtonClassName={'p-button-outlined p-button-danger ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
                 updateButtonClassName={'p-button-outlined p-button-warning ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
               />
-              {/* <Button onClick={()=>openTranslateTag(data.id)} className="p-button-outlined text-xs rtl h-10 w-25 p-1 ml-2">ترجمه</Button> */}
-              <Button onClick={()=>openShowTag(data.id)} className="p-button-outlined p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2">ترجمه</Button>
+              <Button onClick={()=>openShowTag(data.id, data.title)} className="p-button-outlined p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2">ترجمه</Button>
              </>
             )}
             

@@ -16,13 +16,18 @@ export const CreateTag = () => {
             {id:2, label: 'ثبت تگ جدید' ,url:'/tag/new-tag' },
     ];
 
-    const createTag = () => { alert(value); setValue(''); setTagId(1); setVisibleAlert(true) }
+    const createTag = () => { 
+        alert(value); 
+        setTagId(1); 
+        setVisibleAlert(true);
+         
+    }
     
-    const closeTranslateAlert = () => { setVisibleAlert(false) }
+    const closeTranslateAlert = () => { setValue(''); setVisibleAlert(false);  }
 
     return (
         <>
-            <TranslateAlert visibleAlert={visibleAlert} onHide={closeTranslateAlert} tagId={tagId} />
+            <TranslateAlert visibleAlert={visibleAlert} onHide={closeTranslateAlert} tagId={tagId} tagName={value} />
             <div className='w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl'>
                 <Breadcrumb item={item}/>
                 <div className=" flex justify-start mr-[8%] mt-10 ">
