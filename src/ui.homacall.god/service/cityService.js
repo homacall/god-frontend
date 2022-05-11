@@ -7,5 +7,15 @@ export const CityServiceGetByProvinceID = PrviceID => {
       Authorization: 'Bearer ' + token,
     },
   }
-  return http.post(apiUrls.cityGetByProvinceId, PrviceID, config)
+  return http
+    .post(apiUrls.cityGetByProvinceId, PrviceID, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
 }

@@ -1,57 +1,52 @@
 export const userColumns = [
   {
     header: 'نام',
-    field: 'name',
+    field: 'usr_FName',
     className: 'text-xs ',
   },
   {
     header: 'نام خانوادگی',
-    field: 'lastName',
+    field: 'usr_LName',
     className: 'text-xs',
   },
   {
     header: 'کدملی',
-    field: 'userIdNumber',
+    field: 'usr_IdentNum',
     className: 'text-xs',
   },
   {
     header: 'جنسیت',
-    field: 'gender',
+    field: 'usr_Gender',
     className: 'text-xs',
   },
   {
     header: 'ایمیل',
-    field: 'email',
+    field: 'usr_mail',
+    className: 'text-xs',
+  },
+  {
+    header: 'تلفن همراه',
+    field: 'usr_Mobile',
     className: 'text-xs',
   },
   {
     header: 'تاریخ ثبت نام',
-    field: 'registerDate',
+    field: 'usr_DateReg',
     className: 'text-xs',
   },
   {
     header: 'نام کاربری',
-    field: 'username',
-    className: 'text-xs',
-  },
-  {
-    header: 'سطح  دسترسی',
-    field: 'permission',
-    className: 'text-xs',
-  },
-  {
-    header: 'نقش',
-    field: 'roll',
+    field: 'usr_UName',
     className: 'text-xs',
   },
   {
     header: 'عکس',
-    field: 'image',
+    field: 'usr_Img',
     className: 'text-xs',
   },
   {
     header: 'وضعیت',
-    field: 'status',
+    field: 'usr_IsA',
     className: 'text-xs',
   },
   {

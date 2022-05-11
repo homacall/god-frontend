@@ -5,4 +5,6 @@ export const apiUrls = {
   province: GodHOST.concat('/ProvinceGod/GetAll'),
   provinceGetAll: GodHOST.concat('/ProvinceGod/GetAll'),
   cityGetByProvinceId: GodHOST.concat('/CityGod/GetByProvinceID'),
+  insertUser: GodHOST.concat('/UserGod/Insert'),
+  getAllUser: GodHOST.concat('/UserGod/GetAll'),
 }

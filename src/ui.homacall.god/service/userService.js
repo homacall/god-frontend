@@ -1,13 +1,42 @@
 import http from './httpService'
 import { apiUrls } from './urls'
-export const loginUser = user => {
-  return http.post(apiUrls.login, user)
-}
-export const newLanguage = (data, token) => {
+export const insertUser = data => {
+  const token = localStorage.getItem('token')
+
   let config = {
     headers: {
-      'Authorization': 'Bearer ' + token,
-    }
+      Authorization: 'Bearer ' + token,
+    },
   }
-  return http.post(apiUrls.createLanguage, data, config)
+  return http
+    .post(apiUrls.insertUser, data, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}
+
+export const GetAllUser = () => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .get(apiUrls.getAllUser, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
 }
