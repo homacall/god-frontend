@@ -38,7 +38,7 @@ const TranslateTag= ({ visible, onHide, tagId, languages, data, setData, tagName
   const header = () => {
     return (
       <>
-        <div dir='rtl'><p className='text-base'>افزودن ترجمه برای تگ <spann className="text-red-600">{tagName}</spann></p></div>
+        <div dir='rtl'><p className='text-base'>افزودن ترجمه برای تگ <span className="text-red-600">{tagName}</span></p></div>
       </>
     )
   }
