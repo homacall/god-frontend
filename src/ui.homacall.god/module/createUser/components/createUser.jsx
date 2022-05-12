@@ -23,7 +23,7 @@ const CreateUser = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
-
+  const [loading, setLoading] = useState(false)
   const token = useRecoilValue(userData)
   const formik = useFormik({
     initialValues: {
@@ -113,20 +113,23 @@ const CreateUser = () => {
       data.Usr_Img = imageUrl
       setImageError(false)
     }
+    setLoading(true)
     const formData = new FormData()
     Object.keys(data).forEach(key => {
       const value = data[key]
       formData.append(key, value)
     })
     formData.append('Usr_DateReg', '1401/02/20')
-    insertUser(formData).then(res => {
-      if (res.status === 200 || res.data === 'success') {
-        formik.resetForm()
-        setShowMessage(true)
-      }
-    })
-
-    console.log(data)
+    insertUser(formData)
+      .then(res => {
+        if (res.status === 200 || res.data === 'success') {
+          formik.resetForm()
+          setShowMessage(true)
+        }
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   const isFormFieldValid = name => !!(formik.touched[name] && formik.errors[name])
@@ -343,7 +346,7 @@ const CreateUser = () => {
           <InputImage setImageUrl={setImageUrl} imageError={imageError} />
         </div>
         <div className="col-span-3 flex justify-center items-center">
-          <Button label="ثبت" className="p-button-success  mx-auto w-[200px]  text-sm mt-3 h-10" type="submit" />
+          <Button label="ثبت" className="p-button-success  mx-auto w-[200px]  text-sm mt-3 h-10" type="submit" loading={loading} />
         </div>
       </form>
     </div>
