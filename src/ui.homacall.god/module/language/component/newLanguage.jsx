@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { RadioButton } from 'primereact/radiobutton';
 import { Button } from 'primereact/button';
-import Breadcrumb from '../../component/breadcrumb/breadcrumb';
-import { newLanguage } from '../../service/userService';
+import Breadcrumb from '../../../component/breadcrumb/breadcrumb';
+import { newLanguage } from '../../../service/userService';
 import { useRecoilValue } from 'recoil';
-import { userData } from '../../store/atom';
+import { userData } from '../../../store/atom';
 
-const NewLanguage = () => {
+const NewLanguage = ({}) => {
 
     const [languageName, setLanguageName] = useState('');
     const [layout, setLayout] = useState(null);
+    const [loading, setLoading] = useState(false);
+
 
     const item = [
         { id: 1, label: 'مدیریت زبان', url: '/language' },
@@ -26,16 +28,18 @@ const NewLanguage = () => {
         event.preventDefault()
         const formData = new FormData();
         const isRTL = layout === 'RTL' ? true : false
-        formData.append('Lang-Name', languageName);
-        formData.append('Lang-Rtl', isRTL);
-
+        formData.append('Lang_Name', languageName);
+        formData.append('Lang_Rtl', isRTL);
+        setLoading(true)
         try {
             const { data, status } = await newLanguage(formData, user)
             if (status === 200) {
                 console.log(data);
+                setLoading(false)
                 reset()
             }
         } catch (error) {
+            setLoading(false)
             console.log(error)
         }
     }
@@ -60,7 +64,7 @@ const NewLanguage = () => {
                         <label htmlFor="LTR" className='mr-4 text-sm'>چپ به راست</label>
                     </div>
                 </div>
-                <Button label='ثبت' className='relative right-[86%] text-sm mt-3 h-10' />
+                <Button label='ثبت' className='relative right-[86%] text-sm mt-3 h-10' loading={loading} />
             </form>
         </div>
     );
