@@ -2,9 +2,9 @@ import { Route, Routes } from 'react-router'
 import { NotFound } from '../component/notFound'
 import MainLayout from '../layout/mainLayout'
 import { UsersPage } from '../module/createUser'
+import { LanguagePage } from '../module/language'
 import CreateUser from '../module/createUser/components/createUser'
-import Language from '../module/language/language'
-import NewLanguage from '../module/language/newLanguage'
+import NewLanguage from '../module/language/component/newLanguage'
 import { Roll } from '../module/roll'
 import { CreateRoll } from '../module/roll/CreateRoll'
 import { Tag } from '../module/tag'
@@ -17,7 +17,7 @@ export const PrivateRoutes = () => {
     <MainLayout>
       <Routes>
         <Route path={`${authRoutes.login}`} element={<LoginForm />} />
-        <Route path={`${language.languageTable}`} element={<Language />} />
+        <Route path={`${language.languageTable}`} element={<LanguagePage />} />
         <Route path={`${language.newForm}`} element={<NewLanguage />} />
         <Route path={`${users.users}`} element={<UsersPage />} />
         <Route path={`${users.createUser}`} element={<CreateUser />} />
