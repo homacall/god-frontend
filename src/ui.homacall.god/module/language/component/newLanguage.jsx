@@ -1,20 +1,19 @@
-import React, { useState } from 'react'
-import { InputText } from 'primereact/inputtext'
-import { RadioButton } from 'primereact/radiobutton'
-import { Button } from 'primereact/button'
-import Breadcrumb from '../../component/breadcrumb/breadcrumb'
-import { newLanguage } from '../../service/languageService'
-import { useRecoilValue } from 'recoil'
-import { userData } from '../../store/atom'
 
-const NewLanguage = () => {
-  const [languageName, setLanguageName] = useState('')
-  const [layout, setLayout] = useState(null)
+import React, { useState } from 'react';
+import { InputText } from 'primereact/inputtext';
+import { RadioButton } from 'primereact/radiobutton';
+import { Button } from 'primereact/button';
+import Breadcrumb from '../../../component/breadcrumb/breadcrumb';
+import { newLanguage } from '../../../service/userService';
+import { useRecoilValue } from 'recoil';
+import { userData } from '../../../store/atom';
 
-  const item = [
-    { id: 1, label: 'مدیریت زبان', url: '/language' },
-    { id: 2, label: 'ثبت فرم جدید', url: '/language/new-form' },
-  ]
+const NewLanguage = ({}) => {
+
+    const [languageName, setLanguageName] = useState('');
+    const [layout, setLayout] = useState(null);
+    const [loading, setLoading] = useState(false);
+
 
   const reset = () => {
     setLanguageName('')
