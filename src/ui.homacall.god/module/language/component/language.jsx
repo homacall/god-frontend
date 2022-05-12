@@ -8,33 +8,54 @@ import { InputText } from 'primereact/inputtext';
 import TableActions from '../../common/actionBody'
 import UpdateDialog from './updateLanguage'
 import { languageColumns } from '../constant/tableColumn';
+import { DeleteLanguage } from '../../../service/languageService';
 
 const Language = ({ data }) => {
 
     const [globalFilter, setGlobalFilter] = useState(null);
     const [dataTable, setDataTable] = useState([])
+    const [editProps, setEditProps] = useState({ lang_Name: '', lang_Rtl: false })
+    const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+    const [doHideDeleteDialog, setDoHideDeleteDialog] = useState(false)
+
+
+    const deleteRow = async (id) => {
+
+        const formData = new FormData();
+        formData.append('ID', id);
+        try {
+            const { data, status } = await DeleteLanguage(formData)
+            if (status === 200 || data) {
+                console.log(data);
+                setDoHideDeleteDialog(true)
+            }
+        } catch (error) {
+            console.log(error)
+            setDoHideDeleteDialog(true)
+
+        } finally {
+            setDoHideDeleteDialog(false)
+        }
+
+    }
 
     useEffect(() => {
         const newData = []
         data.forEach(item =>
             newData.push({
                 ...item,
+                lang_Rtl: item.lang_Rtl === true ? 'راست به چپ' : 'چپ به راست',
                 action: (
                     <TableActions
-                        deleteAction={() => { }}
+                        deleteAction={() => { deleteRow(item.id) }}
                         hasDelete={true}
-                        hasUpdate={true}
-                        updateAction={() => {
-                            alert('edit')
-                        }}
-                        updateView={<UpdateDialog {...item} />}
-                        deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-1'}
-                        updateButtonClassName={' p-button-warning ml-1 text-xs rtl  p-1'}
+                        hasUpdate={false}
+                        deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-2'}
                         deleteLabel="حذف"
-                        updateLabel="ویرایش"
                         deleteIcon={false}
-                        updateIcon={false}
+                        doHideDeleteDialog={doHideDeleteDialog}
                     >
+                        <Button className=' p-button-warning ml-1 text-xs rtl p-2' label='ویرایش' onClick={() => { setEditProps({ ...item }); setShowUpdateDialog(!showUpdateDialog) }} />
                     </TableActions>
                 ),
             }),
@@ -65,7 +86,7 @@ const Language = ({ data }) => {
 
     return (
         <div className="w-[95%] mt-4 m-auto container">
-
+            <UpdateDialog showUpdateDialog={showUpdateDialog} setShowUpdateDialog={setShowUpdateDialog} {...editProps} />
             <div className="card">
                 <Toolbar className="mb-4" right={rightToolbarTemplate} ></Toolbar>
 

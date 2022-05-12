@@ -1,12 +1,12 @@
 export const languageColumns = [
     {
         header: 'عنوان',
-        field: 'title',
+        field: 'lang_Name',
         className: 'text-sm w-60 text-center ',
     },
     {
         header: 'نوع چیدمان',
-        field: 'layout',
+        field: 'lang_Rtl',
         className: 'text-sm w-60 text-center',
     },
     {
