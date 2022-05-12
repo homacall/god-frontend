@@ -9,6 +9,7 @@ export const sidebar = {
   home: '/',
   roll: '/roll',
   tag: '/tag',
+  manage: '/company',
 }
 export const language = {
   languageTable: '/language',
@@ -29,4 +30,9 @@ export const rolls = {
 export const tags = {
   tag: '/tag',
   newTag: '/tag/new-tag',
+}
+
+export const manage = {
+  company: '/company',
+  newCompany: '/company/new-company',
 }
