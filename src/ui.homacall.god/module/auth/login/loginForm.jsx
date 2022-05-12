@@ -3,15 +3,14 @@ import { InputText } from 'primereact/inputtext'
 import { Password } from 'primereact/password'
 import { Button } from 'primereact/button'
 import { useNavigate } from 'react-router-dom'
-import { loginUser } from '../../../service/userService'
+import { loginUser } from '../../../service/loginService'
 import { useSetRecoilState } from 'recoil'
 import { userData } from '../../../store/atom'
 
 const NewLanguage = () => {
   const [UserName, setUserName] = useState('')
   const [PassWord, setPassword] = useState('')
-  const [loading, setLoading] = useState(false);
-
+  const [loading, setLoading] = useState(false)
 
   const setToken = useSetRecoilState(userData)
   const navigate = useNavigate()

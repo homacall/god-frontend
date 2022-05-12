@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export function InputImage() {
+export function InputImage({ setImageUrl, imageError }) {
   const uploadedImage = React.useRef(null)
   const imageUploader = React.useRef(null)
   const [state, setState] = useState({ url: false })
@@ -15,6 +15,7 @@ export function InputImage() {
         current.src = e.target.result
       }
       reader.readAsDataURL(file)
+      setImageUrl(file.name)
     }
   }
 
@@ -42,9 +43,9 @@ export function InputImage() {
         <img src="/assets/img/user.png" ref={uploadedImage} className="w-[200px] h-[200px] relative rounded-[20px]" alt="..." />
       </div>
       {!state.url ? (
-        <div className="mt-3 text-warning text-center">{' تصویر خود را انتخاب کنید.'}</div>
+        <div className={`mt-3 text-center ${imageError && 'p-error'}`}>{' تصویر خود را انتخاب کنید.'}</div>
       ) : (
-        <div className="text-success mt-3 text-center">تصویر با موفقیت انتخاب شد.</div>
+        <div className="p-success mt-3 text-center">تصویر با موفقیت انتخاب شد.</div>
       )}
     </div>
   )

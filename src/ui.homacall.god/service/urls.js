@@ -3,4 +3,9 @@ export const apiUrls = {
   login: GodHOST.concat('/LoginGod/Login'),
   createLanguage: GodHOST.concat('/LanguageGod/insert'),
   province: GodHOST.concat('/ProvinceGod/GetAll'),
+  provinceGetAll: GodHOST.concat('/ProvinceGod/GetAll'),
+  cityGetByProvinceId: GodHOST.concat('/CityGod/GetByProvinceID'),
+  insertUser: GodHOST.concat('/UserGod/Insert'),
+  getAllUser: GodHOST.concat('/UserGod/GetAll'),
+  deleteUser: GodHOST.concat('/UserGod/Delete'),
 }

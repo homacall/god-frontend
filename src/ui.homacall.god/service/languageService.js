@@ -1,15 +1,13 @@
 import http from './httpService'
 import { apiUrls } from './urls'
-export const ProvinceServiceGetAll = () => {
-  const token = localStorage.getItem('token')
-
-  const config = {
+export const newLanguage = (data, token) => {
+  let config = {
     headers: {
       Authorization: 'Bearer ' + token,
     },
   }
   return http
-    .get(apiUrls.provinceGetAll, config)
+    .post(apiUrls.createLanguage, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {

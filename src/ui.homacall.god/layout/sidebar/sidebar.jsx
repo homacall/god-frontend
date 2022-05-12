@@ -6,7 +6,6 @@ import { LogoutDialog } from './logOutDialog'
 
 const Sidebar = () => {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
-
   const location = useLocation()
   const path = location.pathname.split('/')
   const url = '/' + path[1]
