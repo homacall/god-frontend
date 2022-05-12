@@ -9,8 +9,10 @@ import { Roll } from '../module/roll'
 import { CreateRoll } from '../module/roll/CreateRoll'
 import { Tag } from '../module/tag'
 import { CreateTag } from '../module/tag/components/CreateTag'
-import { language, users, rolls, authRoutes, tags } from '../utils/constants/routes/publicRoute'
+import { language, users, rolls, authRoutes, routeStretcher } from '../utils/constants/routes/publicRoute'
 import LoginForm from '../module/auth/login/loginForm'
+import { RouteStretcher } from '../module/routeStretcher'
+import { CreateStretcher } from '../module/routeStretcher/CreateStretcher'
 
 export const PrivateRoutes = () => {
   return (
@@ -25,6 +27,9 @@ export const PrivateRoutes = () => {
         <Route path={rolls.newRoll} element={<CreateRoll />} />
         <Route path={`${tags.tag}`} element={<Tag />} />
         <Route path={`${tags.newTag}`} element={<CreateTag />} />
+        <Route path={routeStretcher.main} element={<RouteStretcher />} />
+        <Route path={routeStretcher.create} element={<CreateStretcher />} />
+
         <Route path="/" element={<h1 style={{ textAlign: 'center', marginTop: 100 }}>سلام، به پنل اصلی خوش آمدید</h1>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
