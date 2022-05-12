@@ -18,7 +18,6 @@ const TableActions = ({
   children,
   deleteIcon,
   updateIcon,
-  doHideDeleteDialog,
   deleteLoading,
 }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
@@ -30,12 +29,6 @@ const TableActions = ({
   const handleUpdateDialog = () => {
     setOpenUpdateDialog(!openUpdateDialog)
   }
-
-  useEffect(() => {
-    if (doHideDeleteDialog) {
-      handleDeleteDialog()
-    }
-  }, [doHideDeleteDialog])
 
   return (
     <>

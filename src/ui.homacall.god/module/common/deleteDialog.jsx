@@ -7,7 +7,10 @@ const DeleteDialog = ({ visible, onHide, deleteAction, deleteLoading }) => {
       <>
         <Button
           label="بلی"
-          onClick={deleteAction}
+          onClick={() => {
+            deleteAction()
+            onHide()
+          }}
           loading={deleteLoading}
           className="p-button-outlined  p-button-success relative right-[70%] text-xs mt-3 h-10"
         />
