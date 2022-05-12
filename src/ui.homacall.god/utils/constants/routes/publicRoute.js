@@ -8,6 +8,7 @@ export const sidebar = {
   users: '/users',
   home: '/',
   roll: '/roll',
+  routeStretcher: '/route-stretcher',
 }
 export const language = {
   languageTable: '/language',
@@ -23,4 +24,8 @@ export const home = {
 export const rolls = {
   roll: '/roll',
   newRoll: '/roll/new-roll',
+}
+export const routeStretcher = {
+  main: '/route-stretcher',
+  create: '/create-stretcher',
 }

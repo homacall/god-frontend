@@ -48,7 +48,7 @@ export const DeleteUser = id => {
     },
   }
   return http
-    .post(apiUrls.getAllUser, id, config)
+    .post(apiUrls.deleteUser, id, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
