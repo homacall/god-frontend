@@ -36,6 +36,11 @@ const items = [
     label: 'انتصاب ساختار',
     url: `${sidebar.routeStretcher}`,
   },
+  {
+    id: 7,
+    label: 'انتصاب ساختار',
+    url: `${sidebar.routeStretcher}`,
+  },
 ]
 
 export default items
