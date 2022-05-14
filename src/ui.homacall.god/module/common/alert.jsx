@@ -1,7 +1,7 @@
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 
-export const Alert = ({ showMessage, setShowMessage, setMessage, message }) => {
+export const Alert = ({ showMessage, setShowMessage, setMessage, message, hideParentDialog }) => {
   const dialogFooter = (
     <div className="flex justify-content-center">
       <Button
@@ -11,6 +11,9 @@ export const Alert = ({ showMessage, setShowMessage, setMessage, message }) => {
         onClick={() => {
           setShowMessage(false)
           setMessage('')
+          if (hideParentDialog) {
+            hideParentDialog()
+          }
         }}
       />
     </div>

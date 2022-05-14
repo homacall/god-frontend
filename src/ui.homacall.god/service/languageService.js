@@ -1,6 +1,6 @@
 import http from './httpService'
 import { apiUrls } from './urls'
-export const newLanguage = (data) => {
+export const newLanguage = data => {
   const token = localStorage.getItem('token')
 
   let config = {
@@ -40,7 +40,7 @@ export const GetAllLanguage = () => {
       }
     })
 }
-export const DeleteLanguage = (id) => {
+export const DeleteLanguage = id => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -59,7 +59,7 @@ export const DeleteLanguage = (id) => {
       }
     })
 }
-export const UpdateLanguage = () => {
+export const UpdateLanguage = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -67,7 +67,7 @@ export const UpdateLanguage = () => {
     },
   }
   return http
-    .post(apiUrls.updateLanguage, config)
+    .post(apiUrls.updateLanguage, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -78,4 +78,3 @@ export const UpdateLanguage = () => {
       }
     })
 }
-

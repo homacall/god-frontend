@@ -11,4 +11,6 @@ export const apiUrls = {
   insertUser: GodHOST.concat('/UserGod/Insert'),
   getAllUser: GodHOST.concat('/UserGod/GetAll'),
   deleteUser: GodHOST.concat('/UserGod/Delete'),
+  createTag: GodHOST.concat('/TagsknowledgeGod/Insert'),
+  getAllTags: GodHOST.concat('/TagsknowledgeGod/GetAll'),
 }

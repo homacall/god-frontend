@@ -9,7 +9,6 @@ import { classNames } from 'primereact/utils'
 import { Alert } from '../../common/alert'
 
 const NewLanguage = () => {
-  const [, setLanguageName] = useState('')
   const [layout, setLayout] = useState(null)
   const [handleError, setHandleError] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -39,10 +38,6 @@ const NewLanguage = () => {
   const isFormFieldValid = name => !!(formik.touched[name] && formik.errors[name])
   const getFormErrorMessage = name => {
     return isFormFieldValid(name) && <small className="mr-[8%] p-error">{formik.errors[name]}</small>
-  }
-  const reset = () => {
-    setLanguageName('')
-    setLayout(null)
   }
   const handleSubmit = async data => {
     if (layout === null) {

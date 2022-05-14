@@ -26,7 +26,6 @@ const Language = ({ data, fetchAgain }) => {
       setShowMessage(true)
 
       if (status === 200 || data === 'Succeed') {
-        console.log(data)
         setMessage('زبان مورد نظر با موفقیت حذف شد')
         fetchAgain()
       } else {
@@ -103,7 +102,7 @@ const Language = ({ data, fetchAgain }) => {
 
   return (
     <div className="w-[95%] mt-4 m-auto container">
-      <UpdateDialog showUpdateDialog={showUpdateDialog} setShowUpdateDialog={setShowUpdateDialog} {...editProps} />
+      <UpdateDialog fetchAgain={fetchAgain} showUpdateDialog={showUpdateDialog} setShowUpdateDialog={setShowUpdateDialog} {...editProps} />
       <Dialog
         visible={showMessage}
         onHide={() => setShowMessage(false)}
