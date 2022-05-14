@@ -9,6 +9,7 @@ export const sidebar = {
   home: '/',
   roll: '/roll',
   tag: '/tag',
+  routeStretcher: '/route-stretcher',
 }
 export const language = {
   languageTable: '/language',
@@ -29,4 +30,10 @@ export const rolls = {
 export const tags = {
   tag: '/tag',
   newTag: '/tag/new-tag',
+}
+
+export const routeStretcher = {
+  main: '/route-stretcher',
+  create: '/route-stretcher/create',
+  update: '/route-stretcher/update/:stretcherId',
 }
