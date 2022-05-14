@@ -92,3 +92,26 @@ export const deleteCompany = id => {
   })
  
 }
+
+export const getCompanyById = id => {
+  const token = localStorage.getItem('token')
+
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+
+  return http
+    .post(apiUrls.getCompanyById, id, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+ 
+}
