@@ -1,6 +1,6 @@
 export const GodHOST = process.env.REACT_APP_GOD_API_HOST || ''
 export const apiUrls = {
-  login: GodHOST.concat('/LoginGod/Login'),
+  login: GodHOST.concat('AuthenticationGod/Login'),
   createLanguage: GodHOST.concat('/LanguageGod/insert'),
   getAllLanguage: GodHOST.concat('/LanguageGod/GetAll'),
   deleteLanguage: GodHOST.concat('/LanguageGod/Delete'),
