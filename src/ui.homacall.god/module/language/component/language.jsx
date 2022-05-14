@@ -58,7 +58,7 @@ const Language = ({ data }) => {
               label="ویرایش"
               onClick={() => {
                 setEditProps({ ...item })
-                setShowUpdateDialog(!showUpdateDialog)
+                setShowUpdateDialog(perv => !perv)
               }}
             />
           </TableActions>

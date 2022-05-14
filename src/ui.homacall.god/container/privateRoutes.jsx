@@ -3,7 +3,7 @@ import { NotFound } from '../component/notFound'
 import MainLayout from '../layout/mainLayout'
 import { UsersPage } from '../module/createUser'
 import { LanguagePage } from '../module/language'
-import CreateUser from '../module/createUser/components/createUser'
+import CreateAndEditUser from '../module/createUser/components/createUser'
 import NewLanguage from '../module/language/component/newLanguage'
 import { Roll } from '../module/roll'
 import { CreateRoll } from '../module/roll/CreateRoll'
@@ -12,7 +12,7 @@ import { CreateTag } from '../module/tag/components/CreateTag'
 import { language, users, rolls, authRoutes, routeStretcher, tags } from '../utils/constants/routes/publicRoute'
 import LoginForm from '../module/auth/login/loginForm'
 import { RouteStretcher } from '../module/routeStretcher'
-import { CreateStretcher } from '../module/routeStretcher/CreateStretcher'
+import { CreateAndEditStretcher } from '../module/routeStretcher/components/CreateStretcher'
 
 export const PrivateRoutes = () => {
   return (
@@ -22,13 +22,14 @@ export const PrivateRoutes = () => {
         <Route path={`${language.languageTable}`} element={<LanguagePage />} />
         <Route path={`${language.newForm}`} element={<NewLanguage />} />
         <Route path={`${users.users}`} element={<UsersPage />} />
-        <Route path={`${users.createUser}`} element={<CreateUser />} />
+        <Route path={`${users.createUser}`} element={<CreateAndEditUser />} />
         <Route path={rolls.roll} element={<Roll />} />
         <Route path={rolls.newRoll} element={<CreateRoll />} />
         <Route path={`${tags.tag}`} element={<Tag />} />
         <Route path={`${tags.newTag}`} element={<CreateTag />} />
         <Route path={routeStretcher.main} element={<RouteStretcher />} />
-        <Route path={routeStretcher.create} element={<CreateStretcher />} />
+        <Route path={routeStretcher.create} element={<CreateAndEditStretcher />} />
+        <Route path={routeStretcher.update} element={<CreateAndEditStretcher />} />
 
         <Route path="/" element={<h1 style={{ textAlign: 'center', marginTop: 100 }}>سلام، به پنل اصلی خوش آمدید</h1>} />
         <Route path="*" element={<NotFound />} />

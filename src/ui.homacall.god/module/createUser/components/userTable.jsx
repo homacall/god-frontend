@@ -4,13 +4,14 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Toolbar } from 'primereact/toolbar'
-import { UpdateUser } from './updateUser'
-import TableActions from '../../common/actionBody'
-import { userColumns } from '../constant/tableColumn'
 import { Image } from 'primereact/image'
-import { DeleteUser } from '../../../service/userService'
 import { Dialog } from 'primereact/dialog'
-import CreateUser from './createUser'
+
+import CreateAndEditUser from './createUser'
+
+import { userColumns } from '../constant/tableColumn'
+import TableActions from '../../common/actionBody'
+import { DeleteUser } from '../../../service/userService'
 
 export const UserTable = ({ data }) => {
   const [dataTable, setDataTable] = useState([])
@@ -71,7 +72,7 @@ export const UserTable = ({ data }) => {
             updateAction={() => {
               alert('edit')
             }}
-            updateView={<CreateUser updateUser={item} />}
+            updateView={<CreateAndEditUser updateUser={item} />}
             deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-1'}
             updateButtonClassName={' p-button-warning ml-1 text-xs rtl  p-1'}
             deleteLabel="حذف"

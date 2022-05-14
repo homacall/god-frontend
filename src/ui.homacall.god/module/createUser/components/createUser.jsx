@@ -1,23 +1,26 @@
 import { useState, useEffect, useCallback } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
-import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { Password } from 'primereact/password'
-import { InputImage } from '../../common/fileUploader'
-import { ProvinceServiceGetAll } from '../../../service/province'
-import { Dropdown } from 'primereact/dropdown'
-import { createUserBreadcrumb } from '../constant/createUserBreadcrumb'
-import { CityServiceGetByProvinceID } from '../../../service/cityService'
-import { InputTextarea } from 'primereact/inputtextarea'
-import { createUserGender } from '../constant/createusergender'
-import { useFormik } from 'formik'
 import { classNames } from 'primereact/utils'
+import { Password } from 'primereact/password'
+import { Dropdown } from 'primereact/dropdown'
+import { InputTextarea } from 'primereact/inputtextarea'
+import { Dialog } from 'primereact/dialog'
+import { useFormik } from 'formik'
 import { useRecoilValue } from 'recoil'
+
+import { createUserGender } from '../constant/createusergender'
+import { createUserBreadcrumb } from '../constant/createUserBreadcrumb'
+
+import { InputImage } from '../../common/fileUploader'
+
+import { CityServiceGetByProvinceID } from '../../../service/cityService'
+import { ProvinceServiceGetAll } from '../../../service/province'
 import { userData } from '../../../store/atom'
 import { insertUser } from '../../../service/userService'
-import { Dialog } from 'primereact/dialog'
+import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 
-const CreateUser = ({ updateUser }) => {
+const CreateAndEditUser = ({ updateUser }) => {
   const [provinces, setProvinces] = useState([])
   const [cities, setCities] = useState([])
   const [imageUrl, setImageUrl] = useState('')
@@ -38,7 +41,6 @@ const CreateUser = ({ updateUser }) => {
     Usr_Address: '',
     Usr_Mobile: '',
   })
-  console.log(updateUser)
   useEffect(() => {
     if (updateUser) {
       setInitialValue({
@@ -371,4 +373,4 @@ const CreateUser = ({ updateUser }) => {
     </div>
   )
 }
-export default CreateUser
+export default CreateAndEditUser

@@ -34,5 +34,6 @@ export const tags = {
 
 export const routeStretcher = {
   main: '/route-stretcher',
-  create: '/create-stretcher',
+  create: '/route-stretcher/create',
+  update: '/route-stretcher/update/:stretcherId',
 }

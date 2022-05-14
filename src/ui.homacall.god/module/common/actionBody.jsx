@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from 'primereact/button'
 import UpdateDialog from './updateDialog'
 import DeleteDialog from './deleteDialog'
@@ -19,6 +19,7 @@ const TableActions = ({
   deleteIcon,
   updateIcon,
   deleteLoading,
+  updateHasView = true,
 }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
@@ -49,7 +50,11 @@ const TableActions = ({
           icon={updateIcon && 'pi pi-pencil text-xs'}
           className={updateButtonClassName}
           onClick={() => {
-            handleUpdateDialog()
+            if (updateHasView) {
+              handleUpdateDialog()
+            } else {
+              updateAction()
+            }
           }}
           style={updateStyle}
         />
@@ -57,7 +62,7 @@ const TableActions = ({
       {hasDelete && (
         <DeleteDialog loading={deleteLoading} visible={openDeleteDialog} onHide={handleDeleteDialog} deleteAction={deleteAction} />
       )}
-      {hasUpdate && (
+      {hasUpdate && updateHasView && (
         <UpdateDialog visible={openUpdateDialog} onHide={handleUpdateDialog} updateAction={updateAction} UpdateView={updateView} />
       )}
       {children}

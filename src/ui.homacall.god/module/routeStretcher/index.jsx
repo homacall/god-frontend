@@ -1,33 +1,37 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Toolbar } from 'primereact/toolbar'
-import { UpdateRoll } from './components/updateRoll'
 
 import TableActions from '../common/actionBody'
 import { routeColumns } from './constant/tableColumn'
 
 export const RouteStretcher = () => {
-  const [rollName, setRollName] = useState('')
   const [globalFilter, setGlobalFilter] = useState(null)
-
+  const navigate = useNavigate()
   const dataL = [
     {
       id: 1,
-      name: 'Admin',
+      PID: '1',
+      TgID: '1',
+      Translate: '1',
+      Type: '1',
     },
     {
       id: 2,
-      name: 'Employee',
+      PID: '2',
+      TgID: '2',
+      Translate: '2',
+      Type: '2',
     },
   ]
   const rightToolbarTemplate = () => {
     return (
       <>
-        <Link to="/create-stretcher">
+        <Link to="/route-stretcher/create">
           <Button label="ثبت جدید" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
         </Link>
       </>
@@ -75,11 +79,11 @@ export const RouteStretcher = () => {
                 hasDelete={true}
                 hasUpdate={true}
                 updateAction={() => {
-                  alert(rollName + ' ' + data.id)
+                  navigate(`/route-stretcher/update/${data.id}`)
                 }}
+                updateHasView={false}
                 deleteLabel="حذف"
                 updateLabel="ویرایش"
-                updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data.name} />}
                 deleteButtonClassName={'p-button-outlined p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-outlined p-button-warning text-xs rtl h-10 w-25 p-1'}
               />
