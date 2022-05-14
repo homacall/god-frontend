@@ -35,4 +35,5 @@ export const tags = {
 export const manage = {
   company: '/company',
   newCompany: '/company/new-company',
+  editCompany: '/company/edit/:CompanyId',
 }

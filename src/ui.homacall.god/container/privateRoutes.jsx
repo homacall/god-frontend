@@ -29,6 +29,7 @@ export const PrivateRoutes = () => {
         <Route path={`${tags.newTag}`} element={<CreateTag />} />
         <Route path={`${manage.company}`} element={<Company />} />
         <Route path={`${manage.newCompany}`} element={<CreateCompany />} />
+        <Route path={`${manage.editCompany}`} element={<CreateCompany />} />
         <Route path="/" element={<h1 style={{ textAlign: 'center', marginTop: 100 }}>سلام، به پنل اصلی خوش آمدید</h1>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
