@@ -19,7 +19,6 @@ export const TreeView = ({ setSelectedRoute, closeButton }) => {
 
   const filterData = route => {
     const newData = data.filter(d => d.parentId === route.id)
-    console.log({ setSelectedRoute, newData })
     if (setSelectedRoute) {
       if (!newData.length) {
         setSelectedRoute(route)

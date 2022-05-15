@@ -1,6 +1,6 @@
 import http from './httpService'
 import { apiUrls } from './urls'
-export const CreateTagService = data => {
+export const getTranslateByTagId = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -8,7 +8,7 @@ export const CreateTagService = data => {
     },
   }
   return http
-    .post(apiUrls.createTag, data, config)
+    .post(apiUrls.getTranslateTagId, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -19,7 +19,7 @@ export const CreateTagService = data => {
       }
     })
 }
-export const GetAllTags = () => {
+export const insertTranslate = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -27,7 +27,7 @@ export const GetAllTags = () => {
     },
   }
   return http
-    .get(apiUrls.getAllTags, config)
+    .post(apiUrls.insertTranslate, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -38,7 +38,7 @@ export const GetAllTags = () => {
       }
     })
 }
-export const DeleteTag = data => {
+export const UpdateTranslate = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -46,26 +46,7 @@ export const DeleteTag = data => {
     },
   }
   return http
-    .post(apiUrls.deleteTags, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
-      } else {
-        return err
-      }
-    })
-}
-export const UpdateTags = data => {
-  const token = localStorage.getItem('token')
-  let config = {
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  }
-  return http
-    .post(apiUrls.updateTags, data, config)
+    .post(apiUrls.updateTranslate, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {

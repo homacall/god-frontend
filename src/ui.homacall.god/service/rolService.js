@@ -1,6 +1,6 @@
 import http from './httpService'
 import { apiUrls } from './urls'
-export const CreateTagService = data => {
+export const InsertRole = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -8,7 +8,7 @@ export const CreateTagService = data => {
     },
   }
   return http
-    .post(apiUrls.createTag, data, config)
+    .post(apiUrls.insertRol, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -19,7 +19,7 @@ export const CreateTagService = data => {
       }
     })
 }
-export const GetAllTags = () => {
+export const DeleteRole = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -27,7 +27,7 @@ export const GetAllTags = () => {
     },
   }
   return http
-    .get(apiUrls.getAllTags, config)
+    .post(apiUrls.deleteRol, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -38,7 +38,8 @@ export const GetAllTags = () => {
       }
     })
 }
-export const DeleteTag = data => {
+
+export const UpdateRole = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -46,7 +47,7 @@ export const DeleteTag = data => {
     },
   }
   return http
-    .post(apiUrls.deleteTags, data, config)
+    .post(apiUrls.updateRol, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -57,7 +58,8 @@ export const DeleteTag = data => {
       }
     })
 }
-export const UpdateTags = data => {
+
+export const GetAllRole = () => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -65,7 +67,7 @@ export const UpdateTags = data => {
     },
   }
   return http
-    .post(apiUrls.updateTags, data, config)
+    .get(apiUrls.getAllRol, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {

@@ -10,7 +10,6 @@ const Calendar = ({ onChange, selectedDate }) => {
       setSelectedDay({ year: parseInt(splitDate[0]), month: parseInt(splitDate[1]), day: parseInt(splitDate[2]) })
     }
   }, [selectedDate])
-  console.log(selectedDay)
   return (
     <DatePicker
       value={selectedDay}

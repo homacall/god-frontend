@@ -64,7 +64,7 @@ const UpdateDialog = props => {
       footer={footer}
     >
       <Alert
-        hideParentDialog={() => props.setShowUpdateDialog(!props.showUpdateDialog)}
+        callBack={() => props.setShowUpdateDialog(!props.showUpdateDialog)}
         message={message}
         setMessage={setMessage}
         setShowMessage={setShowMessage}

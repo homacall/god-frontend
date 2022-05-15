@@ -13,4 +13,13 @@ export const apiUrls = {
   deleteUser: GodHOST.concat('/UserGod/Delete'),
   createTag: GodHOST.concat('/TagsknowledgeGod/Insert'),
   getAllTags: GodHOST.concat('/TagsknowledgeGod/GetAll'),
+  deleteTags: GodHOST.concat('/TagsknowledgeGod/Delete'),
+  updateTags: GodHOST.concat('/TagsknowledgeGod/Update'),
+  getTranslateTagId: GodHOST.concat('/TranslateTagsGod/GetAllByTagID'),
+  insertTranslate: GodHOST.concat('/TranslateTagsGod/Insert'),
+  updateTranslate: GodHOST.concat('/TranslateTagsGod/Update'),
+  insertRol: GodHOST.concat('/RoleGod/Insert'),
+  getAllRol: GodHOST.concat('/RoleGod/GetAll'),
+  deleteRol: GodHOST.concat('/RoleGod/Delete'),
+  updateRol: GodHOST.concat('/RoleGod/Update'),
 }

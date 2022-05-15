@@ -55,9 +55,7 @@ export const CreateAndEditStretcher = () => {
       }
       return errors
     },
-    onSubmit: data => {
-      console.log(data)
-    },
+    onSubmit: data => {},
     enableReinitialize: true,
   })
   const isFormFieldValid = name => !!(formik.touched[name] && formik.errors[name])

@@ -12,6 +12,7 @@ import UpdateTranslateTag from './UpdateTranslateTag'
 
 import GetTranslateLanguage from './utils/getLanguages'
 import { GetAllLanguage } from '../../../service/languageService'
+import { getTranslateByTagId } from '../../../service/translateService'
 
 //Get one tag translations list from server with api
 const dataL = [
@@ -33,24 +34,39 @@ const ShowTag = ({ visible, tagId, onHide, tagName }) => {
   const [globalFilter, setGlobalFilter] = useState(null)
   const [openTranslate, setOpenTranslate] = useState(false)
   const [openUpdateTranslate, setOpenUpdateTranslate] = useState(false)
-  const [oldName, setOldName] = useState(false)
+  const [oldName, setOldName] = useState('')
   const [oldLang, setOpldLang] = useState(false)
   const [id, setId] = useState(0)
-  const [data, setData] = useState(dataL)
+  const [languages, setLanguages] = useState([])
+  const [translates, setTranslates] = useState([])
+  const [translateId, setTranslateId] = useState(0)
 
-  useEffect(() => {
+  const fetchLanguage = () => {
     GetAllLanguage().then(res => {
       if (res.data || res.status === 200) {
-        setData(res.data.map(item => ({ id: item.id })))
-        // "lang_ID": 7,
-        // "lang_Name": "En",
-        // "lang_Rtl": false
+        setLanguages(res.data.map(item => ({ id: item.lang_ID, name: item.lang_Name })))
       }
     })
+  }
+
+  const fetchTranslate = id => {
+    const formData = new FormData()
+    formData.append('Tag_ID', id)
+    getTranslateByTagId(formData).then(res => {
+      if (res.data || res.status === 200) {
+        setTranslates(res.data)
+      }
+    })
+  }
+  useEffect(() => {
+    fetchLanguage()
   }, [])
-
-  const languagesToTranslate = GetTranslateLanguage(...dataL)
-
+  useEffect(() => {
+    if (tagId !== 0) {
+      fetchTranslate(tagId)
+    }
+  }, [tagId])
+  const languagesToTranslate = GetTranslateLanguage({ translates, languages })
   const openTranslateTag = () => {
     setOpenTranslate(true)
   }
@@ -59,11 +75,17 @@ const ShowTag = ({ visible, tagId, onHide, tagName }) => {
     setOpenTranslate(false)
   }
 
-  const openUpdateTranslateTag = (tagId, name, lang) => {
-    setId(tagId)
-    setOldName(name)
-    setOpldLang(lang)
+  const openUpdateTranslateTag = data => {
+    setId(data.tranTg_TagID)
+    setOldName(data.tranTg_Text)
+    setOpldLang(data.tranTg_LangID)
+    setTranslateId(data.tranTg_ID)
     setOpenUpdateTranslate(true)
+    //     tranTg_ID: 4
+    // tranTg_LangID: 7
+    // tranTg_TagID: 7
+    // tranTg_Text: "edit"
+    console.log(data)
   }
 
   const closeUpdateTranslateTag = () => {
@@ -97,8 +119,8 @@ const ShowTag = ({ visible, tagId, onHide, tagName }) => {
         visible={openTranslate}
         tagId={tagId}
         onHide={closeTranslateTag}
-        data={data}
-        setData={setData}
+        data={translates}
+        setData={setTranslates}
         languages={languagesToTranslate}
         tagName={tagName}
       />
@@ -108,8 +130,9 @@ const ShowTag = ({ visible, tagId, onHide, tagName }) => {
         oldVal={oldName}
         langId={oldLang}
         onHide={closeUpdateTranslateTag}
-        data={data}
-        setData={setData}
+        data={translates}
+        setData={setTranslates}
+        translateId={translateId}
       />
       <Dialog visible={visible} onHide={onHide}>
         <div className="w-[60vw] pb-4 rounded-md m-auto container bg-white rtl">
@@ -117,7 +140,7 @@ const ShowTag = ({ visible, tagId, onHide, tagName }) => {
             <Toolbar className="mb-4" left={rightToolbarTemplate}></Toolbar>
 
             <DataTable
-              value={data}
+              value={translates}
               paginator
               rows={10}
               rowsPerPageOptions={[5, 10, 25]}
@@ -145,7 +168,9 @@ const ShowTag = ({ visible, tagId, onHide, tagName }) => {
                 body={data => (
                   <>
                     <Button
-                      onClick={() => openUpdateTranslateTag(data.id, data.name, data.language)}
+                      onClick={() => {
+                        openUpdateTranslateTag(data)
+                      }}
                       className="p-button-outlined p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2"
                     >
                       ویرایش

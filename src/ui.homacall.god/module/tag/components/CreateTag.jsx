@@ -7,6 +7,7 @@ import { item } from './constant/BreadcampItem'
 import { CreateTagService } from '../../../service/tagManagerService'
 import { classNames } from 'primereact/utils'
 import { Alert } from '../../common/alert'
+import { useNavigate } from 'react-router'
 
 export const CreateTag = () => {
   const [value, setValue] = useState('')
@@ -15,6 +16,8 @@ export const CreateTag = () => {
   const [error, setError] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
   const [message, setMessage] = useState('')
+  const navigate = useNavigate()
+
   const submitHandler = e => {
     e.preventDefault()
     if (!value || value === '') {
@@ -26,12 +29,13 @@ export const CreateTag = () => {
     formData.append('Tag_Name', value)
     CreateTagService(formData)
       .then(res => {
+        setShowMessage(true)
         if (res.status === 200 || res.data === 'Succeed') {
-          setTagId(res.data.Tag_ID)
-          setVisibleAlert(true)
+          setMessage('ساخت تگ با موفقیت انجام شد ')
+          // setTagId(res.data.Tag_ID)
+          // setVisibleAlert(true)
         } else {
           setMessage('خطا در ساخت تگ ')
-          setShowMessage(true)
         }
       })
       .catch(e => console.log(e))
@@ -45,7 +49,13 @@ export const CreateTag = () => {
   return (
     <>
       <TranslateAlert visibleAlert={visibleAlert} onHide={closeTranslateAlert} tagId={tagId} tagName={value} />
-      <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />{' '}
+      <Alert
+        message={message}
+        setMessage={setMessage}
+        setShowMessage={setShowMessage}
+        showMessage={showMessage}
+        callBack={() => navigate('/tag')}
+      />
       <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
         <Breadcrumb item={item} />
         <div className=" flex justify-start mr-[8%] mt-10 ">

@@ -12,7 +12,6 @@ export const LanguagePage = () => {
     GetAllLanguage()
       .then(res => {
         if (res.data) setData(res.data)
-        console.log(data)
       })
       .catch(e => console.log(e))
   }, [fetchAgain])
