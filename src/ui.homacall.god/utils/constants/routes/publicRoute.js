@@ -37,6 +37,8 @@ export const manage = {
   company: '/company',
   newCompany: '/company/new-company',
   editCompany: '/company/edit/:CompanyId',
+}
+
 export const routeStretcher = {
   main: '/route-stretcher',
   create: '/route-stretcher/create',
