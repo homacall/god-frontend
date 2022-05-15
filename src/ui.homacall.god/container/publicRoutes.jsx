@@ -4,7 +4,7 @@ import LoginForm from '../module/auth/login/loginForm'
 
 export const PublicRoutes = () => {
   return (
-    <div className={`w-full  bg-slate-100 inline-block `}>
+    <div className={`w-full bg-slate-100 inline-block `}>
       <Routes>
         <Route path={`${authRoutes.login}`} element={<LoginForm />} />
       </Routes>
