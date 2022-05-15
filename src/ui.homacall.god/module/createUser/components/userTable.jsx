@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
@@ -13,6 +13,7 @@ import { userColumns } from '../constant/tableColumn'
 import TableActions from '../../common/actionBody'
 import { DeleteUser } from '../../../service/userService'
 import { UserPermissions } from '../../userPermissions'
+import { SetRoleUserDialog } from './setRoleUser'
 
 export const UserTable = ({ data }) => {
   const [dataTable, setDataTable] = useState([])
@@ -21,6 +22,9 @@ export const UserTable = ({ data }) => {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [showPermissions, setShowPermissions] = useState(false)
   const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
+  const [userIdForRole, setUserIdForRole] = useState(0)
+  const [showRoleDialog, setRoleDialog] = useState(false)
+  const navigate = useNavigate()
   const deleteUser = id => {
     setDeleteLoading(true)
     const formData = new FormData()
@@ -51,11 +55,15 @@ export const UserTable = ({ data }) => {
   const permissionDialogHandler = () => {
     setShowPermissions(perv => !perv)
   }
+  const roleDialogHandler = () => {
+    setRoleDialog(perv => !perv)
+  }
   useEffect(() => {
     const newData = []
     data.forEach(item =>
       newData.push({
         ...item,
+        usr_Gender: item.usr_Gender === 1 ? 'مرد' : item.usr_Gender === 0 ? 'زن' : 'سایر',
         usr_Img: (
           <Image
             src={'/assets/img/user.png'}
@@ -76,9 +84,8 @@ export const UserTable = ({ data }) => {
             hasDelete={true}
             hasUpdate={true}
             updateAction={() => {
-              alert('edit')
+              navigate(`/users/update/${item.usr_ID}`)
             }}
-            updateView={<CreateAndEditUser updateUser={item} />}
             deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-1'}
             updateButtonClassName={' p-button-warning ml-1 text-xs rtl  p-1'}
             deleteLabel="حذف"
@@ -86,6 +93,7 @@ export const UserTable = ({ data }) => {
             deleteIcon={false}
             updateIcon={false}
             deleteLoading={deleteLoading}
+            updateHasView={false}
           >
             <Button className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1' : ' p-button-danger ml-2 text-xs rtl  p-1'}>
               {item.usr_IsA ? 'غیرفعال' : 'فعال'}
@@ -99,7 +107,15 @@ export const UserTable = ({ data }) => {
             >
               سطح دسترسی
             </Button>
-            <Button className="p-button-help text-xs rtl  p-1">نقش</Button>
+            <Button
+              className="p-button-help text-xs rtl  p-1"
+              onClick={() => {
+                setUserIdForRole(item.usr_ID)
+                roleDialogHandler()
+              }}
+            >
+              نقش
+            </Button>
           </TableActions>
         ),
         usr_IsA: item.usr_IsA ? 'فعال' : 'غیرفعال',
@@ -134,6 +150,7 @@ export const UserTable = ({ data }) => {
             <h5>{`کاربر ${deletedUser}  با موفقیت حذف شد.`}</h5>
           </div>
         </Dialog>
+        <SetRoleUserDialog onHide={roleDialogHandler} visible={showRoleDialog} userId={userIdForRole} />
         <UserPermissions visible={showPermissions} onHide={permissionDialogHandler} user={userInfoForPermission} />
         <DataTable
           value={dataTable}

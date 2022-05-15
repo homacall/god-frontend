@@ -1,7 +1,7 @@
 export const roleColumn = [
   {
     header: 'نام',
-    field: 'rol_Name',
+    field: 'transTagText',
     className: 'text-sm',
   },
 ]

@@ -13,7 +13,7 @@ import { DeleteRole, GetAllRole, UpdateRole } from '../../service/rolService'
 import { Alert } from '../common/alert'
 
 export const Roll = () => {
-  const [rollName, setRollName] = useState('')
+  const [rollName, setRollName] = useState(0)
   const [globalFilter, setGlobalFilter] = useState(null)
   const [dataL, setDataL] = useState([])
   const [fetchAgain, setFetchAgain] = useState(false)
@@ -64,10 +64,10 @@ export const Roll = () => {
       .catch(err => console.log(err))
   }
 
-  const updateRole = (rolId, rolName) => {
+  const updateRole = (rolId, rol_TagID) => {
     const formData = new FormData()
     formData.append('Rol_ID', rolId)
-    formData.append('Rol_Name', rolName)
+    formData.append('Rol_TgID', rol_TagID)
     UpdateRole(formData)
       .then(res => {
         setShowMessage(true)
@@ -127,7 +127,7 @@ export const Roll = () => {
                 }}
                 deleteLabel="حذف"
                 updateLabel="ویرایش"
-                updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data.rol_Name} />}
+                updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data.rol_TagID} />}
                 deleteButtonClassName={'p-button-outlined p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-outlined p-button-warning text-xs rtl h-10 w-25 p-1'}
               />

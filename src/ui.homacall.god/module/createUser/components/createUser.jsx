@@ -17,17 +17,19 @@ import { InputImage } from '../../common/fileUploader'
 import { CityServiceGetByProvinceID } from '../../../service/cityService'
 import { ProvinceServiceGetAll } from '../../../service/province'
 import { userData } from '../../../store/atom'
-import { insertUser } from '../../../service/userService'
+import { GetByUserId, insertUser, UpdateUser } from '../../../service/userService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
+import { useLocation, useParams } from 'react-router'
 
 const CreateAndEditUser = ({ updateUser }) => {
+  const location = useLocation()
+  const params = useParams()
   const [provinces, setProvinces] = useState([])
   const [cities, setCities] = useState([])
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
   const [loading, setLoading] = useState(false)
-  const token = useRecoilValue(userData)
   const [initialValues, setInitialValue] = useState({
     Usr_FName: '',
     Usr_LName: '',
@@ -41,23 +43,46 @@ const CreateAndEditUser = ({ updateUser }) => {
     Usr_Address: '',
     Usr_Mobile: '',
   })
+  const [editMode, setEditMode] = useState(location.pathname.includes('/users/update/') && params.userId)
+
   useEffect(() => {
-    if (updateUser) {
-      setInitialValue({
-        Usr_FName: updateUser?.Usr_FName || '',
-        Usr_LName: updateUser?.Usr_LName || '',
-        Usr_Gender: updateUser?.Usr_Gender || '',
-        Usr_mail: updateUser?.Usr_mail || '',
-        Usr_UName: updateUser?.Usr_UName || '',
-        Usr_HPass: updateUser?.Usr_HPass || '',
-        Usr_IdentNum: updateUser?.Usr_IdentNum || '',
-        Usr_Prov_ID: updateUser?.Usr_Prov_ID || '',
-        Usr_Cty_ID: updateUser?.Usr_Cty_ID || '',
-        Usr_Address: updateUser?.Usr_Address || '',
-        Usr_Mobile: updateUser?.Usr_Mobile || '',
+    if (location.pathname.includes('/users/update/') && params.userId) {
+      setEditMode(true)
+    } else {
+      setEditMode(false)
+    }
+  }, [location.pathname, params?.userId])
+  useEffect(() => {
+    if (editMode) {
+      // routeBreadcrumb[1].label = 'ویرایش انتساب'
+      // routeBreadcrumb[1].url = `/route-stretcher/update/${params.stretcherId}`
+
+      // fetch find one data
+      const formData = new FormData()
+      formData.append('ID', params.userId)
+      GetByUserId(formData).then(res => {
+        if (res.data || res.status === 200) {
+          fetchCity(res.data.usr_Cty_ID).then(() => {
+            setInitialValue({
+              Usr_FName: res.data.usr_FName,
+              Usr_LName: res.data.usr_LName,
+              Usr_Gender: res.data.usr_Gender,
+              Usr_mail: res.data.usr_mail,
+              Usr_UName: res.data.usr_UName,
+              Usr_HPass: '',
+              Usr_IdentNum: res.data.usr_IdentNum,
+              Usr_Prov_ID: res.data.usr_Prov_ID,
+              Usr_Cty_ID: res.data.usr_Cty_ID,
+              Usr_Address: res.data.usr_Address,
+              Usr_Mobile: res.data.usr_Mobile,
+            })
+            setImageUrl(res.data.usr_Img)
+          })
+        }
       })
     }
-  }, [updateUser])
+  }, [])
+
   const formik = useFormik({
     initialValues,
     validate: data => {
@@ -91,7 +116,7 @@ const CreateAndEditUser = ({ updateUser }) => {
         errors.Usr_UName = 'نام کاربری را وارد کنید'
       }
 
-      if (!data.Usr_HPass) {
+      if (!data.Usr_HPass && !editMode) {
         errors.Usr_HPass = 'رمز عبور را وارد کنید'
       }
       if (!data.Usr_Prov_ID) {
@@ -109,15 +134,16 @@ const CreateAndEditUser = ({ updateUser }) => {
     onSubmit: data => {
       submitHandler(data)
     },
+    enableReinitialize: true,
   })
 
-  const fetchProvince = useCallback(async () => {
-    ProvinceServiceGetAll(token)
+  const fetchProvince = () => {
+    ProvinceServiceGetAll()
       .then(res => {
         setProvinces(res.data)
       })
       .catch(err => console.log(err))
-  }, [token])
+  }
   const fetchCity = async id => {
     const formData = new FormData()
     formData.append('PrviceID', id)
@@ -140,17 +166,35 @@ const CreateAndEditUser = ({ updateUser }) => {
       const value = data[key]
       formData.append(key, value)
     })
-    formData.append('Usr_DateReg', '1401/02/20')
-    insertUser(formData)
-      .then(res => {
-        if (res.status === 200 || res.data === 'success') {
-          formik.resetForm()
-          setShowMessage(true)
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    if (editMode) {
+      formData.append('Usr_ID', params.userId)
+      if (!data.Usr_HPass) {
+        formData.delete('Usr_HPass')
+      }
+      UpdateUser(formData)
+        .then(res => {
+          if (res.data || res.status === 200) {
+            setShowMessage(true)
+          }
+        })
+        .catch(err => console.log(err))
+        .finally(() => {
+          setLoading(false)
+        })
+    } else {
+      formData.append('Usr_DateReg', '1401/02/20')
+      insertUser(formData)
+        .then(res => {
+          if (res.status === 200 || res.data === 'success') {
+            formik.resetForm()
+            setShowMessage(true)
+          }
+        })
+        .catch(err => console.log(err))
+        .finally(() => {
+          setLoading(false)
+        })
+    }
   }
 
   const isFormFieldValid = name => !!(formik.touched[name] && formik.errors[name])
@@ -164,10 +208,8 @@ const CreateAndEditUser = ({ updateUser }) => {
   )
 
   useEffect(() => {
-    if (provinces && !provinces.length) {
-      fetchProvince()
-    }
-  }, [provinces, fetchProvince])
+    fetchProvince()
+  }, [])
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createUserBreadcrumb} />
@@ -182,7 +224,7 @@ const CreateAndEditUser = ({ updateUser }) => {
       >
         <div className="flex align-items-center flex-column pt-6 px-3">
           <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
-          <h5>کاربر جدید با موفقیت ثبت شد!</h5>
+          <h5>{editMode ? 'کاربر با موفقیت ویرایش شد.' : `کاربر جدید با موفقیت ثبت شد!`}</h5>
         </div>
       </Dialog>
       <form className="grid grid-cols-3 gap-4 gap-y-10 p-5 mt-10" onSubmit={formik.handleSubmit}>
@@ -364,7 +406,7 @@ const CreateAndEditUser = ({ updateUser }) => {
         </span>
 
         <div className="col-span-3 flex items-center">
-          <InputImage setImageUrl={setImageUrl} imageError={imageError} />
+          <InputImage setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
         </div>
         <div className="col-span-3 flex justify-center items-center">
           <Button label="ثبت" className="p-button-success  mx-auto w-[200px]  text-sm mt-3 h-10" type="submit" loading={loading} />

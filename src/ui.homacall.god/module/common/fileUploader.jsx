@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-export function InputImage({ setImageUrl, imageError }) {
+export function InputImage({ setImageUrl, imageError, imageUrl }) {
   const uploadedImage = React.useRef(null)
   const imageUploader = React.useRef(null)
   const [state, setState] = useState({ url: false })
+
   const handleImageUpload = e => {
     const [file] = e.target.files
     setState({ url: true })
@@ -40,7 +41,12 @@ export function InputImage({ setImageUrl, imageError }) {
         }}
       />
       <div onClick={() => imageUploader.current.click()}>
-        <img src="/assets/img/user.png" ref={uploadedImage} className="w-[200px] h-[200px] relative rounded-[20px]" alt="..." />
+        <img
+          src={imageUrl || '/assets/img/user.png'}
+          ref={uploadedImage}
+          className="w-[200px] h-[200px] relative rounded-[20px]"
+          alt="..."
+        />
       </div>
       {!state.url ? (
         <div className={`mt-3 text-center ${imageError && 'p-error'}`}>{' تصویر خود را انتخاب کنید.'}</div>

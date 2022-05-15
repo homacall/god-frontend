@@ -19,7 +19,9 @@ export const apiUrls = {
   insertTranslate: GodHOST.concat('/TranslateTagsGod/Insert'),
   updateTranslate: GodHOST.concat('/TranslateTagsGod/Update'),
   insertRol: GodHOST.concat('/RoleGod/Insert'),
-  getAllRol: GodHOST.concat('/RoleGod/GetAll'),
+  getAllRol: GodHOST.concat('/RoleGod/GetAllSP'),
   deleteRol: GodHOST.concat('/RoleGod/Delete'),
   updateRol: GodHOST.concat('/RoleGod/Update'),
+  getByUserId: GodHOST.concat('/UserGod/GetByID'),
+  updateUser: GodHOST.concat('/UserGod/Update'),
 }

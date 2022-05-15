@@ -13,6 +13,7 @@ import { TreeViewData } from '../constant/treeViewData'
 import { routeTypes } from '../constant/routeTypes'
 import { useLocation, useParams } from 'react-router'
 import { TreeView } from '../../userPermissions/components/treeView'
+import { GetAllTags } from '../../../service/tagManagerService'
 
 export const CreateAndEditStretcher = () => {
   const location = useLocation()
@@ -26,6 +27,17 @@ export const CreateAndEditStretcher = () => {
   const [isParent, setIsParent] = useState(false)
   const [showTreeView, setShowTreeView] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(undefined)
+  const [tags, setTags] = useState([])
+  const fetchTags = () => {
+    GetAllTags()
+      .then(res => {
+        if (res.data || res.status === 200) {
+          setTags(res.data)
+        }
+      })
+      .catch(error => console.log(error))
+  }
+
   useEffect(() => {
     if (location.pathname.includes('/route-stretcher/update/')) {
       routeBreadcrumb[1].label = 'ویرایش انتساب'
@@ -39,7 +51,9 @@ export const CreateAndEditStretcher = () => {
       })
     }
   }, [location.pathname, params?.stretcherId])
-
+  useEffect(() => {
+    fetchTags()
+  }, [])
   const formik = useFormik({
     initialValues,
     validate: data => {
@@ -119,7 +133,9 @@ export const CreateAndEditStretcher = () => {
             value={formik.values.RoutStr_Tag_ID}
             onChange={formik.handleChange}
             name="RoutStr_Tag_ID"
-            options={[{ value: 1, label: 'a' }]}
+            optionLabel="tag_Name"
+            optionValue="tag_ID"
+            options={tags}
             className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_Tag_ID'), 'w-full': true })}
           />
           <label htmlFor="RoutStr_Tag_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_Tag_ID') })}`}>

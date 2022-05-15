@@ -81,10 +81,6 @@ const ShowTag = ({ visible, tagId, onHide, tagName }) => {
     setOpldLang(data.tranTg_LangID)
     setTranslateId(data.tranTg_ID)
     setOpenUpdateTranslate(true)
-    //     tranTg_ID: 4
-    // tranTg_LangID: 7
-    // tranTg_TagID: 7
-    // tranTg_Text: "edit"
     console.log(data)
   }
 

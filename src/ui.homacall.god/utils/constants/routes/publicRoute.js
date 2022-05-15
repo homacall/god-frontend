@@ -18,6 +18,7 @@ export const language = {
 export const users = {
   users: '/users',
   createUser: '/users/create-user',
+  update: '/users/update/:userId',
 }
 export const home = {
   home: '/',
