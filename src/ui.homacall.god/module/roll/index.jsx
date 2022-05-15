@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
@@ -8,22 +8,37 @@ import { Toolbar } from 'primereact/toolbar'
 import { UpdateRoll } from './components/updateRoll'
 
 import TableActions from '../common/actionBody'
-import { userColumns } from './constant/tableColumn'
+import { roleColumn } from './constant/tableColumn'
+import { DeleteRole, GetAllRole, UpdateRole } from '../../service/rolService'
+import { Alert } from '../common/alert'
 
 export const Roll = () => {
-  const [rollName, setRollName] = useState('');
-  const [globalFilter, setGlobalFilter] = useState(null);
-
-  const dataL = [
-    {
-      id: 1,
-      name: 'Admin',
-    },
-    {
-      id: 2,
-      name: 'Employee',
-    },
-  ]
+  const [rollName, setRollName] = useState('')
+  const [globalFilter, setGlobalFilter] = useState(null)
+  const [dataL, setDataL] = useState([])
+  const [fetchAgain, setFetchAgain] = useState(false)
+  const [showMessage, setShowMessage] = useState(false)
+  const [message, setMessage] = useState('')
+  // const dataL = [
+  //   {
+  //     id: 1,
+  //     name: 'Admin',
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Employee',
+  //   },
+  // ]
+  const fetchAgainHandler = () => {
+    setFetchAgain(perv => !perv)
+  }
+  useEffect(() => {
+    GetAllRole().then(res => {
+      if (res.data || res.status === 200) {
+        setDataL(res.data)
+      }
+    })
+  }, [fetchAgain])
   const rightToolbarTemplate = () => {
     return (
       <>
@@ -33,20 +48,53 @@ export const Roll = () => {
       </>
     )
   }
+  const deleteRole = id => {
+    const formData = new FormData()
+    formData.append('ID', id)
+    DeleteRole(formData)
+      .then(res => {
+        setShowMessage(true)
+        if (res.data || res.status === 200) {
+          setMessage('حذف نقش با موفقیت انجام شد')
+          fetchAgainHandler()
+        } else {
+          setMessage('خطا در حذف نقش ')
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  const updateRole = (rolId, rolName) => {
+    const formData = new FormData()
+    formData.append('Rol_ID', rolId)
+    formData.append('Rol_Name', rolName)
+    UpdateRole(formData)
+      .then(res => {
+        setShowMessage(true)
+        if (res.data || res.status === 200) {
+          setMessage('ویرایش نقش با موفقیت انجام شد')
+          fetchAgainHandler()
+        } else {
+          setMessage('خطا در ویرایش نقش ')
+        }
+      })
+      .catch(err => console.log(err))
+  }
 
   const header = (
     <div className="table-header">
-        <span className="p-input-icon-left">
-            <i className="pi pi-search text-sm" />
-            <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value) } placeholder="جستجو ..." className='h-10 text-sm' />
-        </span>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search text-sm" />
+        <InputText type="search" onInput={e => setGlobalFilter(e.target.value)} placeholder="جستجو ..." className="h-10 text-sm" />
+      </span>
     </div>
-);
+  )
 
   return (
     <div className="w-[95%] mt-4 m-auto container">
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+        <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
 
         <DataTable
           value={dataL}
@@ -60,24 +108,26 @@ export const Roll = () => {
           responsiveLayout="scroll"
           className="rtl"
         >
-          {userColumns.map((col, index) => (
+          {roleColumn.map((col, index) => (
             <Column field={col.field} header={col.header} sortable key={index} filterBy="#{data.name}" className={col.className}></Column>
-            ))}
-          
+          ))}
+
           <Column
             field="image"
             header="عملیات"
-            body={(data) => (
+            body={data => (
               <TableActions
-                deleteAction={() => { alert(data.id); }}
+                deleteAction={() => {
+                  deleteRole(data.rol_ID)
+                }}
                 hasDelete={true}
                 hasUpdate={true}
                 updateAction={() => {
-                  alert(rollName+" "+data.id)
+                  updateRole(data.rol_ID, rollName)
                 }}
                 deleteLabel="حذف"
                 updateLabel="ویرایش"
-                updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data.name} />}
+                updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data.rol_Name} />}
                 deleteButtonClassName={'p-button-outlined p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-outlined p-button-warning text-xs rtl h-10 w-25 p-1'}
               />

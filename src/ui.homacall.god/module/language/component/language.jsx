@@ -11,7 +11,7 @@ import { languageColumns } from '../constant/tableColumn'
 import { DeleteLanguage } from '../../../service/languageService'
 import { Dialog } from 'primereact/dialog'
 
-const Language = ({ data }) => {
+const Language = ({ data, fetchAgain }) => {
   const [globalFilter, setGlobalFilter] = useState(null)
   const [dataTable, setDataTable] = useState([])
   const [editProps, setEditProps] = useState({ lang_Name: '', lang_Rtl: false })
@@ -23,14 +23,14 @@ const Language = ({ data }) => {
     formData.append('ID', id)
     try {
       const { data, status } = await DeleteLanguage(formData)
-      if (status === 200 || data) {
-        console.log(data)
+      setShowMessage(true)
+
+      if (status === 200 || data === 'Succeed') {
         setMessage('زبان مورد نظر با موفقیت حذف شد')
+        fetchAgain()
       } else {
         setMessage('خطا در حذف زبان مورد نظر !!')
       }
-      setMessage('خطا در حذف زبان مورد نظر !!')
-      setShowMessage(true)
     } catch (error) {
       console.log(error)
     }
@@ -45,7 +45,7 @@ const Language = ({ data }) => {
         action: (
           <TableActions
             deleteAction={() => {
-              deleteRow(item.id)
+              deleteRow(item.lang_ID)
             }}
             hasDelete={true}
             hasUpdate={false}
@@ -102,7 +102,7 @@ const Language = ({ data }) => {
 
   return (
     <div className="w-[95%] mt-4 m-auto container">
-      <UpdateDialog showUpdateDialog={showUpdateDialog} setShowUpdateDialog={setShowUpdateDialog} {...editProps} />
+      <UpdateDialog fetchAgain={fetchAgain} showUpdateDialog={showUpdateDialog} setShowUpdateDialog={setShowUpdateDialog} {...editProps} />
       <Dialog
         visible={showMessage}
         onHide={() => setShowMessage(false)}
@@ -116,7 +116,7 @@ const Language = ({ data }) => {
           {/* <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i> */}
           <h5>{message}</h5>
         </div>
-      </Dialog>{' '}
+      </Dialog>
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
 

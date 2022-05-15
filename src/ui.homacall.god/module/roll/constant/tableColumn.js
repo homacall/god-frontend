@@ -1,8 +1,7 @@
-export const userColumns = [
+export const roleColumn = [
   {
     header: 'نام',
-    field: 'name',
+    field: 'rol_Name',
     className: 'text-sm',
   },
- 
 ]

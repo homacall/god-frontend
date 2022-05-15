@@ -12,6 +12,7 @@ import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { TreeViewData } from '../constant/treeViewData'
 import { routeTypes } from '../constant/routeTypes'
 import { useLocation, useParams } from 'react-router'
+import { TreeView } from '../../userPermissions/components/treeView'
 
 export const CreateAndEditStretcher = () => {
   const location = useLocation()
@@ -23,6 +24,8 @@ export const CreateAndEditStretcher = () => {
     RoutStr_TypeRout: '',
   })
   const [isParent, setIsParent] = useState(false)
+  const [showTreeView, setShowTreeView] = useState(false)
+  const [selectedRoute, setSelectedRoute] = useState(undefined)
   useEffect(() => {
     if (location.pathname.includes('/route-stretcher/update/')) {
       routeBreadcrumb[1].label = 'ویرایش انتساب'
@@ -36,6 +39,7 @@ export const CreateAndEditStretcher = () => {
       })
     }
   }, [location.pathname, params?.stretcherId])
+
   const formik = useFormik({
     initialValues,
     validate: data => {
@@ -51,9 +55,7 @@ export const CreateAndEditStretcher = () => {
       }
       return errors
     },
-    onSubmit: data => {
-      console.log(data)
-    },
+    onSubmit: data => {},
     enableReinitialize: true,
   })
   const isFormFieldValid = name => !!(formik.touched[name] && formik.errors[name])
@@ -65,7 +67,17 @@ export const CreateAndEditStretcher = () => {
       <Button label="باشه" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} />
     </div>
   )
-
+  const treeViewDialogFooter = (
+    <div className="flex justify-content-center">
+      <Button label="بازگشت" className="p-button-text" autoFocus onClick={() => setShowTreeView(false)} />
+    </div>
+  )
+  useEffect(() => {
+    console.log(selectedRoute)
+    if (selectedRoute) {
+      setShowTreeView(false)
+    }
+  }, [selectedRoute])
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={routeBreadcrumb} />
@@ -116,7 +128,26 @@ export const CreateAndEditStretcher = () => {
           {getFormErrorMessage('RoutStr_Tag_ID')}
         </span>
         <span className="p-float-label relative">
-          <TreeSelect
+          <div
+            className="outline-2 h-[50px] w-full block border border-1 rounded-lg border-gray-300 hover:border-blue-600	cursor-pointer	relative"
+            onClick={() => (!isParent ? setShowTreeView(perv => !perv) : {})}
+          >
+            <div className="w-30 h-30 absolute ">
+              <i className="pi-angle-down  " style={{ fontSize: '2em' }}></i>
+            </div>
+          </div>
+          <Dialog
+            visible={showTreeView}
+            onHide={() => setShowTreeView(false)}
+            position="center"
+            footer={treeViewDialogFooter}
+            showHeader={false}
+            breakpoints={{ '960px': '80vw' }}
+            style={{ width: '50vw' }}
+          >
+            <TreeView setSelectedRoute={setSelectedRoute} />
+          </Dialog>
+          {/* <TreeSelect
             filter
             selectionMode="single"
             id="RoutStr_PID"
@@ -125,10 +156,14 @@ export const CreateAndEditStretcher = () => {
             name="RoutStr_PID"
             options={TreeViewData}
             className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_PID'), 'w-full': true })}
-            disabled={isParent}
-          />
-          <label htmlFor="RoutStr_PID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_PID') })}`}>
-            Parent id
+            disabled={true}
+            onClick={() => alert('hi')}
+          /> */}
+          <label
+            htmlFor="RoutStr_PID"
+            className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_PID'), 'p-disabled': isParent })}`}
+          >
+            {selectedRoute ? selectedRoute.tagName : 'Parent id'}
           </label>
           <div className="col-12 absolute ">
             <Checkbox

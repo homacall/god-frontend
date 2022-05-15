@@ -1,15 +1,33 @@
 import http from './httpService'
 import { apiUrls } from './urls'
-export const newLanguage = data => {
+export const InsertRole = data => {
   const token = localStorage.getItem('token')
-
   let config = {
     headers: {
       Authorization: 'Bearer ' + token,
     },
   }
   return http
-    .post(apiUrls.createLanguage, data, config)
+    .post(apiUrls.insertRol, data, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}
+export const DeleteRole = data => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.deleteRol, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -21,7 +39,7 @@ export const newLanguage = data => {
     })
 }
 
-export const GetAllLanguage = () => {
+export const UpdateRole = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -29,7 +47,7 @@ export const GetAllLanguage = () => {
     },
   }
   return http
-    .get(apiUrls.getAllLanguage, config)
+    .post(apiUrls.updateRol, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -40,7 +58,8 @@ export const GetAllLanguage = () => {
       }
     })
 }
-export const DeleteLanguage = id => {
+
+export const GetAllRole = () => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -48,26 +67,7 @@ export const DeleteLanguage = id => {
     },
   }
   return http
-    .post(apiUrls.deleteLanguage, id, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
-      } else {
-        return err
-      }
-    })
-}
-export const UpdateLanguage = data => {
-  const token = localStorage.getItem('token')
-  let config = {
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  }
-  return http
-    .post(apiUrls.updateLanguage, data, config)
+    .get(apiUrls.getAllRol, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {

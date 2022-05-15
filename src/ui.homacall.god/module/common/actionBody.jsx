@@ -63,7 +63,15 @@ const TableActions = ({
         <DeleteDialog loading={deleteLoading} visible={openDeleteDialog} onHide={handleDeleteDialog} deleteAction={deleteAction} />
       )}
       {hasUpdate && updateHasView && (
-        <UpdateDialog visible={openUpdateDialog} onHide={handleUpdateDialog} updateAction={updateAction} UpdateView={updateView} />
+        <UpdateDialog
+          visible={openUpdateDialog}
+          onHide={handleUpdateDialog}
+          updateAction={() => {
+            updateAction()
+            handleUpdateDialog()
+          }}
+          UpdateView={updateView}
+        />
       )}
       {children}
     </>

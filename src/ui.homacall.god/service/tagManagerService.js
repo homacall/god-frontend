@@ -1,15 +1,14 @@
 import http from './httpService'
 import { apiUrls } from './urls'
-export const newLanguage = data => {
+export const CreateTagService = data => {
   const token = localStorage.getItem('token')
-
   let config = {
     headers: {
       Authorization: 'Bearer ' + token,
     },
   }
   return http
-    .post(apiUrls.createLanguage, data, config)
+    .post(apiUrls.createTag, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -20,8 +19,7 @@ export const newLanguage = data => {
       }
     })
 }
-
-export const GetAllLanguage = () => {
+export const GetAllTags = () => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -29,7 +27,7 @@ export const GetAllLanguage = () => {
     },
   }
   return http
-    .get(apiUrls.getAllLanguage, config)
+    .get(apiUrls.getAllTags, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -40,7 +38,7 @@ export const GetAllLanguage = () => {
       }
     })
 }
-export const DeleteLanguage = id => {
+export const DeleteTag = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -48,7 +46,7 @@ export const DeleteLanguage = id => {
     },
   }
   return http
-    .post(apiUrls.deleteLanguage, id, config)
+    .post(apiUrls.deleteTags, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -59,7 +57,7 @@ export const DeleteLanguage = id => {
       }
     })
 }
-export const UpdateLanguage = data => {
+export const UpdateTags = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -67,7 +65,7 @@ export const UpdateLanguage = data => {
     },
   }
   return http
-    .post(apiUrls.updateLanguage, data, config)
+    .post(apiUrls.updateTags, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {

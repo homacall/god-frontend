@@ -12,12 +12,15 @@ import CreateAndEditUser from './createUser'
 import { userColumns } from '../constant/tableColumn'
 import TableActions from '../../common/actionBody'
 import { DeleteUser } from '../../../service/userService'
+import { UserPermissions } from '../../userPermissions'
 
 export const UserTable = ({ data }) => {
   const [dataTable, setDataTable] = useState([])
   const [showMessage, setShowMessage] = useState(false)
   const [deletedUser, setDeletedUser] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [showPermissions, setShowPermissions] = useState(false)
+  const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
   const deleteUser = id => {
     setDeleteLoading(true)
     const formData = new FormData()
@@ -45,6 +48,9 @@ export const UserTable = ({ data }) => {
       />
     </div>
   )
+  const permissionDialogHandler = () => {
+    setShowPermissions(perv => !perv)
+  }
   useEffect(() => {
     const newData = []
     data.forEach(item =>
@@ -84,7 +90,15 @@ export const UserTable = ({ data }) => {
             <Button className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1' : ' p-button-danger ml-2 text-xs rtl  p-1'}>
               {item.usr_IsA ? 'غیرفعال' : 'فعال'}
             </Button>
-            <Button className="p-button-primary text-xs rtl ml-1 p-1">سطح دسترسی</Button>
+            <Button
+              className="p-button-primary text-xs rtl ml-1 p-1"
+              onClick={() => {
+                setUserInfoForPermission(data)
+                setShowPermissions(perv => !perv)
+              }}
+            >
+              سطح دسترسی
+            </Button>
             <Button className="p-button-help text-xs rtl  p-1">نقش</Button>
           </TableActions>
         ),
@@ -120,6 +134,7 @@ export const UserTable = ({ data }) => {
             <h5>{`کاربر ${deletedUser}  با موفقیت حذف شد.`}</h5>
           </div>
         </Dialog>
+        <UserPermissions visible={showPermissions} onHide={permissionDialogHandler} user={userInfoForPermission} />
         <DataTable
           value={dataTable}
           paginator
