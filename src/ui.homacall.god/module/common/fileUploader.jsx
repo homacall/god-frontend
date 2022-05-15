@@ -4,6 +4,7 @@ export function InputImage({ setImageUrl, imageError }) {
   const uploadedImage = React.useRef(null)
   const imageUploader = React.useRef(null)
   const [state, setState] = useState({ url: false })
+  
   const handleImageUpload = e => {
     const [file] = e.target.files
     setState({ url: true })
