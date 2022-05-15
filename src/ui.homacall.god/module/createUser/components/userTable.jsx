@@ -4,28 +4,53 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Toolbar } from 'primereact/toolbar'
-import { UpdateUser } from './updateUser'
-import TableActions from '../../common/actionBody'
-import { userColumns } from '../constant/tableColumn'
 import { Image } from 'primereact/image'
-import { DeleteUser } from '../../../service/userService'
 import { Dialog } from 'primereact/dialog'
+
+import CreateAndEditUser from './createUser'
+
+import { userColumns } from '../constant/tableColumn'
+import TableActions from '../../common/actionBody'
+import { DeleteUser } from '../../../service/userService'
+import { UserPermissions } from '../../userPermissions'
 
 export const UserTable = ({ data }) => {
   const [dataTable, setDataTable] = useState([])
   const [showMessage, setShowMessage] = useState(false)
   const [deletedUser, setDeletedUser] = useState('')
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [showPermissions, setShowPermissions] = useState(false)
+  const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
   const deleteUser = id => {
-    DeleteUser(id).then(res => {
-      if (res.data && res.data === 'success') {
-      }
-    })
+    setDeleteLoading(true)
+    const formData = new FormData()
+    formData.append('ID', id)
+    DeleteUser(formData)
+      .then(res => {
+        if (res.data && res.data === 'success') {
+          setShowMessage(true)
+        }
+      })
+      .finally(() => {
+        setDeleteLoading(false)
+      })
   }
   const dialogFooter = (
     <div className="flex justify-content-center">
-      <Button label="باشه" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} />
+      <Button
+        label="باشه"
+        className="p-button-text"
+        autoFocus
+        onClick={() => {
+          setDeletedUser('')
+          setShowMessage(false)
+        }}
+      />
     </div>
   )
+  const permissionDialogHandler = () => {
+    setShowPermissions(perv => !perv)
+  }
   useEffect(() => {
     const newData = []
     data.forEach(item =>
@@ -44,25 +69,36 @@ export const UserTable = ({ data }) => {
         ),
         action: (
           <TableActions
-            deleteAction={() => {}}
+            deleteAction={() => {
+              setDeletedUser(item.usr_UName)
+              deleteUser(item.usr_ID)
+            }}
             hasDelete={true}
             hasUpdate={true}
             updateAction={() => {
               alert('edit')
             }}
-            updateView={<UpdateUser />}
+            updateView={<CreateAndEditUser updateUser={item} />}
             deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-1'}
             updateButtonClassName={' p-button-warning ml-1 text-xs rtl  p-1'}
             deleteLabel="حذف"
             updateLabel="ویرایش"
             deleteIcon={false}
             updateIcon={false}
+            deleteLoading={deleteLoading}
           >
             <Button className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1' : ' p-button-danger ml-2 text-xs rtl  p-1'}>
-              {console.log(item)}
               {item.usr_IsA ? 'غیرفعال' : 'فعال'}
             </Button>
-            <Button className="p-button-primary text-xs rtl ml-1 p-1">سطح دسترسی</Button>
+            <Button
+              className="p-button-primary text-xs rtl ml-1 p-1"
+              onClick={() => {
+                setUserInfoForPermission(data)
+                setShowPermissions(perv => !perv)
+              }}
+            >
+              سطح دسترسی
+            </Button>
             <Button className="p-button-help text-xs rtl  p-1">نقش</Button>
           </TableActions>
         ),
@@ -70,7 +106,7 @@ export const UserTable = ({ data }) => {
       }),
     )
     setDataTable(newData)
-  }, [data])
+  }, [data, deleteLoading])
   const rightToolbarTemplate = () => {
     return (
       <>
@@ -98,6 +134,7 @@ export const UserTable = ({ data }) => {
             <h5>{`کاربر ${deletedUser}  با موفقیت حذف شد.`}</h5>
           </div>
         </Dialog>
+        <UserPermissions visible={showPermissions} onHide={permissionDialogHandler} user={userInfoForPermission} />
         <DataTable
           value={dataTable}
           paginator
@@ -106,6 +143,7 @@ export const UserTable = ({ data }) => {
           paginatorTemplate="NextPageLink LastPageLink PageLinks FirstPageLink PrevPageLink "
           responsiveLayout="scroll"
           className="rtl"
+          emptyMessage="رکوردی یافت نشد"
         >
           {userColumns.map((col, index) => {
             return (

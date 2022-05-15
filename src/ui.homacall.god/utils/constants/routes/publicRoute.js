@@ -10,6 +10,7 @@ export const sidebar = {
   roll: '/roll',
   tag: '/tag',
   manage: '/company',
+  routeStretcher: '/route-stretcher',
 }
 export const language = {
   languageTable: '/language',
@@ -36,4 +37,8 @@ export const manage = {
   company: '/company',
   newCompany: '/company/new-company',
   editCompany: '/company/edit/:CompanyId',
+export const routeStretcher = {
+  main: '/route-stretcher',
+  create: '/route-stretcher/create',
+  update: '/route-stretcher/update/:stretcherId',
 }

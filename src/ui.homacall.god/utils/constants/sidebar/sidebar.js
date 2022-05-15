@@ -28,8 +28,8 @@ const items = [
   },
   {
     id: 6,
-    label: 'انتصاب مسیر',
-    url: `${sidebar.path}`,
+    label: 'انتساب مسیر',
+    url: `${sidebar.routeStretcher}`,
   },
 ]
 

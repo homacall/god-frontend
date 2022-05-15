@@ -18,6 +18,8 @@ const TableActions = ({
   children,
   deleteIcon,
   updateIcon,
+  deleteLoading,
+  updateHasView = true,
 }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
@@ -48,14 +50,28 @@ const TableActions = ({
           icon={updateIcon && 'pi pi-pencil text-xs'}
           className={updateButtonClassName}
           onClick={() => {
-            handleUpdateDialog()
+            if (updateHasView) {
+              handleUpdateDialog()
+            } else {
+              updateAction()
+            }
           }}
           style={updateStyle}
         />
       )}
-      {hasDelete && <DeleteDialog visible={openDeleteDialog} onHide={handleDeleteDialog} deleteAction={deleteAction} />}
-      {hasUpdate && (
-        <UpdateDialog visible={openUpdateDialog} onHide={handleUpdateDialog} updateAction={updateAction} UpdateView={updateView} />
+      {hasDelete && (
+        <DeleteDialog loading={deleteLoading} visible={openDeleteDialog} onHide={handleDeleteDialog} deleteAction={deleteAction} />
+      )}
+      {hasUpdate && updateHasView && (
+        <UpdateDialog
+          visible={openUpdateDialog}
+          onHide={handleUpdateDialog}
+          updateAction={() => {
+            updateAction()
+            handleUpdateDialog()
+          }}
+          UpdateView={updateView}
+        />
       )}
       {children}
     </>

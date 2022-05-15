@@ -1,23 +1,26 @@
 import { useState, useEffect, useCallback } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
-import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { Password } from 'primereact/password'
-import { InputImage } from '../../common/fileUploader'
-import { ProvinceServiceGetAll } from '../../../service/province'
-import { Dropdown } from 'primereact/dropdown'
-import { createUserBreadcrumb } from '../constant/createUserBreadcrumb'
-import { CityServiceGetByProvinceID } from '../../../service/cityService'
-import { InputTextarea } from 'primereact/inputtextarea'
-import { createUserGender } from '../constant/createusergender'
-import { useFormik } from 'formik'
 import { classNames } from 'primereact/utils'
+import { Password } from 'primereact/password'
+import { Dropdown } from 'primereact/dropdown'
+import { InputTextarea } from 'primereact/inputtextarea'
+import { Dialog } from 'primereact/dialog'
+import { useFormik } from 'formik'
 import { useRecoilValue } from 'recoil'
+
+import { createUserGender } from '../constant/createusergender'
+import { createUserBreadcrumb } from '../constant/createUserBreadcrumb'
+
+import { InputImage } from '../../common/fileUploader'
+
+import { CityServiceGetByProvinceID } from '../../../service/cityService'
+import { ProvinceServiceGetAll } from '../../../service/province'
 import { userData } from '../../../store/atom'
 import { insertUser } from '../../../service/userService'
-import { Dialog } from 'primereact/dialog'
+import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 
-const CreateUser = () => {
+const CreateAndEditUser = ({ updateUser }) => {
   const [provinces, setProvinces] = useState([])
   const [cities, setCities] = useState([])
   const [imageUrl, setImageUrl] = useState('')
@@ -25,20 +28,38 @@ const CreateUser = () => {
   const [showMessage, setShowMessage] = useState(false)
   const [loading, setLoading] = useState(false)
   const token = useRecoilValue(userData)
+  const [initialValues, setInitialValue] = useState({
+    Usr_FName: '',
+    Usr_LName: '',
+    Usr_Gender: '',
+    Usr_mail: '',
+    Usr_UName: '',
+    Usr_HPass: '',
+    Usr_IdentNum: '',
+    Usr_Prov_ID: '',
+    Usr_Cty_ID: '',
+    Usr_Address: '',
+    Usr_Mobile: '',
+  })
+  useEffect(() => {
+    if (updateUser) {
+      setInitialValue({
+        Usr_FName: updateUser?.Usr_FName || '',
+        Usr_LName: updateUser?.Usr_LName || '',
+        Usr_Gender: updateUser?.Usr_Gender || '',
+        Usr_mail: updateUser?.Usr_mail || '',
+        Usr_UName: updateUser?.Usr_UName || '',
+        Usr_HPass: updateUser?.Usr_HPass || '',
+        Usr_IdentNum: updateUser?.Usr_IdentNum || '',
+        Usr_Prov_ID: updateUser?.Usr_Prov_ID || '',
+        Usr_Cty_ID: updateUser?.Usr_Cty_ID || '',
+        Usr_Address: updateUser?.Usr_Address || '',
+        Usr_Mobile: updateUser?.Usr_Mobile || '',
+      })
+    }
+  }, [updateUser])
   const formik = useFormik({
-    initialValues: {
-      Usr_FName: '',
-      Usr_LName: '',
-      Usr_Gender: '',
-      Usr_mail: '',
-      Usr_UName: '',
-      Usr_HPass: '',
-      Usr_IdentNum: '',
-      Usr_Prov_ID: '',
-      Usr_Cty_ID: '',
-      Usr_Address: '',
-      Usr_Mobile: '',
-    },
+    initialValues,
     validate: data => {
       let errors = {}
       if (!data.Usr_FName) {
@@ -352,4 +373,4 @@ const CreateUser = () => {
     </div>
   )
 }
-export default CreateUser
+export default CreateAndEditUser
