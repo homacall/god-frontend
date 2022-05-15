@@ -1,57 +1,62 @@
-export const tableColumns = [
+export const companyColumns = [
     {
       header: 'نام',
-      field: 'name',
+      field: 'coIn_Name',
       className: 'text-sm',
     },
     {
       header: 'لوگو',
-      field: 'logo',
+      field: 'coIn_Logo',
       className: 'text-sm',
     },
     {
       header: 'آدرس',
-      field: 'address',
+      field: 'coIn_Address',
       className: 'text-sm',
     },
     {
       header: 'تلفن',
-      field: 'phone',
+      field: 'coIn_Phone',
       className: 'text-sm',
     },
     {
       header: 'موبایل',
-      field: 'mobile',
+      field: 'coIn_Mobile',
       className: 'text-sm',
     },
     {
       header: 'فکس',
-      field: 'fax',
+      field: 'coIn_Fax',
+      className: 'text-sm',
+    },
+    {
+      header: 'سامانه پیامک',
+      field: 'coIn_SmsNumber',
       className: 'text-sm',
     },
     {
       header: 'ایمیل',
-      field: 'email',
+      field: 'coIn_Email',
       className: 'text-sm',
     },
     {
       header: 'سایت',
-      field: 'site',
+      field: 'coIn_Site',
       className: 'text-sm',
     },
     {
       header: 'اینستاگرام',
-      field: 'insta',
+      field: 'coIn_Instagram',
       className: 'text-sm',
     },
     {
       header: 'درباره',
-      field: 'about',
+      field: 'coIn_About',
       className: 'text-sm',
     },
     {
       header: 'زبان',
-      field: 'language',
+      field: 'coIn_LangID',
       className: 'text-sm',
     },
    

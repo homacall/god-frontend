@@ -8,63 +8,83 @@ import { InputImage } from '../../common/fileUploader'
 import { Button } from 'primereact/button'
 
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
+import { Alert } from '../../common/alert'
 
 import { createCompanyBreadcrumb } from '../constant/createCompanyBreadcrumb'
 import validate from '../constant/validate'
-import { InsertCompany, UpdateCompany, getCompanyById, getAllLanguages } from '../constant/Crud'
+import { UpdateCompany, getCompanyById, getAllLanguages } from '../constant/Crud'
+import { GetAllLanguage } from '../../../service/languageService'
+import { GetAllCompanyInfo, InsertCompany } from '../../../service/companyService'
+
 
 export const CreateCompany = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
+  const [companyInfo, setCompanyInfo] = useState([]);
+  const [languages, setLanguages] = useState([]);
+  const [showMessage, setShowMessage] = useState(false)
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false);
   const [initialValues, setInitialValues] = useState({
-    Comp_FName: '',
-    Comp_Address: '',
-    Comp_Fax: '',
-    Comp_Email: '',
-    Comp_Phone: '',
-    Comp_Mobile: '',
-    Comp_Site: '',
-    Comp_Insta: '',
-    Comp_About: '',
-    Comp_Lang: '',
-    Comp_SMS: ''
+    CoIn_Name: '',
+    CoIn_Address: '',
+    CoIn_Fax: '',
+    CoIn_Email: '',
+    CoIn_Phone: '',
+    CoIn_Mobile: '',
+    CoIn_Site: '',
+    CoIn_Instagram: '',
+    CoIn_About: '',
+    CoIn_LangID: '',
+    CoIn_SmsNumber: ''
   })
 
   const location = useLocation();
   let { CompanyId } = useParams();
   const navigate = useNavigate();
 
-  //get languages from database with api
-  let languages = getAllLanguages();
-  
+  const fetchLanguage = () => {
+    GetAllLanguage().then(res => {
+      if (res.data || res.status === 200) {
+        setLanguages(res.data.map(item => ({ id: item.lang_ID, name: item.lang_Name })))
+      }
+    })
+  }
 
   useEffect(() => {
+    fetchLanguage() 
+    GetAllCompanyInfo().then(res => {
+      if (res.data) {
+        setCompanyInfo(res.data)
+      }
+    }).catch(err=> console.log("error: ", err))
+  }, [])
+  
+  useEffect(() => {
     let path = location.pathname;
-    
-     //get company info from database with companyId params 
-     let companyInfo = getCompanyById(CompanyId);
 
-     if(path.split("/")[2] === "new-company"){
+    if(path.split("/")[2] === "new-company"){
        //if company info is exist redirect to company index page 
        if(companyInfo.length > 0){
         navigate("/company");   
-       }
+    }
         
     }else{
+      console.log("company: ", companyInfo)
        //initialize for formik
-       setImageUrl(companyInfo[0].logo);
+       setImageUrl(companyInfo.coIn_Logo);
        setInitialValues({
-        Comp_FName: companyInfo[0].name,
-        Comp_Address: companyInfo[0].address,
-        Comp_Fax: companyInfo[0].fax,
-        Comp_Email: companyInfo[0].email,
-        Comp_Phone: companyInfo[0].phone,
-        Comp_Mobile: companyInfo[0].mobile,
-        Comp_Site: companyInfo[0].site,
-        Comp_Insta: companyInfo[0].insta,
-        Comp_About: companyInfo[0].about,
-        Comp_Lang: companyInfo[0].language,
-        Comp_SMS: companyInfo[0].sms
+        CoIn_FName: companyInfo.coIn_FName,
+        CoIn_Address: companyInfo.coIn_Address,
+        CoIn_Fax: companyInfo.coIn_fax,
+        CoIn_Email: companyInfo.coIn_Email,
+        CoIn_Phone: companyInfo.coIn_Phone,
+        CoIn_Mobile: companyInfo.coIn_Mobile,
+        CoIn_Site: companyInfo.coIn_Site,
+        CoIn_Instagram: companyInfo.coIn_Instagram,
+        CoIn_About: companyInfo.coIn_About,
+        CoIn_LangID: companyInfo.coIn_LangID,
+        CoIn_SmsNumber: companyInfo.coIn_SmsNumber
       })
     }
     
@@ -77,11 +97,52 @@ export const CreateCompany = () => {
       if (!imageUrl) {
         return setImageError(true)
       } else {
-        values.Comp_Img = imageUrl;
+        values.CoIn_Logo = imageUrl;
        if(CompanyId){
         UpdateCompany(values, CompanyId)
        }else{
-        InsertCompany(values);
+        const formData = new FormData()
+        Object.keys(values).forEach(key => {
+          const value = values[key]
+          formData.append(key, value)
+        })
+          if(!CompanyId){
+            InsertCompany(formData)
+            .then(res => {
+              setShowMessage(true)
+              if (res.status === 200 || res.data === 'success') {
+                formik.resetForm()
+                setMessage('ثبت شرکت جدید با موفقیت انجام شد')
+              } else {
+                setMessage('ثبت شرکت جدید با خطا مواجه شد')
+              }
+            }).catch(err => {
+              setShowMessage(true)
+              setMessage('ثبت شرکت جدید با خطا مواجه شد')
+              console.log(err)
+            })
+            .finally(() => {
+              setLoading(false)
+            })
+          }else{
+             InsertCompany(formData)
+            .then(res => {
+              setShowMessage(true)
+              if (res.status === 200 || res.data === 'success') {
+                formik.resetForm()
+                setMessage('ثبت شرکت جدید با موفقیت انجام شد')
+              } else {
+                setMessage('ثبت شرکت جدید با خطا مواجه شد')
+              }
+            }).catch(err => {
+              setShowMessage(true)
+              setMessage('ثبت شرکت جدید با خطا مواجه شد')
+              console.log(err)
+            })
+            .finally(() => {
+              setLoading(false)
+            })
+          }
        }
         
         setImageError(false)
@@ -93,126 +154,126 @@ export const CreateCompany = () => {
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createCompanyBreadcrumb} />
-
+      <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-7">
         <span className="p-float-label" dir='ltr'>
           <InputText
-            id="Comp_FName"
-            name="Comp_FName" 
-            value={formik.values.Comp_FName}
+            id="CoIn_Name"
+            name="CoIn_Name" 
+            value={formik.values.CoIn_Name}
             className="p-inputtext p-component"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <label htmlFor="Comp_FName">نام</label>
-          {formik.touched.Comp_FName && formik.errors.Comp_FName ? (
-         <div className='text-red-600'>{formik.errors.Comp_FName}</div>
+          <label htmlFor="CoIn_Name">نام</label>
+          {formik.touched.CoIn_Name && formik.errors.CoIn_Name ? (
+         <div className='text-red-600'>{formik.errors.CoIn_Name}</div>
        ) : null}
         </span>
 
         <span className="p-float-label" dir='ltr'>
         <InputText
-            id="Comp_SMS"
-            name="Comp_SMS"
-            value={formik.values.Comp_SMS}
+            id="CoIn_SmsNumber"
+            name="CoIn_SmsNumber"
+            value={formik.values.CoIn_SmsNumber}
             className="p-inputtext p-component"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <label htmlFor="Comp_SMS">شماره سامانه پیامک</label>
-          {formik.touched.Comp_SMS && formik.errors.Comp_SMS ? (
-         <div className='text-red-600'>{formik.errors.Comp_SMS}</div>
+          <label htmlFor="CoIn_SmsNumber">شماره سامانه پیامک</label>
+          {formik.touched.CoIn_SmsNumber && formik.errors.CoIn_SmsNumber ? (
+         <div className='text-red-600'>{formik.errors.CoIn_SmsNumber}</div>
        ) : null} 
         </span>
 
         <span className="p-float-label" dir='ltr'>
           <InputText
-            id="Comp_Phone"
-            name="Comp_Phone"
-            value={formik.values.Comp_Phone}
+            id="CoIn_Phone"
+            name="CoIn_Phone"
+            value={formik.values.CoIn_Phone}
             className="p-inputtext p-component"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <label htmlFor="Comp_Phone">تلفن</label>
-          {formik.touched.Comp_Phone && formik.errors.Comp_Phone ? (
-         <div className='text-red-600'>{formik.errors.Comp_Phone}</div>
+          <label htmlFor="CoIn_Phone">تلفن</label>
+          {formik.touched.CoIn_Phone && formik.errors.CoIn_Phone ? (
+         <div className='text-red-600'>{formik.errors.CoIn_Phone}</div>
        ) : null} 
         </span>
 
         <span className="p-float-label" dir='ltr'>
           <InputText
-            id="Comp_Mobile"
-            name="Comp_Mobile" 
-            value={formik.values.Comp_Mobile}
+            id="CoIn_Mobile"
+            name="CoIn_Mobile" 
+            value={formik.values.CoIn_Mobile}
             className="p-inputtext p-component"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <label htmlFor="Comp_Mobile">موبایل</label>
-          {formik.touched.Comp_Mobile && formik.errors.Comp_Mobile ? (
-         <div className='text-red-600'>{formik.errors.Comp_Mobile}</div>
+          <label htmlFor="CoIn_Mobile">موبایل</label>
+          {formik.touched.CoIn_Mobile && formik.errors.CoIn_Mobile ? (
+         <div className='text-red-600'>{formik.errors.CoIn_Mobile}</div>
        ) : null} 
         </span>
 
         <span className="p-float-label" dir='ltr'>
           <InputText
-            id="Comp_Fax"
-            name="Comp_Fax" 
-            value={formik.values.Comp_Fax}
+            id="CoIn_Fax"
+            name="CoIn_Fax" 
+            value={formik.values.CoIn_Fax}
             className="p-inputtext p-component"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <label htmlFor="Comp_Fax">فکس</label>
-          {formik.touched.Comp_Fax && formik.errors.Comp_Fax ? (
-         <div className='text-red-600'>{formik.errors.Comp_Fax}</div>
+          <label htmlFor="CoIn_Fax">فکس</label>
+          {formik.touched.CoIn_Fax && formik.errors.CoIn_Fax ? (
+         <div className='text-red-600'>{formik.errors.CoIn_Fax}</div>
        ) : null} 
         </span>
 
         <span className="p-float-label" dir='ltr'>
           <InputText
-            id="Comp_Email"
-            name="Comp_Email" 
-            value={formik.values.Comp_Email}
+            id="CoIn_Email"
+            name="CoIn_Email" 
+            value={formik.values.CoIn_Email}
             className="p-inputtext p-component"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <label htmlFor="Comp_Email">ایمیل</label>
-          {formik.touched.Comp_Email && formik.errors.Comp_Email ? (
-         <div className='text-red-600'>{formik.errors.Comp_Email}</div>
+          <label htmlFor="CoIn_Email">ایمیل</label>
+          {formik.touched.CoIn_Email && formik.errors.CoIn_Email ? (
+         <div className='text-red-600'>{formik.errors.CoIn_Email}</div>
        ) : null} 
         </span>
 
         <span className="p-float-label" dir='ltr'>
           <InputText
-            id="Comp_Site"
-            name="Comp_Site" 
-            value={formik.values.Comp_Site}
+            id="CoIn_Site"
+            name="CoIn_Site" 
+            value={formik.values.CoIn_Site}
             className="p-inputtext p-component"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <label htmlFor="Comp_Site">سایت</label>
-          {formik.touched.Comp_Site && formik.errors.Comp_Site ? (
-         <div className='text-red-600'>{formik.errors.Comp_Site}</div>
+          <label htmlFor="CoIn_Site">سایت</label>
+          {formik.touched.CoIn_Site && formik.errors.CoIn_Site ? (
+         <div className='text-red-600'>{formik.errors.CoIn_Site}</div>
        ) : null} 
         </span>
 
         <span className="p-float-label" dir='ltr'>
           <InputText
-            id="Comp_Insta"
-            name="Comp_Insta" 
-            value={formik.values.Comp_Insta}
+            id="CoIn_Instagram"
+            name="CoIn_Instagram" 
+            value={formik.values.CoIn_Instagram}
             className="p-inputtext p-component"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
-          <label htmlFor="Comp_Insta">اینستاگرام</label>
-          {formik.touched.Comp_Insta && formik.errors.Comp_Insta ? (
-         <div className='text-red-600'>{formik.errors.Comp_Insta}</div>
+          <label htmlFor="CoIn_Instagram">اینستاگرام</label>
+          {formik.touched.CoIn_Instagram && formik.errors.CoIn_Instagram ? (
+         <div className='text-red-600'>{formik.errors.CoIn_Instagram}</div>
        ) : null}
         </span>
 
@@ -220,11 +281,11 @@ export const CreateCompany = () => {
           
           <Dropdown 
              options={languages} 
-             id="Comp_Lang"
-             name="Comp_Lang"  
+             id="CoIn_LangID"
+             name="CoIn_LangID"  
              optionLabel="name"
              optionValue="id"
-             value={formik.values.Comp_Lang}
+             value={formik.values.CoIn_LangID}
              filter 
              showClear 
              filterBy="name"
@@ -233,8 +294,8 @@ export const CreateCompany = () => {
              dir="rtl"
              style={{ width: '70%'}}
            />
-           {formik.touched.Comp_Lang && formik.errors.Comp_Lang ? (
-         <div className='text-red-600'>{formik.errors.Comp_Lang}</div>
+           {formik.touched.CoIn_LangID && formik.errors.CoIn_LangID ? (
+         <div className='text-red-600'>{formik.errors.CoIn_LangID}</div>
        ) : null}
          </span>
 
@@ -242,25 +303,25 @@ export const CreateCompany = () => {
 
         <div className='w-full mt-5 flex flex-col items-end content-center'>
         <InputText
-            id="Comp_Address"
-            name="Comp_Address"
-            value={formik.values.Comp_Address}
+            id="CoIn_Address"
+            name="CoIn_Address"
+            value={formik.values.CoIn_Address}
             className="p-inputtext p-component w-11/12"
             placeholder='آدرس'
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />   
              {/* <label htmlFor="Comp_Address">آدرس</label>   */}
-           {formik.touched.Comp_Address && formik.errors.Comp_Address ? (
-         <div className='text-red-600'>{formik.errors.Comp_Address}</div>
+           {formik.touched.CoIn_Address && formik.errors.CoIn_Address ? (
+         <div className='text-red-600'>{formik.errors.CoIn_Address}</div>
        ) : null}  
         </div>
      
          <div className='w-full mt-5 flex flex-col items-end content-center'>
             <InputTextarea 
-            id="Comp_About" 
-            name="Comp_About" 
-            value={formik.values.Comp_About}
+            id="CoIn_About" 
+            name="CoIn_About" 
+            value={formik.values.CoIn_About}
             rows={5} 
             placeholder="درباره شرکت" 
             className='p-inputtextarea w-11/12'
@@ -268,8 +329,8 @@ export const CreateCompany = () => {
             onChange={formik.handleChange}
             />
             
-            {formik.touched.Comp_About && formik.errors.Comp_About ? (
-         <div className='text-red-600'>{formik.errors.Comp_About}</div>
+            {formik.touched.CoIn_About && formik.errors.CoIn_About ? (
+         <div className='text-red-600'>{formik.errors.CoIn_About}</div>
        ) : null}
          </div>
 
@@ -278,7 +339,7 @@ export const CreateCompany = () => {
          </div>
 
          <div className="mt-10 flex justify-end justify-items-end">
-          <Button label="ثبت" className="p-button-success w-[200px] text-sm mt-3 h-10" type="submit" />
+          <Button loading={loading} label="ثبت" className="p-button-success w-[200px] text-sm mt-3 h-10" type="submit" />
         </div>
 
       </form>
