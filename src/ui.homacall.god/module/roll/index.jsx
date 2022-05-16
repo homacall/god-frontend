@@ -95,7 +95,6 @@ export const Roll = () => {
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
         <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
-
         <DataTable
           value={dataL}
           paginator

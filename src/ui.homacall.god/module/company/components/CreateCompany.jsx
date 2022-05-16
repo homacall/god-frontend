@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useFormik } from 'formik'
 import { useParams, useLocation, useNavigate } from 'react-router'
 import { InputText } from 'primereact/inputtext'
@@ -12,15 +12,14 @@ import { Alert } from '../../common/alert'
 
 import { createCompanyBreadcrumb } from '../constant/createCompanyBreadcrumb'
 import validate from '../constant/validate'
-import { UpdateCompany, getCompanyById, getAllLanguages } from '../constant/Crud'
 import { GetAllLanguage } from '../../../service/languageService'
-import { GetAllCompanyInfo, InsertCompany } from '../../../service/companyService'
+import { GetCompanyById, InsertCompany, UpdateCompany } from '../../../service/companyService'
 
 
 export const CreateCompany = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
-  const [companyInfo, setCompanyInfo] = useState([]);
+  const [companyById, setCompanyBYId] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [showMessage, setShowMessage] = useState(false)
   const [message, setMessage] = useState('')
@@ -50,99 +49,113 @@ export const CreateCompany = () => {
       }
     })
   }
+const fetchCompany =useCallback(()=>{
+  const formData = new FormData()
+  formData.append("ID", CompanyId)
+  GetCompanyById(formData).then(res => {
+    if (res.data) {
+      setCompanyBYId(res.data)
+  
+    }
+  }).catch(err=> console.log("error: ", err))},[CompanyId]) 
 
   useEffect(() => {
     fetchLanguage() 
-    GetAllCompanyInfo().then(res => {
-      if (res.data) {
-        setCompanyInfo(res.data)
-      }
-    }).catch(err=> console.log("error: ", err))
-  }, [])
+    fetchCompany()
+  }, [fetchCompany])
   
   useEffect(() => {
     let path = location.pathname;
 
     if(path.split("/")[2] === "new-company"){
        //if company info is exist redirect to company index page 
-       if(companyInfo.length > 0){
+       if(companyById.length > 0){
         navigate("/company");   
     }
         
     }else{
-      console.log("company: ", companyInfo)
        //initialize for formik
-       setImageUrl(companyInfo.coIn_Logo);
+       setImageUrl(companyById.coIn_Logo);
        setInitialValues({
-        CoIn_FName: companyInfo.coIn_FName,
-        CoIn_Address: companyInfo.coIn_Address,
-        CoIn_Fax: companyInfo.coIn_fax,
-        CoIn_Email: companyInfo.coIn_Email,
-        CoIn_Phone: companyInfo.coIn_Phone,
-        CoIn_Mobile: companyInfo.coIn_Mobile,
-        CoIn_Site: companyInfo.coIn_Site,
-        CoIn_Instagram: companyInfo.coIn_Instagram,
-        CoIn_About: companyInfo.coIn_About,
-        CoIn_LangID: companyInfo.coIn_LangID,
-        CoIn_SmsNumber: companyInfo.coIn_SmsNumber
+        CoIn_Name: companyById.coIn_Name,
+        CoIn_Address: companyById.coIn_Address,
+        CoIn_Fax: companyById.coIn_Fax,
+        CoIn_Email: companyById.coIn_Email,
+        CoIn_Phone: companyById.coIn_Phone,
+        CoIn_Mobile: companyById.coIn_Mobile,
+        CoIn_Site: companyById.coIn_Site,
+        CoIn_Instagram: companyById.coIn_Instagram,
+        CoIn_About: companyById.coIn_About,
+        CoIn_LangID: companyById.coIn_LangID,
+        CoIn_SmsNumber: companyById.coIn_SmsNumber
       })
     }
+  }, [location.pathname, navigate, companyById])
+
+  const handleInsetCompany = formData => {
+    InsertCompany(formData)
+    .then(res => {
+      setShowMessage(true)
+      if (res.status === 200 || res.data) {
+        formik.resetForm()
+        setMessage('ثبت شرکت جدید با موفقیت انجام شد')
+        navigate("/company");
+      } else {
+        setMessage('ثبت شرکت جدید با خطا مواجه شد')
+      }
+    }).catch(err => {
+      setShowMessage(true)
+      setMessage('ثبت شرکت جدید با خطا مواجه شد')
+      console.log(err)
+    })
+    .finally(() => {
+      setLoading(false)
+    })
+
+  }
+
+const handleUpdateCompany = formData => { 
     
-  }, [location.pathname, navigate, CompanyId])
+    UpdateCompany(formData)
+    .then(res => {
+      setShowMessage(true)
+      if (res.status === 200 || res.data === "Succeed") {
+        //formik.resetForm()
+        setMessage('ویرایش شرکت با موفقیت انجام شد')
+        
+      } else {
+        setMessage('ویرایش شرکت با خطا مواجه شد')
+      }
+    }).catch(err => {
+      setShowMessage(true)
+      setMessage('ویرایش شرکت با خطا مواجه شد')
+      console.log(err)
+    })
+    .finally(() => {
+      setLoading(false)
+    })
+   }
 
   const formik = useFormik({
     initialValues,
     validate,
     onSubmit: values => {
+      
       if (!imageUrl) {
         return setImageError(true)
       } else {
-        values.CoIn_Logo = imageUrl;
-       if(CompanyId){
-        UpdateCompany(values, CompanyId)
-       }else{
         const formData = new FormData()
+        values.CoIn_Logo = imageUrl;
         Object.keys(values).forEach(key => {
           const value = values[key]
           formData.append(key, value)
         })
-          if(!CompanyId){
-            InsertCompany(formData)
-            .then(res => {
-              setShowMessage(true)
-              if (res.status === 200 || res.data === 'success') {
-                formik.resetForm()
-                setMessage('ثبت شرکت جدید با موفقیت انجام شد')
-              } else {
-                setMessage('ثبت شرکت جدید با خطا مواجه شد')
-              }
-            }).catch(err => {
-              setShowMessage(true)
-              setMessage('ثبت شرکت جدید با خطا مواجه شد')
-              console.log(err)
-            })
-            .finally(() => {
-              setLoading(false)
-            })
-          }else{
-             InsertCompany(formData)
-            .then(res => {
-              setShowMessage(true)
-              if (res.status === 200 || res.data === 'success') {
-                formik.resetForm()
-                setMessage('ثبت شرکت جدید با موفقیت انجام شد')
-              } else {
-                setMessage('ثبت شرکت جدید با خطا مواجه شد')
-              }
-            }).catch(err => {
-              setShowMessage(true)
-              setMessage('ثبت شرکت جدید با خطا مواجه شد')
-              console.log(err)
-            })
-            .finally(() => {
-              setLoading(false)
-            })
-          }
+        
+       if(CompanyId){
+         formData.append("CoIn_ID", CompanyId);
+         handleUpdateCompany(formData)
+       }else{
+         handleInsetCompany(formData) 
        }
         
         setImageError(false)
@@ -154,7 +167,7 @@ export const CreateCompany = () => {
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createCompanyBreadcrumb} />
-      <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
+      <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} callBack={()=>navigate("/company")} />
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-7">
         <span className="p-float-label" dir='ltr'>

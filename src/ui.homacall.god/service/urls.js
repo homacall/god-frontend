@@ -26,5 +26,7 @@ export const apiUrls = {
   insertCompany: GodHOST.concat('/CompanyInfoGod/Insert'),
   deleteCompany: GodHOST.concat('/CompanyInfoGod/Delete'),
   updateCompany: GodHOST.concat('/CompanyInfoGod/Update'),
+  getCompanyById: GodHOST.concat('/CompanyInfoGod/GetByID'),
+  getAllCompanySP: GodHOST.concat('/CompanyInfoGod/GetAllSP'),
 
 }
