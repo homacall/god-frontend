@@ -57,3 +57,22 @@ export const UpdateTranslate = data => {
       }
     })
 }
+export const GetAllTagsTranslate = () => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .get(apiUrls.getAllTagsTranslate, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}

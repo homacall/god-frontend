@@ -3,33 +3,35 @@ import { Button } from 'primereact/button'
 import { classNames } from 'primereact/utils'
 import { useFormik } from 'formik'
 import { Dialog } from 'primereact/dialog'
-import { TreeSelect } from 'primereact/treeselect'
 import { Dropdown } from 'primereact/dropdown'
 import { Checkbox } from 'primereact/checkbox'
 
 import { routeBreadcrumb } from '../constant/breadcrumb'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { TreeViewData } from '../constant/treeViewData'
 import { routeTypes } from '../constant/routeTypes'
 import { useLocation, useParams } from 'react-router'
 import { TreeView } from '../../userPermissions/components/treeView'
-import { GetAllTags } from '../../../service/tagManagerService'
+import { CreateRouteStructure, GetAllRoutesGodByType, GetByIdRouteStructure } from '../../../service/routeStretcherService'
+import { Alert } from '../../common/alert'
+import { GetAllTagsTranslate } from '../../../service/translateService'
 
 export const CreateAndEditStretcher = () => {
   const location = useLocation()
   const params = useParams()
   const [showMessage, setShowMessage] = useState(false)
   const [initialValues, setInitialValue] = useState({
-    RoutStr_PID: '',
     RoutStr_Tag_ID: '',
     RoutStr_TypeRout: '',
   })
   const [isParent, setIsParent] = useState(false)
   const [showTreeView, setShowTreeView] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(undefined)
+  const [routes, setRoutes] = useState([])
   const [tags, setTags] = useState([])
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+  const [message, setMessage] = useState('')
   const fetchTags = () => {
-    GetAllTags()
+    GetAllTagsTranslate()
       .then(res => {
         if (res.data || res.status === 200) {
           setTags(res.data)
@@ -37,30 +39,44 @@ export const CreateAndEditStretcher = () => {
       })
       .catch(error => console.log(error))
   }
-
+  const fetchRoutes = () => {
+    GetAllRoutesGodByType()
+      .then(res => {
+        if (res.data || res.status === 200) {
+          setRoutes(res.data)
+        }
+      })
+      .catch(err => console.log(err))
+  }
+  const fetchRouteById = id => {
+    const formData = new FormData()
+    formData.append('ID', id)
+    GetByIdRouteStructure(formData).then(res => {
+      if (res.data || res.status === 200) {
+        setSelectedRoute()
+        setInitialValue({
+          RoutStr_Tag_ID: res.data.routStr_Tag_ID,
+          RoutStr_TypeRout: res.data.routStr_TypeRout.toString(),
+        })
+      }
+    })
+  }
   useEffect(() => {
     if (location.pathname.includes('/route-stretcher/update/')) {
       routeBreadcrumb[1].label = 'ویرایش انتساب'
       routeBreadcrumb[1].url = `/route-stretcher/update/${params.stretcherId}`
-
-      // fetch find one data
-      setInitialValue({
-        RoutStr_PID: '0-0-0',
-        RoutStr_Tag_ID: 1,
-        RoutStr_TypeRout: '1',
-      })
+      fetchRouteById(params.stretcherId)
     }
   }, [location.pathname, params?.stretcherId])
   useEffect(() => {
+    fetchRoutes()
     fetchTags()
   }, [])
   const formik = useFormik({
     initialValues,
     validate: data => {
       let errors = {}
-      if (data.RoutStr_PID !== 0 && !data.RoutStr_PID) {
-        errors.RoutStr_PID = 'Paren id را انتخاب کنید.'
-      }
+
       if (!data.RoutStr_Tag_ID) {
         errors.RoutStr_Tag_ID = 'Tag id را انتخاب کنید.'
       }
@@ -69,7 +85,31 @@ export const CreateAndEditStretcher = () => {
       }
       return errors
     },
-    onSubmit: data => {},
+    onSubmit: data => {
+      const formData = new FormData()
+      console.log(selectedRoute)
+      formData.append('RoutStr_TypeRout', parseInt(data.RoutStr_TypeRout))
+      formData.append('RoutStr_Tag_ID', data.RoutStr_Tag_ID)
+      if (isParent || !selectedRoute) {
+        formData.append('RoutStr_PID', 0)
+      } else {
+        formData.append('RoutStr_PID', selectedRoute.routStr_ID)
+      }
+      CreateRouteStructure(formData)
+        .then(res => {
+          setShowSuccessMessage(true)
+
+          if (res.data || res.status === 200) {
+            fetchRoutes()
+            setMessage('مسیر جدید با موفقیت ثبت شد')
+            setIsParent(false)
+            formik.resetForm()
+          } else {
+            setMessage('خطا در ثبت مسیر جدید')
+          }
+        })
+        .catch(err => console.log(err))
+    },
     enableReinitialize: true,
   })
   const isFormFieldValid = name => !!(formik.touched[name] && formik.errors[name])
@@ -87,14 +127,15 @@ export const CreateAndEditStretcher = () => {
     </div>
   )
   useEffect(() => {
-    console.log(selectedRoute)
-    if (selectedRoute) {
+    if (selectedRoute && routes.length) {
       setShowTreeView(false)
     }
   }, [selectedRoute])
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={routeBreadcrumb} />
+      <Alert message={message} setMessage={setMessage} setShowMessage={setShowSuccessMessage} showMessage={showSuccessMessage} />
+
       <Dialog
         visible={showMessage}
         onHide={() => setShowMessage(false)}
@@ -109,7 +150,7 @@ export const CreateAndEditStretcher = () => {
           <h5>مسیر جدید با موفقیت انتساب داده شد!</h5>
         </div>
       </Dialog>
-      <form className="grid grid-cols-3 gap-4 gap-y-10 p-5 mt-10" onSubmit={formik.handleSubmit}>
+      <form className="grid grid-cols-1 gap-4 gap-y-10 p-5 mt-10" onSubmit={formik.handleSubmit}>
         <span className="p-float-label">
           <Dropdown
             id="RoutStr_TypeRout"
@@ -117,13 +158,13 @@ export const CreateAndEditStretcher = () => {
             onChange={formik.handleChange}
             name="RoutStr_TypeRout"
             options={routeTypes}
-            className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_TypeRout'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_TypeRout'), 'w-[60%]': true })}
           />
           <label
             htmlFor="RoutStr_TypeRout"
             className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_TypeRout') })}`}
           >
-            Route Type
+            نوع ساختار
           </label>
           {getFormErrorMessage('RoutStr_TypeRout')}
         </span>
@@ -133,55 +174,33 @@ export const CreateAndEditStretcher = () => {
             value={formik.values.RoutStr_Tag_ID}
             onChange={formik.handleChange}
             name="RoutStr_Tag_ID"
-            optionLabel="tag_Name"
+            optionLabel="tagTranslate_Name"
             optionValue="tag_ID"
             options={tags}
-            className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_Tag_ID'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_Tag_ID'), 'w-[60%]': true, 'rtl': true })}
           />
           <label htmlFor="RoutStr_Tag_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_Tag_ID') })}`}>
-            Tag id
+            عنوان ساختار
           </label>
           {getFormErrorMessage('RoutStr_Tag_ID')}
         </span>
-        <span className="p-float-label relative">
+        <span className="p-float-label flex">
           <div
-            className="outline-2 h-[50px] w-full block border border-1 rounded-lg border-gray-300 hover:border-blue-600	cursor-pointer	relative"
+            className="outline-2 h-[50px] w-[60%] block border border-1 rounded-lg border-gray-300 hover:border-blue-600 	cursor-pointer	relative"
             onClick={() => (!isParent ? setShowTreeView(perv => !perv) : {})}
           >
-            <div className="w-30 h-30 absolute ">
-              <i className="pi-angle-down  " style={{ fontSize: '2em' }}></i>
-            </div>
+            <label
+              htmlFor="RoutStr_PID"
+              className={`right-2 text-sm  ${classNames({
+                'p-error': isFormFieldValid('RoutStr_PID'),
+                'text-[#ccc]': isParent,
+                'text-[#6f757d]': !isParent,
+              })}`}
+            >
+              {selectedRoute ? selectedRoute.routStr_Trans_Tag_Name : 'مسیر  والد'}
+            </label>
           </div>
-          <Dialog
-            visible={showTreeView}
-            onHide={() => setShowTreeView(false)}
-            position="center"
-            footer={treeViewDialogFooter}
-            showHeader={false}
-            breakpoints={{ '960px': '80vw' }}
-            style={{ width: '50vw' }}
-          >
-            <TreeView setSelectedRoute={setSelectedRoute} />
-          </Dialog>
-          {/* <TreeSelect
-            filter
-            selectionMode="single"
-            id="RoutStr_PID"
-            value={formik.values.RoutStr_PID}
-            onChange={formik.handleChange}
-            name="RoutStr_PID"
-            options={TreeViewData}
-            className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_PID'), 'w-full': true })}
-            disabled={true}
-            onClick={() => alert('hi')}
-          /> */}
-          <label
-            htmlFor="RoutStr_PID"
-            className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_PID'), 'p-disabled': isParent })}`}
-          >
-            {selectedRoute ? selectedRoute.tagName : 'Parent id'}
-          </label>
-          <div className="col-12 absolute ">
+          <div className="  mr-4">
             <Checkbox
               inputId="cb1"
               value={isParent}
@@ -191,13 +210,23 @@ export const CreateAndEditStretcher = () => {
               checked={isParent}
               className={'top-[10px]'}
             ></Checkbox>
-            <small htmlFor="cb1" className="p-checkbox-label mr-2 opacity-[75%] absolute w-[200px] top-[13px]">
+            <small htmlFor="cb1" className="p-checkbox-label mr-2 opacity-[75%] block mr-[30px]  mt-[-11px] w-[200px] ">
               مسیر اصلی
             </small>
           </div>
-          {getFormErrorMessage('RoutStr_PID')}
+          <Dialog
+            visible={showTreeView}
+            onHide={() => setShowTreeView(false)}
+            position="center"
+            footer={treeViewDialogFooter}
+            showHeader={false}
+            breakpoints={{ '960px': '80vw' }}
+            style={{ width: '40vw' }}
+          >
+            <TreeView setSelectedRoute={setSelectedRoute} data={routes} />
+          </Dialog>
         </span>
-        <Button label="ثبت" className="p-button-primary relative right-[86%] text-sm mt-3 h-10" />
+        <Button label="ثبت" className="p-button-primary relative text-sm mt-3 h-10 w-[100px] " />
       </form>
     </div>
   )

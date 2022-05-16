@@ -40,3 +40,6 @@ body{
 .p-password-input{
     width: 100%;
 }
+.p-dropdown-items-wrapper{
+    direction: rtl;
+}

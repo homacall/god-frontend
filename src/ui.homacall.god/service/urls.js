@@ -24,4 +24,11 @@ export const apiUrls = {
   updateRol: GodHOST.concat('/RoleGod/Update'),
   getByUserId: GodHOST.concat('/UserGod/GetByID'),
   updateUser: GodHOST.concat('/UserGod/Update'),
+  userRoleInsert: GodHOST.concat('/UserRoleGod/Insert'),
+  getAllRoutes: GodHOST.concat('/RouteStructureGod/GetAll'),
+  getAllRoutesByType: GodHOST.concat('/RouteStructureGod/GetAllByTypeRoute'),
+  createRoteStructure: GodHOST.concat('/RouteStructureGod/Insert'),
+  deleteRoteStructure: GodHOST.concat('/RouteStructureGod/Delete'),
+  getAllTagsTranslate: GodHOST.concat('/TagsknowledgeGod/GetAllTagsTranslate'),
+  getByIdRouteStructure: GodHOST.concat('/RouteStructureGod/GetByID'),
 }

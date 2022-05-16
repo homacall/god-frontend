@@ -6,7 +6,7 @@ export const showTagTableColumns = [
   },
   {
     header: 'نوع زبان',
-    field: 'tranTg_LangID',
+    field: 'tranTg_LangName',
     className: 'text-sm',
   },
 ]

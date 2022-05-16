@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
@@ -8,26 +8,17 @@ import { Toolbar } from 'primereact/toolbar'
 
 import TableActions from '../common/actionBody'
 import { routeColumns } from './constant/tableColumn'
+import { DeleteRouteStructure, GetAllRoutesGodByType } from '../../service/routeStretcherService'
+import { routeTypes } from './constant/routeTypes'
+import { Alert } from '../common/alert'
 
 export const RouteStretcher = () => {
   const [globalFilter, setGlobalFilter] = useState(null)
+  const [allRoutes, setAllRoutes] = useState([])
+  const [message, setMessage] = useState('')
+  const [showMessage, setShowMessage] = useState(false)
   const navigate = useNavigate()
-  const dataL = [
-    {
-      id: 1,
-      PID: '1',
-      TgID: '1',
-      Translate: '1',
-      Type: '1',
-    },
-    {
-      id: 2,
-      PID: '2',
-      TgID: '2',
-      Translate: '2',
-      Type: '2',
-    },
-  ]
+
   const rightToolbarTemplate = () => {
     return (
       <>
@@ -38,6 +29,36 @@ export const RouteStretcher = () => {
     )
   }
 
+  const fetchRouteStructure = () => {
+    GetAllRoutesGodByType().then(res => {
+      if (res.data || res.status === 200) {
+        setAllRoutes(
+          res.data.map(item => {
+            const type = routeTypes.find(type => type.value === item.routStr_TypeRout.toString())
+            return { ...item, routStr_TypeRout: type.label }
+          }),
+        )
+      }
+    })
+  }
+  const deleteRoute = id => {
+    const formData = new FormData()
+    formData.append('ID', id)
+    DeleteRouteStructure(formData)
+      .then(res => {
+        setShowMessage(true)
+        if (res.data || res.status === 200) {
+          setMessage('مسیر با موفقیت حذف شد.')
+          fetchRouteStructure()
+        } else {
+          setMessage('خطا در حذف مسیر')
+        }
+      })
+      .catch(err => console.log(err))
+  }
+  useEffect(() => {
+    fetchRouteStructure()
+  }, [])
   const header = (
     <div className="table-header">
       <span className="p-input-icon-left">
@@ -51,9 +72,10 @@ export const RouteStretcher = () => {
     <div className="w-[95%] mt-4 m-auto container">
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+        <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
 
         <DataTable
-          value={dataL}
+          value={allRoutes}
           paginator
           rows={10}
           rowsPerPageOptions={[5, 10, 25]}
@@ -74,12 +96,12 @@ export const RouteStretcher = () => {
             body={data => (
               <TableActions
                 deleteAction={() => {
-                  alert(data.id)
+                  deleteRoute(data.routStr_ID)
                 }}
                 hasDelete={true}
                 hasUpdate={true}
                 updateAction={() => {
-                  navigate(`/route-stretcher/update/${data.id}`)
+                  navigate(`/route-stretcher/update/${data.routStr_ID}`)
                 }}
                 updateHasView={false}
                 deleteLabel="حذف"

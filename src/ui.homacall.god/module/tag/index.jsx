@@ -12,6 +12,7 @@ import { tagColumns } from './constant/tableColumn'
 import ShowTag from './components/ShowTag'
 import { DeleteTag, GetAllTags, UpdateTags } from '../../service/tagManagerService'
 import { Alert } from '../common/alert'
+import { GetAllTagsTranslate } from '../../service/translateService'
 
 export const Tag = () => {
   const [tagName, setTagName] = useState('')
@@ -24,9 +25,9 @@ export const Tag = () => {
   const [message, setMessage] = useState('')
   //Get Tags List from server with api
   useEffect(() => {
-    GetAllTags().then(res => {
+    GetAllTagsTranslate().then(res => {
       if (res.data) {
-        setData(res.data.map(item => ({ id: item.tag_ID, title: item.tag_Name })))
+        setData(res.data.map(item => ({ id: item.tag_ID, title: item.tag_Name, transTitle: item.tagTranslate_Name || '--' })))
       }
     })
   }, [fetchAgain])
@@ -97,7 +98,7 @@ export const Tag = () => {
 
   return (
     <>
-      <ShowTag visible={openShow} tagId={id} onHide={closeShowTag} tagName={tagName} />
+      <ShowTag visible={openShow} tagId={id} onHide={closeShowTag} tagName={tagName} fetchAgain={fetchAgainHandler} />
       <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
       <div className="w-[95%] mt-4 m-auto container">
         <div className="card">
