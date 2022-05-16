@@ -10,17 +10,14 @@ import TableActions from '../common/actionBody'
 import { companyColumns } from './constant/tableColumn'
 import PageToolbar from './constant/PageToolbar'
 import { Alert } from '../common/alert'
-import { GetAllLanguage } from '../../service/languageService'
 import { GetAllCompanyInfoSP, DeleteCompany } from '../../service/companyService'
 import ShowAllTableData from '../common/ShowAllTableData'
 import {showAllDataBreadcrumb} from './constant/createCompanyBreadcrumb'
-import { set } from 'lodash'
 
 
 export const Company = () => {
   const [globalFilter, setGlobalFilter] = useState(null);
   const [companyInfo, setCompanyInfo] = useState([]);
-  const [languages, setLanguages] = useState([]);
   const [fetchAgain, setFetchAgain] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
   const [message, setMessage] = useState('')
@@ -29,18 +26,7 @@ export const Company = () => {
   const [companyInfoObject, setCompanyInfoObject] = useState({})
   const navigate = useNavigate();
 
-  const fetchLanguage = () => {
-    GetAllLanguage().then(res => {
-      if (res.data || res.status === 200) {
-        setLanguages(res.data.map(item => ({ id: item.lang_ID, name: item.lang_Name })))
-      }
-    })
-  }
-
-  useEffect(() => {
-    fetchLanguage()
-  }, [])
-
+ 
 const renderImage =  coIn_Logo => <Image
 src={'/assets/img/'+coIn_Logo}
 template="نمایش"

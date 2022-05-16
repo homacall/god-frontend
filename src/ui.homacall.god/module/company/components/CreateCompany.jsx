@@ -49,7 +49,7 @@ export const CreateCompany = () => {
       }
     })
   }
-const fetchCompany =useCallback(()=>{
+const fetchCompany = useCallback(()=>{
   const formData = new FormData()
   formData.append("ID", CompanyId)
   GetCompanyById(formData).then(res => {
