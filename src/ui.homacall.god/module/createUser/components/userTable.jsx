@@ -71,12 +71,12 @@ export const UserTable = ({ data, fetchAgain }) => {
                 setUserIsActive({ status: item.usr_IsA, userId: item.usr_ID, username: item.usr_UName })
                 activeDialogHandler()
               }}
-              className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1' : ' p-button-danger ml-2 text-xs rtl  p-1'}
+              className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1 mt-1' : ' p-button-danger ml-2 text-xs rtl  p-1 mt-1'}
             >
               {item.usr_IsA ? 'غیرفعال' : 'فعال'}
             </Button>
             <Button
-              className="p-button-primary text-xs rtl ml-1 p-1"
+              className="p-button-primary text-xs rtl ml-1 p-1 mt-1"
               onClick={() => {
                 setUserInfoForPermission(data)
                 setShowPermissions(perv => !perv)
@@ -85,7 +85,7 @@ export const UserTable = ({ data, fetchAgain }) => {
               سطح دسترسی
             </Button>
             <Button
-              className="p-button-help text-xs rtl  p-1"
+              className="p-button-help text-xs rtl  p-1 mt-1"
               onClick={() => {
                 setUserIdForRole(item.usr_ID)
                 roleDialogHandler()

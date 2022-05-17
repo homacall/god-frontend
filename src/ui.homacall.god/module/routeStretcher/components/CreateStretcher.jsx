@@ -56,7 +56,7 @@ export const CreateAndEditStretcher = () => {
   }
   const fetchRouteById = id => {
     const formData = new FormData()
-    formData.append('ID', id)
+    formData.append('RotID', id)
     GetByIdRouteStructure(formData).then(res => {
       if (res.data || res.status === 200) {
         setSelectedRoute(res.data)
@@ -203,6 +203,8 @@ export const CreateAndEditStretcher = () => {
             name="RoutStr_TypeRout"
             options={routeTypes}
             className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_TypeRout'), 'w-[60%]': true })}
+            filterBy="label"
+            filter
           />
           <label
             htmlFor="RoutStr_TypeRout"
@@ -222,6 +224,8 @@ export const CreateAndEditStretcher = () => {
             optionValue="tag_ID"
             options={tags}
             className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_Tag_ID'), 'w-[60%]': true, 'rtl': true })}
+            filterBy="tagTranslate_Name"
+            filter
           />
           <label htmlFor="RoutStr_Tag_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_Tag_ID') })}`}>
             عنوان ساختار

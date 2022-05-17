@@ -30,7 +30,7 @@ export const apiUrls = {
   createRoteStructure: GodHOST.concat('/RouteStructureGod/Insert'),
   deleteRoteStructure: GodHOST.concat('/RouteStructureGod/Delete'),
   getAllTagsTranslate: GodHOST.concat('/TagsknowledgeGod/GetAllTagsTranslate'),
-  getByIdRouteStructure: GodHOST.concat('/RouteStructureGod/GetByID'),
+  getByIdRouteStructure: GodHOST.concat('/RouteStructureGod/GetByIDSP'),
   updateRouteStructure: GodHOST.concat('/RouteStructure/Update'),
   getAllCompany: GodHOST.concat('/CompanyInfoGod/GetAll'),
   insertCompany: GodHOST.concat('/CompanyInfoGod/Insert'),
@@ -42,4 +42,5 @@ export const apiUrls = {
   getRoleByUserId: GodHOST.concat('/UserRoleGod/GetAllRoleByUserIDSP'),
   updateUserRole: GodHOST.concat('/UserRoleGod/Update'),
   deleteAllUserRole: GodHOST.concat('/UserRoleGod/DeleteAllUserRole'),
+  getAllRoutesStrByParentType: GodHOST.concat('/RouteStructureGod/GetAllByParentTypeRoute'),
 }

@@ -76,7 +76,6 @@ const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagNam
   useEffect(() => {
     setLanguageList(languages)
   }, [languages])
-  console.log(languageList)
   return (
     <Dialog visible={visible} onHide={onHide} footer={footer} header={header} dir="rtl">
       <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />

@@ -3,13 +3,15 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { Toolbar } from 'primereact/toolbar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { GetAllRoutesGodByType } from '../../service/routeStretcherService'
 import { TreeView } from './components/treeView'
 import { permissionColumns } from './constants/permissionColumns'
 
 export const UserPermissions = ({ visible, onHide, user }) => {
   const [newPermissionDialog, setNewPermissionDialog] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(undefined)
+  const [routes, setRoutes] = useState([])
   const handelNewPermissionDialog = () => {
     setNewPermissionDialog(perv => !perv)
   }
@@ -23,7 +25,13 @@ export const UserPermissions = ({ visible, onHide, user }) => {
       <Button label="باشه" className="p-button-text" autoFocus onClick={handelNewPermissionDialog} />
     </div>
   )
-
+  useEffect(() => {
+    GetAllRoutesGodByType()
+      .then(res => {
+        setRoutes(res.data)
+      })
+      .catch(err => console.log(err))
+  }, [])
   const rightToolbarTemplate = () => {
     return (
       <>
@@ -56,7 +64,7 @@ export const UserPermissions = ({ visible, onHide, user }) => {
         breakpoints={{ '960px': '80vw' }}
         style={{ width: '60vw' }}
       >
-        <TreeView data={[]} setSelectedRoute={setSelectedRoute} />
+        <TreeView data={routes} setSelectedRoute={setSelectedRoute} hasPermission={true} />
       </Dialog>
       <DataTable
         value={[]}

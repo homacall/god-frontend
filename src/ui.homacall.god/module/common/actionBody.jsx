@@ -37,7 +37,7 @@ const TableActions = ({
         <Button
           label={deleteLabel}
           icon={deleteIcon && 'pi pi-trash text-xs'}
-          className={`${deleteButtonClassName} `}
+          className={`${deleteButtonClassName} mt-1`}
           onClick={() => {
             handleDeleteDialog()
           }}
@@ -47,7 +47,7 @@ const TableActions = ({
       {hasUpdate && (
         <Button
           label={updateLabel}
-          icon={updateIcon && 'pi pi-pencil text-xs'}
+          icon={updateIcon && 'pi pi-pencil text-xs mt-1'}
           className={updateButtonClassName}
           onClick={() => {
             if (updateHasView) {
