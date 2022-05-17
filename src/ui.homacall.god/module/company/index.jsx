@@ -1,23 +1,86 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
+import { Image } from 'primereact/image'
 
 import TableActions from '../common/actionBody'
-import { tableColumns } from './constant/tableColumn'
+import { companyColumns } from './constant/tableColumn'
 import PageToolbar from './constant/PageToolbar'
-import { getAllLanguages, getCompanyInfo, DeleteCompany } from './constant/Crud'
+import { Alert } from '../common/alert'
+import { GetAllCompanyInfoSP, DeleteCompany } from '../../service/companyService'
+import ShowAllTableData from '../common/ShowAllTableData'
+import {showAllDataBreadcrumb} from './constant/createCompanyBreadcrumb'
+
 
 export const Company = () => {
   const [globalFilter, setGlobalFilter] = useState(null);
-  
-   //Get company info from database with api
-   const companyInfo = getCompanyInfo();
+  const [companyInfo, setCompanyInfo] = useState([]);
+  const [fetchAgain, setFetchAgain] = useState(false)
+  const [showMessage, setShowMessage] = useState(false)
+  const [message, setMessage] = useState('')
+  const [showAllData, setShowAllData] = useState(false)
+  const [compId, setCompId] = useState(0)
+  const [companyInfoObject, setCompanyInfoObject] = useState({})
+  const navigate = useNavigate();
 
-   //Get all languages from database with api
-   const languages = getAllLanguages();
+ 
+const renderImage =  coIn_Logo => <Image
+src={'/assets/img/'+coIn_Logo}
+template="نمایش"
+alt="لوگو"
+width={50}
+height={50}
+preview={true}
+className="w-[50px] h-[50px] rounded-full"
+/>
+
+  useEffect(() => {
+    GetAllCompanyInfoSP().then(res => {
+      if (res.data || res.status === 200) {
+       if(res.data.length > 0){
+        setCompanyInfoObject({
+          'نام': res.data[0].coIn_Name,
+          'لوگو': renderImage(res.data[0].coIn_Logo),
+          'تلفن': res.data[0].coIn_Phone,
+          'موبایل': res.data[0].coIn_Mobile,
+          'فکس': res.data[0].coIn_Fax,
+          'پنل پیامک': res.data[0].coIn_SmsNumber,
+          'ایمیل': res.data[0].coIn_Email,
+          'اینستاگرام': res.data[0].coIn_Instagram,
+          'سایت': res.data[0].coIn_Site,
+          'آدرس شرکت': res.data[0].coIn_Address,
+          'درباره شرکت': res.data[0].coIn_About,
+          'زبان پیشفرض': res.data[0].coIn_LangName,
+        })
+      }
+        const newData = [];
+      res.data.forEach(comp =>
+        newData.push({
+          ...comp,
+          coIn_Logo: (
+            <Image
+              src={'/assets/img/'+comp.coIn_Logo}
+              template="نمایش"
+              alt={comp.coIn_Name}
+              width={50}
+              height={50}
+              preview={true}
+              className="w-[50px] h-[50px] rounded-full"
+            />
+          ),
+        })
+      )
+        setCompanyInfo(newData)
+      }
+    }).catch(err=> console.log("error: ", err))
+  }, [fetchAgain])
+
+  const fetchAgainHandler = () => {
+    setFetchAgain(perv => !perv)
+  }
 
   const header = (
     <div className="table-header">
@@ -28,13 +91,49 @@ export const Company = () => {
     </div>
 );
 
+const handleOpenShowAll = id=>{ setCompId(id); setShowAllData(true); }
+
+const handleCloseShowAll = ()=>{ setCompId(0); setShowAllData(false) }
+
+const handleDelete = compID => {
+  const formData = new FormData()
+  formData.append('ID', compID)
+  DeleteCompany(formData)
+    .then(res => {
+      setShowMessage(true)
+      if (res.data || res.status === 200) {
+        setMessage('حذف شرکت با موفقیت انجام شد')
+        fetchAgainHandler()
+      } else {
+        setMessage('خطا در حذف شرکت ')
+      }
+    })
+    .catch(err => console.log(err))
+
+}
+
+
   return (
     <>
-     <div className="w-[95%] mt-4 m-auto container">
+    
+
+     <div className="w-[95%] mt-4 m-auto container"> 
       <div className="card">
       
         <PageToolbar size={companyInfo.length} />
-
+        <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
+        <ShowAllTableData 
+    visible={showAllData} 
+    onHide={handleCloseShowAll} 
+    data={companyInfoObject} 
+    headerTitle="نمایش اطلاعات شرکت" 
+    hasBreadCamp={false} 
+    breadCamp={showAllDataBreadcrumb}  
+    hasButton={true}
+    buttonTitle={"ویرایش"}
+    buttonClasses='relative right-[80%] text-sm mt-2 h-10'
+    buttonCallBack={()=>navigate('/company/edit/'+compId)}
+    />
         <DataTable
           value={companyInfo}
           paginator
@@ -47,22 +146,8 @@ export const Company = () => {
           responsiveLayout="scroll"
           className="rtl"
         >
-          {tableColumns.map((col, index) => {
-             if (col.field === 'logo') {
-              return <Column field={col.field} header={col.header} sortable key={index} filterBy="#{data.name}" className={col.className} body={(rowData) => <img src={`/assets/img/`+rowData.logo} alt="هماکال" />} />
-             }else if(col.field === 'language'){
-              return <Column field={col.field} header={col.header} sortable key={index} filterBy="#{data.name}" className={col.className} body={rowData => 
-                languages.map((lang)=>{
-                  if(lang.id === rowData.language){
-                     return lang.name
-                  }
-                  return null
-                }
-              )} />
-             }else{
+          {companyColumns.map((col, index) => {
               return <Column field={col.field} header={col.header} sortable key={index} filterBy="#{data.name}" className={col.className}></Column>
-             }
-            
            })
           }
           
@@ -72,18 +157,19 @@ export const Company = () => {
             body={(data) => (
               <>
               <TableActions
-                deleteAction={() => { DeleteCompany(data.id); }}
+                deleteAction={() => { handleDelete(data.coIn_ID); }}
                 hasDelete={true}
                 hasUpdate={false}
                 updateAction={() => {
-                  alert(data.id)
+                  alert(data.coIn_ID)
                 }}
                 deleteLabel="حذف"
                 updateLabel="ویرایش"
-                deleteButtonClassName={'p-button-outlined p-button-danger  text-xs rtl h-10 w-25 py-1 px-3'}
-                updateButtonClassName={'p-button-outlined p-button-warning mt-2  text-xs rtl h-10 w-25 py-1 px-3'}
+                deleteButtonClassName={'p-button-danger ml-1 rtl p-1 mb-2'}
+                updateButtonClassName={'p-button-warning ml-1 text-xs rtl p-1'}
               />
-              <Link to={'/company/edit/'+data.id}><Button  className='p-button-outlined p-button-warning mt-2  text-xs rtl h-10 w-25 py-1 px-3'>ویرایش</Button></Link>
+              <Link to={'/company/edit/'+data.coIn_ID}><Button className='p-button-warning ml-1 rtl p-1 ml-2 mb-2'>ویرایش</Button></Link>
+              <Button onClick={()=>handleOpenShowAll(data.coIn_ID)} className='p-button-help rtl p-1 mb-2'>نمایش همه</Button>
              </>
             )}
             
