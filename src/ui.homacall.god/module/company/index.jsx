@@ -115,7 +115,14 @@ const handleDelete = compID => {
 
   return (
     <>
-    <ShowAllTableData 
+    
+
+     <div className="w-[95%] mt-4 m-auto container"> 
+      <div className="card">
+      
+        <PageToolbar size={companyInfo.length} />
+        <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
+        <ShowAllTableData 
     visible={showAllData} 
     onHide={handleCloseShowAll} 
     data={companyInfoObject} 
@@ -127,11 +134,6 @@ const handleDelete = compID => {
     buttonClasses='relative right-[80%] text-sm mt-2 h-10'
     buttonCallBack={()=>navigate('/company/edit/'+compId)}
     />
-
-     <div className="w-[95%] mt-4 m-auto container"> 
-      <div className="card">
-        <PageToolbar size={companyInfo.length} />
-        <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
         <DataTable
           value={companyInfo}
           paginator

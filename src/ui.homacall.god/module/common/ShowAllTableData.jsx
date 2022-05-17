@@ -15,11 +15,15 @@ function ShowAllTableData({visible, onHide, data, hasBreadCamp, breadCamp, butto
 };
 
 const header = (
+  <>
   <div className="table-header">
     <p className="p-input-icon-left">
       <span className="text-base">{headerTitle}</span>
     </p>
+   
   </div>
+  
+  </>
 )
 
 const footer = () => {
@@ -33,7 +37,7 @@ const footer = () => {
   
   return (
     <>
-    <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white">
+    {/* <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white"> */}
       <Dialog
         visible={visible}
         onHide={onHide}
@@ -44,7 +48,7 @@ const footer = () => {
         style={{ width: '50vw', direction: 'rtl' }}
         
       >
-        {hasBreadCamp ? <Breadcrumb item={breadCamp} /> : null}
+         {hasBreadCamp ? <Breadcrumb item={breadCamp} /> : null}
         <section>
           {data ?
              renderData(data)
@@ -53,7 +57,7 @@ const footer = () => {
           }
         </section>
       </Dialog>
-    </div>
+    {/* </div> */}
     </>
   )
 }
