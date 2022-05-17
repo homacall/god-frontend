@@ -9,36 +9,22 @@ import { Dialog } from 'primereact/dialog'
 
 import { userColumns } from '../constant/tableColumn'
 import TableActions from '../../common/actionBody'
-import { DeleteUser } from '../../../service/userService'
+import { ChangeUserStatus } from '../../../service/userService'
 import { UserPermissions } from '../../userPermissions'
 import { SetRoleUserDialog } from './setRoleUser'
+import moment from 'moment-jalaali'
 
-export const UserTable = ({ data }) => {
+export const UserTable = ({ data, fetchAgain }) => {
   const [dataTable, setDataTable] = useState([])
   const [showMessage, setShowMessage] = useState(false)
-  const [deletedUser, setDeletedUser] = useState('')
-  const [deleteLoading, setDeleteLoading] = useState(false)
   const [showPermissions, setShowPermissions] = useState(false)
   const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
   const [userIdForRole, setUserIdForRole] = useState(0)
   const [showRoleDialog, setRoleDialog] = useState(false)
   const [activeDialog, setActiveDialog] = useState(false)
-  const [activeUser, setActiveUser] = useState('')
+  const [userIsActive, setUserIsActive] = useState(false)
+
   const navigate = useNavigate()
-  const deleteUser = id => {
-    setDeleteLoading(true)
-    const formData = new FormData()
-    formData.append('ID', id)
-    DeleteUser(formData)
-      .then(res => {
-        if (res.data && res.data === 'success') {
-          setShowMessage(true)
-        }
-      })
-      .finally(() => {
-        setDeleteLoading(false)
-      })
-  }
 
   const permissionDialogHandler = () => {
     setShowPermissions(perv => !perv)
@@ -66,27 +52,27 @@ export const UserTable = ({ data }) => {
             className="w-[50px] h-[50px] rounded-full"
           />
         ),
+        usr_DateReg: moment(item.usr_DateReg).format('jYYYY/jMM/jDD'),
         action: (
           <TableActions
-            deleteAction={() => {
-              setDeletedUser(item.usr_UName)
-              deleteUser(item.usr_ID)
-            }}
-            hasDelete={true}
+            hasDelete={false}
             hasUpdate={true}
             updateAction={() => {
               navigate(`/users/update/${item.usr_ID}`)
             }}
             deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-1'}
             updateButtonClassName={' p-button-warning ml-1 text-xs rtl  p-1'}
-            deleteLabel="حذف"
             updateLabel="ویرایش"
-            deleteIcon={false}
             updateIcon={false}
-            deleteLoading={deleteLoading}
             updateHasView={false}
           >
-            <Button className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1' : ' p-button-danger ml-2 text-xs rtl  p-1'}>
+            <Button
+              onClick={() => {
+                setUserIsActive({ status: item.usr_IsA, userId: item.usr_ID, username: item.usr_UName })
+                activeDialogHandler()
+              }}
+              className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1' : ' p-button-danger ml-2 text-xs rtl  p-1'}
+            >
               {item.usr_IsA ? 'غیرفعال' : 'فعال'}
             </Button>
             <Button
@@ -102,7 +88,6 @@ export const UserTable = ({ data }) => {
               className="p-button-help text-xs rtl  p-1"
               onClick={() => {
                 setUserIdForRole(item.usr_ID)
-                setActiveUser(item.usr_UName)
                 roleDialogHandler()
               }}
             >
@@ -114,7 +99,7 @@ export const UserTable = ({ data }) => {
       }),
     )
     setDataTable(newData)
-  }, [data, deleteLoading, navigate])
+  }, [data, navigate])
   const rightToolbarTemplate = () => {
     return (
       <>
@@ -124,10 +109,29 @@ export const UserTable = ({ data }) => {
       </>
     )
   }
+  const changeUserStatus = () => {
+    const formData = new FormData()
+    formData.append('ID', userIsActive.userId)
+    formData.append('IsActive', !userIsActive.status)
+    ChangeUserStatus(formData).then(res => {
+      if (res.data || res.status === 200) {
+        fetchAgain()
+        setUserIsActive({ status: false, username: '', userId: 0 })
+        activeDialogHandler()
+        setShowMessage(true)
+      }
+    })
+  }
   const dialogFooterActive = (
-    <div className="flex justify-content-center">
-      <Button label="بلی" onClick={() => {}} className="p-button-outlined  p-button-success relative right-[70%] text-xs mt-3 h-10" />
-      <Button label="خیر" onClick={activeDialogHandler} className="p-button-outlined p-button-danger right-[65%] text-xs mt-3 h-10" />
+    <div className="block w-full">
+      <Button label="خیر" onClick={activeDialogHandler} className="p-button-outlined p-button-danger  text-xs mt-3 h-10" />
+      <Button
+        label="بلی"
+        onClick={() => {
+          changeUserStatus()
+        }}
+        className="p-button-outlined  p-button-success relative  text-xs mt-3 h-10"
+      />
     </div>
   )
   const dialogFooter = (
@@ -137,7 +141,6 @@ export const UserTable = ({ data }) => {
         className="p-button-text"
         autoFocus
         onClick={() => {
-          setDeletedUser('')
           setShowMessage(false)
         }}
       />
@@ -158,7 +161,7 @@ export const UserTable = ({ data }) => {
         >
           <div className="flex align-items-center flex-column pt-6 px-3">
             <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
-            <h5>{`کاربر ${deletedUser}  با موفقیت حذف شد.`}</h5>
+            <h5>{`تغییر وضعیت کاربر با موفقیت انجام شد.`}</h5>
           </div>
         </Dialog>
         <Dialog
@@ -170,9 +173,14 @@ export const UserTable = ({ data }) => {
           breakpoints={{ '960px': '80vw' }}
           style={{ width: '30vw' }}
         >
-          <div className="flex align-items-center flex-column pt-6 px-3">
-            <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
-            <h5>{`آیا میخواهید کاربر ${activeUser} را `}</h5>
+          <div className=" pb-4 rounded-md m-auto container bg-white rtl mt-4">
+            <h5>
+              {` آیا میخواهید کاربر ${userIsActive.username} را `}
+              <span className={`${userIsActive.status ? 'text-red-500' : 'text-green-500	'}`}>{`${
+                userIsActive.status ? ' غیرفعال ' : ' فعال '
+              }`}</span>
+              کنید
+            </h5>
           </div>
         </Dialog>
         <SetRoleUserDialog onHide={roleDialogHandler} visible={showRoleDialog} userId={userIdForRole} />

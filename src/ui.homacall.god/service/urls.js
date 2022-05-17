@@ -38,5 +38,8 @@ export const apiUrls = {
   updateCompany: GodHOST.concat('/CompanyInfoGod/Update'),
   getCompanyById: GodHOST.concat('/CompanyInfoGod/GetByID'),
   getAllCompanySP: GodHOST.concat('/CompanyInfoGod/GetAllSP'),
-
+  userIsActive: GodHOST.concat('/UserGod/ISActive'),
+  getRoleByUserId: GodHOST.concat('/UserRoleGod/GetAllRoleByUserIDSP'),
+  updateUserRole: GodHOST.concat('/UserRoleGod/Update'),
+  deleteAllUserRole: GodHOST.concat('/UserRoleGod/DeleteAllUserRole'),
 }

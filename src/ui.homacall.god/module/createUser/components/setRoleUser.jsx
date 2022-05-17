@@ -3,15 +3,16 @@ import { useEffect, useState } from 'react'
 import { GetAllRole } from '../../../service/rolService'
 import { Checkbox } from 'primereact/checkbox'
 import { Button } from 'primereact/button'
-import { InsertUserRole } from '../../../service/userRole'
+import { DeleteAllUserRole, InsertUserRole, UpdateUserRole } from '../../../service/userRole'
 import { Alert } from '../../common/alert'
+import { GetRoleByUserId } from '../../../service/userService'
 
 export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
   const [roles, setRoles] = useState([])
   const [selectedRole, setSelectedRole] = useState([])
   const [showMessage, setShowMessage] = useState(false)
   const [message, setMessage] = useState('')
-
+  const [hasRole, setHasRole] = useState(false)
   const fetchRole = () => {
     GetAllRole()
       .then(res => {
@@ -21,24 +22,66 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
           console.log('error')
         }
       })
+
       .catch(err => {
         console.log(err)
       })
   }
+  const fetchRoleByUserId = () => {
+    const formData = new FormData()
+    formData.append('UserID', userId)
+    GetRoleByUserId(formData).then(res => {
+      if (res.data || res.status === 200) {
+        if (res.data.length) {
+          setHasRole(true)
+        } else {
+          setHasRole(false)
+        }
+        setSelectedRole(res.data.map(item => ({ rol_ID: item.rol_ID, rol_Name: item.transTagText })))
+      }
+    })
+  }
   const submitHandler = () => {
     const data = selectedRole.map(role => ({ usr_ID: userId, rol_ID: role.rol_ID }))
-    InsertUserRole(data)
-      .then(res => {
-        setShowMessage(true)
-        onHide()
-        if (res.data || res.status === 200) {
-          setMessage('تخصیص نقش با موفقیت انجام شد')
-        } else {
-          setMessage('خطا در تخصیص نقش به کاربر')
-        }
-      })
-      .catch(err => console.log(err))
+    const formData = new FormData()
+    formData.append('UserID', userId)
+    if (hasRole) {
+      DeleteAllUserRole(formData)
+        .then(res => {
+          if ((res.data || res.status === 200) && selectedRole.length) {
+            InsertUserRole(data)
+              .then(res => {
+                setShowMessage(true)
+                onHide()
+                if (res.data || res.status === 200) {
+                  setMessage('تخصیص نقش با موفقیت انجام شد')
+                } else {
+                  setMessage('خطا در تخصیص نقش به کاربر')
+                }
+              })
+              .catch(err => console.log(err))
+          }
+        })
+        .catch(err => console.log(err))
+    } else {
+      InsertUserRole(data)
+        .then(res => {
+          setShowMessage(true)
+          onHide()
+          if (res.data || res.status === 200) {
+            setMessage('تخصیص نقش با موفقیت انجام شد')
+          } else {
+            setMessage('خطا در تخصیص نقش به کاربر')
+          }
+        })
+        .catch(err => console.log(err))
+    }
   }
+  useEffect(() => {
+    if (userId !== 0) {
+      fetchRoleByUserId()
+    }
+  }, [userId])
   useEffect(() => {
     fetchRole()
   }, [userId])
