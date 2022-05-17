@@ -15,22 +15,8 @@ import { GetAllLanguage } from '../../../service/languageService'
 import { getTranslateByTagId } from '../../../service/translateService'
 
 //Get one tag translations list from server with api
-const dataL = [
-  {
-    id: 1,
-    name: 'اضافه',
-    language: 'fa',
-    lang_id: 1,
-  },
-  {
-    id: 2,
-    name: 'add',
-    language: 'en',
-    lang_id: 2,
-  },
-]
 
-const ShowTag = ({ visible, tagId, onHide, tagName }) => {
+const ShowTag = ({ visible, tagId, onHide, tagName, fetchAgain }) => {
   const [globalFilter, setGlobalFilter] = useState(null)
   const [openTranslate, setOpenTranslate] = useState(false)
   const [openUpdateTranslate, setOpenUpdateTranslate] = useState(false)
@@ -81,11 +67,6 @@ const ShowTag = ({ visible, tagId, onHide, tagName }) => {
     setOpldLang(data.tranTg_LangID)
     setTranslateId(data.tranTg_ID)
     setOpenUpdateTranslate(true)
-    //     tranTg_ID: 4
-    // tranTg_LangID: 7
-    // tranTg_TagID: 7
-    // tranTg_Text: "edit"
-    console.log(data)
   }
 
   const closeUpdateTranslateTag = () => {
@@ -123,6 +104,7 @@ const ShowTag = ({ visible, tagId, onHide, tagName }) => {
         setData={setTranslates}
         languages={languagesToTranslate}
         tagName={tagName}
+        fetchAgain={fetchAgain}
       />
       <UpdateTranslateTag
         visible={openUpdateTranslate}

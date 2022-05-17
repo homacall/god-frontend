@@ -1,22 +1,17 @@
 export const routeColumns = [
   {
-    header: 'Parent id',
-    field: 'PID',
-    className: 'text-sm',
-  },
-  {
-    header: 'Tag id',
-    field: 'TgID',
+    header: 'Tag name',
+    field: 'routStr_Tag_Name',
     className: 'text-sm',
   },
   {
     header: 'Translate',
-    field: 'Translate',
+    field: 'routStr_Trans_Tag_Name',
     className: 'text-sm',
   },
   {
     header: 'Route Type',
-    field: 'Type',
+    field: 'routStr_TypeRout',
     className: 'text-sm',
   },
 ]

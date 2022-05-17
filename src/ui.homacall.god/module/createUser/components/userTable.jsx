@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
@@ -7,12 +7,11 @@ import { Toolbar } from 'primereact/toolbar'
 import { Image } from 'primereact/image'
 import { Dialog } from 'primereact/dialog'
 
-import CreateAndEditUser from './createUser'
-
 import { userColumns } from '../constant/tableColumn'
 import TableActions from '../../common/actionBody'
 import { DeleteUser } from '../../../service/userService'
 import { UserPermissions } from '../../userPermissions'
+import { SetRoleUserDialog } from './setRoleUser'
 
 export const UserTable = ({ data }) => {
   const [dataTable, setDataTable] = useState([])
@@ -21,6 +20,11 @@ export const UserTable = ({ data }) => {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [showPermissions, setShowPermissions] = useState(false)
   const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
+  const [userIdForRole, setUserIdForRole] = useState(0)
+  const [showRoleDialog, setRoleDialog] = useState(false)
+  const [activeDialog, setActiveDialog] = useState(false)
+  const [activeUser, setActiveUser] = useState('')
+  const navigate = useNavigate()
   const deleteUser = id => {
     setDeleteLoading(true)
     const formData = new FormData()
@@ -35,27 +39,22 @@ export const UserTable = ({ data }) => {
         setDeleteLoading(false)
       })
   }
-  const dialogFooter = (
-    <div className="flex justify-content-center">
-      <Button
-        label="باشه"
-        className="p-button-text"
-        autoFocus
-        onClick={() => {
-          setDeletedUser('')
-          setShowMessage(false)
-        }}
-      />
-    </div>
-  )
+
   const permissionDialogHandler = () => {
     setShowPermissions(perv => !perv)
+  }
+  const roleDialogHandler = () => {
+    setRoleDialog(perv => !perv)
+  }
+  const activeDialogHandler = () => {
+    setActiveDialog(perv => !perv)
   }
   useEffect(() => {
     const newData = []
     data.forEach(item =>
       newData.push({
         ...item,
+        usr_Gender: item.usr_Gender === 1 ? 'مرد' : item.usr_Gender === 0 ? 'زن' : 'سایر',
         usr_Img: (
           <Image
             src={'/assets/img/user.png'}
@@ -76,9 +75,8 @@ export const UserTable = ({ data }) => {
             hasDelete={true}
             hasUpdate={true}
             updateAction={() => {
-              alert('edit')
+              navigate(`/users/update/${item.usr_ID}`)
             }}
-            updateView={<CreateAndEditUser updateUser={item} />}
             deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-1'}
             updateButtonClassName={' p-button-warning ml-1 text-xs rtl  p-1'}
             deleteLabel="حذف"
@@ -86,6 +84,7 @@ export const UserTable = ({ data }) => {
             deleteIcon={false}
             updateIcon={false}
             deleteLoading={deleteLoading}
+            updateHasView={false}
           >
             <Button className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1' : ' p-button-danger ml-2 text-xs rtl  p-1'}>
               {item.usr_IsA ? 'غیرفعال' : 'فعال'}
@@ -99,14 +98,23 @@ export const UserTable = ({ data }) => {
             >
               سطح دسترسی
             </Button>
-            <Button className="p-button-help text-xs rtl  p-1">نقش</Button>
+            <Button
+              className="p-button-help text-xs rtl  p-1"
+              onClick={() => {
+                setUserIdForRole(item.usr_ID)
+                setActiveUser(item.usr_UName)
+                roleDialogHandler()
+              }}
+            >
+              نقش
+            </Button>
           </TableActions>
         ),
         usr_IsA: item.usr_IsA ? 'فعال' : 'غیرفعال',
       }),
     )
     setDataTable(newData)
-  }, [data, deleteLoading])
+  }, [data, deleteLoading, navigate])
   const rightToolbarTemplate = () => {
     return (
       <>
@@ -116,6 +124,25 @@ export const UserTable = ({ data }) => {
       </>
     )
   }
+  const dialogFooterActive = (
+    <div className="flex justify-content-center">
+      <Button label="بلی" onClick={() => {}} className="p-button-outlined  p-button-success relative right-[70%] text-xs mt-3 h-10" />
+      <Button label="خیر" onClick={activeDialogHandler} className="p-button-outlined p-button-danger right-[65%] text-xs mt-3 h-10" />
+    </div>
+  )
+  const dialogFooter = (
+    <div className="flex justify-content-center">
+      <Button
+        label="باشه"
+        className="p-button-text"
+        autoFocus
+        onClick={() => {
+          setDeletedUser('')
+          setShowMessage(false)
+        }}
+      />
+    </div>
+  )
   return (
     <div className="w-[95%] mt-4 m-auto container">
       <div className={`card `}>
@@ -134,6 +161,21 @@ export const UserTable = ({ data }) => {
             <h5>{`کاربر ${deletedUser}  با موفقیت حذف شد.`}</h5>
           </div>
         </Dialog>
+        <Dialog
+          visible={activeDialog}
+          onHide={activeDialogHandler}
+          position="center"
+          footer={dialogFooterActive}
+          showHeader={false}
+          breakpoints={{ '960px': '80vw' }}
+          style={{ width: '30vw' }}
+        >
+          <div className="flex align-items-center flex-column pt-6 px-3">
+            <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
+            <h5>{`آیا میخواهید کاربر ${activeUser} را `}</h5>
+          </div>
+        </Dialog>
+        <SetRoleUserDialog onHide={roleDialogHandler} visible={showRoleDialog} userId={userIdForRole} />
         <UserPermissions visible={showPermissions} onHide={permissionDialogHandler} user={userInfoForPermission} />
         <DataTable
           value={dataTable}

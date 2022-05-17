@@ -20,6 +20,26 @@ export const insertUser = data => {
       }
     })
 }
+export const UpdateUser = data => {
+  const token = localStorage.getItem('token')
+
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.updateUser, data, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}
 
 export const GetAllUser = () => {
   const token = localStorage.getItem('token')
@@ -49,6 +69,25 @@ export const DeleteUser = id => {
   }
   return http
     .post(apiUrls.deleteUser, id, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}
+export const GetByUserId = id => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.getByUserId, id, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {

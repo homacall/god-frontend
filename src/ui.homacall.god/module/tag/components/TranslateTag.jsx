@@ -8,9 +8,10 @@ import '../style/translatetag.css'
 import { insertTranslate } from '../../../service/translateService'
 import { Alert } from '../../common/alert'
 
-const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagName }) => {
+const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagName, fetchAgain }) => {
   const [translateValue, setTranslateValue] = useState('')
   const [languageId, setLanguageId] = useState('')
+  const [languageName, setLanguageName] = useState('')
   const [languageList, setLanguageList] = useState(languages)
   const [showMessage, setShowMessage] = useState(false)
   const [message, setMessage] = useState('')
@@ -24,10 +25,21 @@ const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagNam
         const newList = languageList.filter(lang => lang.value !== languageId)
         setLanguageList(newList)
         if (data) {
-          setData([...data, { id: data.length + 1, tranTg_Text: translateValue, tranTg_LangID: languageId, lang_id: languageId }])
+          setData([
+            ...data,
+            {
+              id: data.length + 1,
+              tranTg_Text: translateValue,
+              tranTg_LangID: languageId,
+              lang_id: languageId,
+              tranTg_LangName: languageName,
+            },
+          ])
         }
         setLanguageId('')
         setTranslateValue('')
+        fetchAgain()
+
         if (languageList.length === 1) {
           onHide()
         }
@@ -64,6 +76,7 @@ const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagNam
   useEffect(() => {
     setLanguageList(languages)
   }, [languages])
+  console.log(languageList)
   return (
     <Dialog visible={visible} onHide={onHide} footer={footer} header={header} dir="rtl">
       <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
@@ -81,6 +94,9 @@ const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagNam
           options={languageList}
           onChange={e => {
             setLanguageId(e.value)
+            const selectedLang = languageList.find(lang => lang.value === e.value)
+
+            setLanguageName(selectedLang?.label)
           }}
           optionLabel="label"
           filter

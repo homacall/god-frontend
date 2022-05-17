@@ -25,6 +25,7 @@ export const PrivateRoutes = () => {
         <Route path={`${language.newForm}`} element={<NewLanguage />} />
         <Route path={`${users.users}`} element={<UsersPage />} />
         <Route path={`${users.createUser}`} element={<CreateAndEditUser />} />
+        <Route path={`${users.update}`} element={<CreateAndEditUser />} />
         <Route path={rolls.roll} element={<Roll />} />
         <Route path={rolls.newRoll} element={<CreateRoll />} />
         <Route path={`${tags.tag}`} element={<Tag />} />

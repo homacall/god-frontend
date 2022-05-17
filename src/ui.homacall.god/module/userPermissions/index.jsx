@@ -4,7 +4,6 @@ import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { Toolbar } from 'primereact/toolbar'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { TreeView } from './components/treeView'
 import { permissionColumns } from './constants/permissionColumns'
 

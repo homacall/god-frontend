@@ -17,7 +17,7 @@ function God() {
     } else {
       setToken(token)
     }
-  }, [navigate, token])
+  }, [navigate, token, setToken])
 
   return <div className="God">{token ? <PrivateRoutes /> : <PublicRoutes />}</div>
 }
