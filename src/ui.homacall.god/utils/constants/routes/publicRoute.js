@@ -9,6 +9,7 @@ export const sidebar = {
   home: '/',
   roll: '/roll',
   tag: '/tag',
+  manage: '/company',
   routeStretcher: '/route-stretcher',
 }
 export const language = {
@@ -31,6 +32,12 @@ export const rolls = {
 export const tags = {
   tag: '/tag',
   newTag: '/tag/new-tag',
+}
+
+export const manage = {
+  company: '/company',
+  newCompany: '/company/new-company',
+  editCompany: '/company/edit/:CompanyId',
 }
 
 export const routeStretcher = {
