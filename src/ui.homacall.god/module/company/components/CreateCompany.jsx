@@ -99,7 +99,7 @@ const fetchCompany = useCallback(()=>{
       if (res.status === 200 || res.data) {
         formik.resetForm()
         setMessage('ثبت شرکت جدید با موفقیت انجام شد')
-        navigate("/company");
+        
       } else {
         setMessage('ثبت شرکت جدید با خطا مواجه شد')
       }
