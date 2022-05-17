@@ -7,8 +7,6 @@ import { Toolbar } from 'primereact/toolbar'
 import { Image } from 'primereact/image'
 import { Dialog } from 'primereact/dialog'
 
-import CreateAndEditUser from './createUser'
-
 import { userColumns } from '../constant/tableColumn'
 import TableActions from '../../common/actionBody'
 import { DeleteUser } from '../../../service/userService'
@@ -116,7 +114,7 @@ export const UserTable = ({ data }) => {
       }),
     )
     setDataTable(newData)
-  }, [data, deleteLoading])
+  }, [data, deleteLoading, navigate])
   const rightToolbarTemplate = () => {
     return (
       <>

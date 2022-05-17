@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import { classNames } from 'primereact/utils'
@@ -7,7 +7,6 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { Dialog } from 'primereact/dialog'
 import { useFormik } from 'formik'
-import { useRecoilValue } from 'recoil'
 
 import { createUserGender } from '../constant/createusergender'
 import { createUserBreadcrumb } from '../constant/createUserBreadcrumb'
@@ -16,12 +15,11 @@ import { InputImage } from '../../common/fileUploader'
 
 import { CityServiceGetByProvinceID } from '../../../service/cityService'
 import { ProvinceServiceGetAll } from '../../../service/province'
-import { userData } from '../../../store/atom'
 import { GetByUserId, insertUser, UpdateUser } from '../../../service/userService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { useLocation, useParams } from 'react-router'
 
-const CreateAndEditUser = ({ updateUser }) => {
+const CreateAndEditUser = () => {
   const location = useLocation()
   const params = useParams()
   const [provinces, setProvinces] = useState([])
@@ -54,10 +52,6 @@ const CreateAndEditUser = ({ updateUser }) => {
   }, [location.pathname, params?.userId])
   useEffect(() => {
     if (editMode) {
-      // routeBreadcrumb[1].label = 'ویرایش انتساب'
-      // routeBreadcrumb[1].url = `/route-stretcher/update/${params.stretcherId}`
-
-      // fetch find one data
       const formData = new FormData()
       formData.append('ID', params.userId)
       GetByUserId(formData).then(res => {
@@ -81,7 +75,7 @@ const CreateAndEditUser = ({ updateUser }) => {
         }
       })
     }
-  }, [])
+  }, [editMode, params.userId])
 
   const formik = useFormik({
     initialValues,

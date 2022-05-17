@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 export function InputImage({ setImageUrl, imageError, imageUrl }) {
   const uploadedImage = React.useRef(null)

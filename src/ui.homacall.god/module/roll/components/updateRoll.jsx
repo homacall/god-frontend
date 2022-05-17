@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { InputText } from 'primereact/inputtext'
 import { GetAllTags } from '../../../service/tagManagerService'
 import { Dropdown } from 'primereact/dropdown'
 

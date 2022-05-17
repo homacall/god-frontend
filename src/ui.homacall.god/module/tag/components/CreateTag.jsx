@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import TranslateAlert from './alert/TranslateAlert'
 import { item } from './constant/BreadcampItem'
 import { CreateTagService } from '../../../service/tagManagerService'
 import { classNames } from 'primereact/utils'
@@ -11,8 +10,6 @@ import { useNavigate } from 'react-router'
 
 export const CreateTag = () => {
   const [value, setValue] = useState('')
-  const [visibleAlert, setVisibleAlert] = useState(false)
-  const [tagId, setTagId] = useState(0)
   const [error, setError] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
   const [message, setMessage] = useState('')
@@ -32,8 +29,6 @@ export const CreateTag = () => {
         setShowMessage(true)
         if (res.status === 200 || res.data === 'Succeed') {
           setMessage('ساخت تگ با موفقیت انجام شد ')
-          // setTagId(res.data.Tag_ID)
-          // setVisibleAlert(true)
         } else {
           setMessage('خطا در ساخت تگ ')
         }
@@ -41,14 +36,8 @@ export const CreateTag = () => {
       .catch(e => console.log(e))
   }
 
-  const closeTranslateAlert = () => {
-    setValue('')
-    setVisibleAlert(false)
-  }
-
   return (
     <>
-      <TranslateAlert visibleAlert={visibleAlert} onHide={closeTranslateAlert} tagId={tagId} tagName={value} />
       <Alert
         message={message}
         setMessage={setMessage}

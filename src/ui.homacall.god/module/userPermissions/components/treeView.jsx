@@ -1,28 +1,30 @@
 import _ from 'lodash'
 import { Button } from 'primereact/button'
+import { useCallback } from 'react'
 import { Fragment, useEffect, useState } from 'react'
-import { GetAllRoutesGod } from '../../../service/routeStretcherService'
 
 export const TreeView = ({ setSelectedRoute, closeButton, data }) => {
   const [dataView, setDataView] = useState([])
   const [selected, setSelected] = useState([])
 
-  const filterData = route => {
-    const newData = data.filter(d => d.routStr_PID === route.routStr_ID)
-    if (setSelectedRoute) {
-      if (!newData.length) {
-        setSelectedRoute(route)
-      } else {
-        setSelectedRoute(undefined)
+  const filterData = useCallback(
+    route => {
+      const newData = data.filter(d => d.routStr_PID === route.routStr_ID)
+      if (setSelectedRoute) {
+        if (!newData.length) {
+          setSelectedRoute(route)
+        } else {
+          setSelectedRoute(undefined)
+        }
       }
-    }
 
-    setDataView(newData)
-  }
-
+      setDataView(newData)
+    },
+    [data, setSelectedRoute],
+  )
   useEffect(() => {
     filterData({ routStr_ID: 0 })
-  }, [data])
+  }, [data, filterData])
   const removeHeaderHandler = index => {
     if (index + 1 === selected.length) return
     const newHeaders = _.slice(selected, 0, index + 1)
@@ -39,7 +41,7 @@ export const TreeView = ({ setSelectedRoute, closeButton, data }) => {
               removeHeaderHandler(0)
             }}
           >
-            <a className="hover:text-indigo-600">اصلی</a>
+            <div className="hover:text-indigo-600">اصلی</div>
             {<i className="pi pi-angle-left pr-2" />}
           </li>
           {selected.map((label, index) => (
@@ -51,7 +53,7 @@ export const TreeView = ({ setSelectedRoute, closeButton, data }) => {
                   removeHeaderHandler(index)
                 }}
               >
-                <a className="hover:text-indigo-600">{label.routStr_Trans_Tag_Name}</a>
+                <div className="hover:text-indigo-600">{label.routStr_Trans_Tag_Name}</div>
                 {index + 1 < selected.length && <i className="pi pi-angle-left pr-2" />}
               </li>
             </Fragment>

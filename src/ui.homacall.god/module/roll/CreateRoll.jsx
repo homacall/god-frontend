@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import Breadcrumb from '../../component/breadcrumb/breadcrumb'
 import { InsertRole } from '../../service/rolService'

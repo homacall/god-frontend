@@ -10,7 +10,7 @@ import { UpdateTag } from './components/UpdateTag'
 import TableActions from '../common/actionBody'
 import { tagColumns } from './constant/tableColumn'
 import ShowTag from './components/ShowTag'
-import { DeleteTag, GetAllTags, UpdateTags } from '../../service/tagManagerService'
+import { DeleteTag, UpdateTags } from '../../service/tagManagerService'
 import { Alert } from '../common/alert'
 import { GetAllTagsTranslate } from '../../service/translateService'
 
