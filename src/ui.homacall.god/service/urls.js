@@ -31,4 +31,5 @@ export const apiUrls = {
   deleteRoteStructure: GodHOST.concat('/RouteStructureGod/Delete'),
   getAllTagsTranslate: GodHOST.concat('/TagsknowledgeGod/GetAllTagsTranslate'),
   getByIdRouteStructure: GodHOST.concat('/RouteStructureGod/GetByID'),
+  updateRouteStructure: GodHOST.concat('/RouteStructure/Update'),
 }

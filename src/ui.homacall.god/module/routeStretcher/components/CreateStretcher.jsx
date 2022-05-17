@@ -11,7 +11,12 @@ import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { routeTypes } from '../constant/routeTypes'
 import { useLocation, useParams } from 'react-router'
 import { TreeView } from '../../userPermissions/components/treeView'
-import { CreateRouteStructure, GetAllRoutesGodByType, GetByIdRouteStructure } from '../../../service/routeStretcherService'
+import {
+  CreateRouteStructure,
+  GetAllRoutesGodByType,
+  GetByIdRouteStructure,
+  UpdateRouteStructure,
+} from '../../../service/routeStretcherService'
 import { Alert } from '../../common/alert'
 import { GetAllTagsTranslate } from '../../../service/translateService'
 
@@ -30,6 +35,7 @@ export const CreateAndEditStretcher = () => {
   const [tags, setTags] = useState([])
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
   const [message, setMessage] = useState('')
+  const [editMode, setEditMode] = useState(location.pathname.includes('/route-stretcher/update/'))
   const fetchTags = () => {
     GetAllTagsTranslate()
       .then(res => {
@@ -53,7 +59,7 @@ export const CreateAndEditStretcher = () => {
     formData.append('ID', id)
     GetByIdRouteStructure(formData).then(res => {
       if (res.data || res.status === 200) {
-        setSelectedRoute()
+        setSelectedRoute(res.data)
         setInitialValue({
           RoutStr_Tag_ID: res.data.routStr_Tag_ID,
           RoutStr_TypeRout: res.data.routStr_TypeRout.toString(),
@@ -63,15 +69,71 @@ export const CreateAndEditStretcher = () => {
   }
   useEffect(() => {
     if (location.pathname.includes('/route-stretcher/update/')) {
+      setEditMode(true)
+    } else {
+      setEditMode(false)
+    }
+  }, [location.pathname, params?.stretcherId])
+  useEffect(() => {
+    if (editMode) {
       routeBreadcrumb[1].label = 'ویرایش انتساب'
       routeBreadcrumb[1].url = `/route-stretcher/update/${params.stretcherId}`
       fetchRouteById(params.stretcherId)
     }
-  }, [location.pathname, params?.stretcherId])
+  }, [params.stretcherId, editMode])
   useEffect(() => {
     fetchRoutes()
     fetchTags()
   }, [])
+  const insertRoute = data => {
+    const formData = new FormData()
+    formData.append('RoutStr_TypeRout', parseInt(data.RoutStr_TypeRout))
+    formData.append('RoutStr_Tag_ID', data.RoutStr_Tag_ID)
+    if (isParent || !selectedRoute) {
+      formData.append('RoutStr_PID', 0)
+    } else {
+      formData.append('RoutStr_PID', selectedRoute.routStr_ID)
+    }
+    CreateRouteStructure(formData)
+      .then(res => {
+        setShowSuccessMessage(true)
+
+        if (res.data || res.status === 200) {
+          fetchRoutes()
+          setMessage('مسیر جدید با موفقیت ثبت شد')
+          setIsParent(false)
+          formik.resetForm()
+        } else {
+          setMessage('خطا در ثبت مسیر جدید')
+        }
+      })
+      .catch(err => console.log(err))
+  }
+  const editRoute = data => {
+    const formData = new FormData()
+    formData.append('RoutStr_TypeRout', parseInt(data.RoutStr_TypeRout))
+    formData.append('RoutStr_Tag_ID', data.RoutStr_Tag_ID)
+    formData.append('RoutStr_ID', params.stretcherId)
+    if (isParent || !selectedRoute) {
+      formData.append('RoutStr_PID', 0)
+    } else {
+      formData.append('RoutStr_PID', selectedRoute.routStr_ID)
+    }
+    UpdateRouteStructure(formData)
+      .then(res => {
+        setShowSuccessMessage(true)
+
+        if (res.data || res.status === 200) {
+          fetchRoutes()
+          setMessage('مسیر جدید با موفقیت ثبت شد')
+          setIsParent(false)
+          formik.resetForm()
+        } else {
+          setMessage('خطا در ثبت مسیر جدید')
+        }
+      })
+      .catch(err => console.log(err))
+  }
   const formik = useFormik({
     initialValues,
     validate: data => {
@@ -86,29 +148,11 @@ export const CreateAndEditStretcher = () => {
       return errors
     },
     onSubmit: data => {
-      const formData = new FormData()
-      console.log(selectedRoute)
-      formData.append('RoutStr_TypeRout', parseInt(data.RoutStr_TypeRout))
-      formData.append('RoutStr_Tag_ID', data.RoutStr_Tag_ID)
-      if (isParent || !selectedRoute) {
-        formData.append('RoutStr_PID', 0)
+      if (editMode) {
+        editRoute(data)
       } else {
-        formData.append('RoutStr_PID', selectedRoute.routStr_ID)
+        insertRoute(data)
       }
-      CreateRouteStructure(formData)
-        .then(res => {
-          setShowSuccessMessage(true)
-
-          if (res.data || res.status === 200) {
-            fetchRoutes()
-            setMessage('مسیر جدید با موفقیت ثبت شد')
-            setIsParent(false)
-            formik.resetForm()
-          } else {
-            setMessage('خطا در ثبت مسیر جدید')
-          }
-        })
-        .catch(err => console.log(err))
     },
     enableReinitialize: true,
   })
@@ -130,7 +174,7 @@ export const CreateAndEditStretcher = () => {
     if (selectedRoute && routes.length) {
       setShowTreeView(false)
     }
-  }, [selectedRoute])
+  }, [selectedRoute, routes.length])
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={routeBreadcrumb} />
