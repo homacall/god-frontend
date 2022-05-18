@@ -1,6 +1,6 @@
 import http from './httpService'
 import { apiUrls } from './urls'
-export const InsertUserRole = data => {
+export const InsertRoleUserPermission = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -8,7 +8,7 @@ export const InsertUserRole = data => {
     },
   }
   return http
-    .post(apiUrls.userRoleInsert, data, config)
+    .post(apiUrls.insertRoleUserPermissionGod, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -19,7 +19,7 @@ export const InsertUserRole = data => {
       }
     })
 }
-export const UpdateUserRole = data => {
+export const DeleteAllRoleUserPermission = id => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -27,7 +27,7 @@ export const UpdateUserRole = data => {
     },
   }
   return http
-    .post(apiUrls.updateUserRole, data, config)
+    .post(apiUrls.deleteAllRoleUserPermissionGod, id, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -38,7 +38,7 @@ export const UpdateUserRole = data => {
       }
     })
 }
-export const DeleteAllUserRole = data => {
+export const GetAllPermissionUserActions = id => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -46,7 +46,26 @@ export const DeleteAllUserRole = data => {
     },
   }
   return http
-    .post(apiUrls.deleteAllUserRole, data, config)
+    .post(apiUrls.getAllPermissionUserActions, id, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}
+export const GetAllPermissionUserRoutePath = id => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.getAllPermissionUserRoutePath, id, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {

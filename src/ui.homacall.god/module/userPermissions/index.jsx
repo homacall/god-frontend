@@ -3,27 +3,112 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { Toolbar } from 'primereact/toolbar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { DeleteAllRoleUserPermission, GetAllPermissionUserRoutePath } from '../../service/roleUserPermissionGod'
+import { GetAllRoutesGodByTypeRouteTree } from '../../service/routeStretcherService'
+import TableActions from '../common/actionBody'
+import { ToastAlert } from '../common/toastAlert'
+import { SelectActions } from './components/selectActions'
 import { TreeView } from './components/treeView'
 import { permissionColumns } from './constants/permissionColumns'
 
 export const UserPermissions = ({ visible, onHide, user }) => {
   const [newPermissionDialog, setNewPermissionDialog] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(undefined)
+  const [closeEditDialog, setCloseEditDialog] = useState(false)
+  const [routes, setRoutes] = useState([])
+  const [dataTable, setDataTable] = useState([])
+  const [fetchAgain, setFetchAgain] = useState(false)
   const handelNewPermissionDialog = () => {
     setNewPermissionDialog(perv => !perv)
   }
+  const fetchAgainHandler = () => {
+    setFetchAgain(perv => !perv)
+  }
   const dialogFooter = (
     <div className="flex justify-content-center">
-      <Button label="باشه" className="p-button-text" autoFocus onClick={onHide} />
+      <Button label="بستن" className="p-button-text" autoFocus onClick={onHide} />
     </div>
   )
   const dialogPermissionFooter = (
     <div className="flex justify-content-center">
-      <Button label="باشه" className="p-button-text" autoFocus onClick={handelNewPermissionDialog} />
+      <Button label="بستن" className="p-button-text" autoFocus onClick={handelNewPermissionDialog} />
     </div>
   )
+  const deleteUserPermission = parentId => {
+    const formData = new FormData()
+    formData.append('UserID', user.usr_ID)
+    formData.append('ParentID', parentId)
+    DeleteAllRoleUserPermission(formData).then(res => {
+      if (res.data || res.status === 200) {
+        fetchAgainHandler()
+        ToastAlert.success('دسترسی ها با موفقیت حذف شد')
+      } else {
+        ToastAlert.error('خطا در حذف دسترسی ها')
+      }
+    })
+  }
+  const onHideUpdateDialogHandler = () => {
+    setCloseEditDialog(true)
+  }
+  const fetchUserPermission = () => {
+    const formData = new FormData()
+    formData.append('UsrRol_ID', user.usr_ID)
+    GetAllPermissionUserRoutePath(formData)
+      .then(res => {
+        if (res.data || res.status === 200) {
+          const newData = []
+          res.data.forEach(item => {
+            newData.push({
+              ...item,
+              action: (
+                <TableActions
+                  hasDelete={true}
+                  hasUpdate={true}
+                  deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-1'}
+                  updateButtonClassName={' p-button-warning ml-1 text-xs rtl  p-1'}
+                  updateLabel="ویرایش"
+                  deleteLabel={'حذف'}
+                  onHideUpdateDialog={closeEditDialog}
+                  deleteAction={() => {
+                    deleteUserPermission(item.routeStructure_ParentID)
+                  }}
+                  deleteIcon={false}
+                  updateIcon={false}
+                  updateView={
+                    <SelectActions
+                      editMode={true}
+                      user={user}
+                      parentId={item.routeStructure_ParentID}
+                      buttonClass="bottom-[25px] left-[45px]"
+                      onHide={onHideUpdateDialogHandler}
+                    />
+                  }
+                  updateHasView={true}
+                  updateHasFooter={false}
+                  updateDialogClassName={'w-[45vw] min-h-[300px]'}
+                ></TableActions>
+              ),
+            })
+          })
+          setDataTable(newData)
+        }
+      })
+      .catch(err => console.log(err))
+  }
 
+  useEffect(() => {
+    GetAllRoutesGodByTypeRouteTree()
+      .then(res => {
+        setRoutes(res.data)
+      })
+      .catch(err => console.log(err))
+  }, [])
+  useEffect(() => {
+    if (visible) {
+      fetchUserPermission()
+    }
+  }, [visible, fetchAgain])
   const rightToolbarTemplate = () => {
     return (
       <>
@@ -36,6 +121,7 @@ export const UserPermissions = ({ visible, onHide, user }) => {
       </>
     )
   }
+
   return (
     <Dialog
       visible={visible}
@@ -56,10 +142,17 @@ export const UserPermissions = ({ visible, onHide, user }) => {
         breakpoints={{ '960px': '80vw' }}
         style={{ width: '60vw' }}
       >
-        <TreeView data={[]} setSelectedRoute={setSelectedRoute} />
+        <TreeView
+          data={routes}
+          setSelectedRoute={setSelectedRoute}
+          hasPermission={true}
+          user={user}
+          onHide={handelNewPermissionDialog}
+          fetchAgain={fetchAgainHandler}
+        />
       </Dialog>
       <DataTable
-        value={[]}
+        value={dataTable}
         paginator
         rows={10}
         rowsPerPageOptions={[5, 10, 25]}

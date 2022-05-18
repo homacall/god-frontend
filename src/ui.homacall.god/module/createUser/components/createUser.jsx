@@ -176,7 +176,6 @@ const CreateAndEditUser = () => {
           setLoading(false)
         })
     } else {
-      formData.append('Usr_DateReg', '1401/02/20')
       insertUser(formData)
         .then(res => {
           if (res.status === 200 || res.data === 'success') {
