@@ -104,14 +104,14 @@ useEffect(() => {
       setShowMessage(true)
       if (res.status === 200 || res.data) {
         formik.resetForm()
-        setMessage('ویرایش پایگاه داده جدید با موفقیت انجام شد')
+        setMessage('ویرایش پایگاه داده با موفقیت انجام شد')
         
       } else {
-        setMessage('ویرایش پایگاه داده جدید با خطا مواجه شد')
+        setMessage('ویرایش پایگاه داده با خطا مواجه شد')
       }
     }).catch(err => {
       setShowMessage(true)
-      setMessage('ویرایش پایگاه داده جدید با خطا مواجه شد')
+      setMessage('ویرایش پایگاه داده با خطا مواجه شد')
       console.log(err)
     })
     .finally(() => {
