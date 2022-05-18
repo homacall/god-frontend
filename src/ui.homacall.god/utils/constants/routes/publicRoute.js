@@ -11,6 +11,7 @@ export const sidebar = {
   tag: '/tag',
   manage: '/company',
   routeStretcher: '/route-stretcher',
+  serverConnection: '/server-connection',
 }
 export const language = {
   languageTable: '/language',
@@ -44,4 +45,10 @@ export const routeStretcher = {
   main: '/route-stretcher',
   create: '/route-stretcher/create',
   update: '/route-stretcher/update/:stretcherId',
+}
+
+export const serverConnection = {
+  main: '/server-connection',
+  create: '/server-connection/create',
+  edit: '/server-connection/edit/:ServerId',
 }

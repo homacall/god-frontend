@@ -1,6 +1,7 @@
 import http from './httpService'
 import { apiUrls } from './urls'
-export const GetAllRoutesGodByType = () => {
+
+export const GetAllServerConnections = () => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -8,83 +9,7 @@ export const GetAllRoutesGodByType = () => {
     },
   }
   return http
-    .get(apiUrls.getAllRoutesByType, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
-      } else {
-        return err
-      }
-    })
-}
-export const CreateRouteStructure = data => {
-  const token = localStorage.getItem('token')
-  let config = {
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  }
-  return http
-    .post(apiUrls.createRoteStructure, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
-      } else {
-        return err
-      }
-    })
-}
-export const DeleteRouteStructure = id => {
-  const token = localStorage.getItem('token')
-  let config = {
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  }
-  return http
-    .post(apiUrls.deleteRoteStructure, id, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
-      } else {
-        return err
-      }
-    })
-}
-export const UpdateRouteStructure = data => {
-  const token = localStorage.getItem('token')
-  let config = {
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  }
-  return http
-    .post(apiUrls.updateRouteStructure, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
-      } else {
-        return err
-      }
-    })
-}
-export const GetByIdRouteStructure = id => {
-  const token = localStorage.getItem('token')
-  let config = {
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  }
-  return http
-    .post(apiUrls.getByIdRouteStructure, id, config)
+    .get(apiUrls.getAllServerConnections, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -96,7 +21,7 @@ export const GetByIdRouteStructure = id => {
     })
 }
 
-export const GetAllRoutesByParent = id => {
+export const InsertServerConnections = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -104,7 +29,7 @@ export const GetAllRoutesByParent = id => {
     },
   }
   return http
-    .post(apiUrls.getAllRoutesByParent, id, config)
+    .post(apiUrls.insertServerConnections, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -114,4 +39,67 @@ export const GetAllRoutesByParent = id => {
         return err
       }
     })
+}
+
+export const UpdateServerConnections = data => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.updateServerConnections, data, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}
+
+export const DeleteServerConnections = data => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.deleteServerConnections, data, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}
+
+export const GetServerConnectionsById = id => {
+  const token = localStorage.getItem('token')
+
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+
+  return http
+    .post(apiUrls.getServerConnectionsById, id, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+ 
 }

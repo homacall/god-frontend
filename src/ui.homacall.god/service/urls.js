@@ -38,5 +38,11 @@ export const apiUrls = {
   updateCompany: GodHOST.concat('/CompanyInfoGod/Update'),
   getCompanyById: GodHOST.concat('/CompanyInfoGod/GetByID'),
   getAllCompanySP: GodHOST.concat('/CompanyInfoGod/GetAllSP'),
+  getAllServerConnections: GodHOST.concat('/ServerConnectionGod/GetAll'),
+  insertServerConnections: GodHOST.concat('/ServerConnectionGod/Insert'),
+  deleteServerConnections: GodHOST.concat('/ServerConnectionGod/Delete'),
+  updateServerConnections: GodHOST.concat('/ServerConnectionGod/Update'),
+  getServerConnectionsById: GodHOST.concat('/ServerConnectionGod/GetByID'),
+  getAllRoutesByParent: GodHOST.concat('/RouteStructureGod/GetAllByParent'),
 
 }
