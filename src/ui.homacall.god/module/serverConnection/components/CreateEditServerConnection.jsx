@@ -98,7 +98,7 @@ useEffect(() => {
     }
   }, [location.pathname, serverConnectionById, fetchSystemName ])
 
-  const handleUpdateCompany = formData => {
+  const handleUpdateServerConnections = formData => {
    UpdateServerConnections(formData)
     .then(res => {
       setShowMessage(true)
@@ -119,7 +119,7 @@ useEffect(() => {
     })
   }
 
-  const handleInsetCompany = formData => {
+  const handleInsertServerConnections = formData => {
     InsertServerConnections(formData)
     .then(res => {
       setShowMessage(true)
@@ -148,7 +148,6 @@ useEffect(() => {
         values.SerConn_SysName = systemName
         setLoading(); 
         const formData = new FormData()
-        values.SerConn_SysID = parseInt(values.SerConn_SysID)
         Object.keys(values).forEach(key => {
           const value = values[key]
           formData.append(key, value)
@@ -156,9 +155,9 @@ useEffect(() => {
 
         if(ServerId){
             formData.append("SerConn_ID", ServerId);
-            handleUpdateCompany(formData)
+            handleUpdateServerConnections(formData)
           }else{
-            handleInsetCompany(formData) 
+            handleInsertServerConnections(formData) 
           }
            
     },

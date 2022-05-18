@@ -41,7 +41,7 @@ export const ServerConnection = () => {
     setFetchAgain(perv => !perv)
   }
 
-  const header = (
+const header = (
     <div className="table-header">
         <span className="p-input-icon-left">
             <i className="pi pi-search text-sm" />
