@@ -12,9 +12,11 @@ import { CreateTag } from '../module/tag/components/CreateTag'
 import LoginForm from '../module/auth/login/loginForm'
 import { Company } from '../module/company'
 import { CreateCompany } from '../module/company/components/CreateCompany'
-import { language, users, rolls, authRoutes, routeStretcher, tags, manage } from '../utils/constants/routes/publicRoute'
+import { language, users, rolls, authRoutes, routeStretcher, tags, manage, serverConnection } from '../utils/constants/routes/publicRoute'
 import { RouteStretcher } from '../module/routeStretcher'
 import { CreateAndEditStretcher } from '../module/routeStretcher/components/CreateStretcher'
+import { ServerConnection } from '../module/serverConnection'
+import CreateEditServerConnection from '../module/serverConnection/components/CreateEditServerConnection'
 
 export const PrivateRoutes = () => {
   return (
@@ -36,6 +38,9 @@ export const PrivateRoutes = () => {
         <Route path={routeStretcher.main} element={<RouteStretcher />} />
         <Route path={routeStretcher.create} element={<CreateAndEditStretcher />} />
         <Route path={routeStretcher.update} element={<CreateAndEditStretcher />} />
+        <Route path={`${serverConnection.main}`} element={<ServerConnection />} />
+        <Route path={`${serverConnection.create}`} element={<CreateEditServerConnection />} />
+        <Route path={`${serverConnection.edit}`} element={<CreateEditServerConnection />} />
         <Route path="/" element={<h1 style={{ textAlign: 'center', marginTop: 100 }}>سلام، به پنل اصلی خوش آمدید</h1>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

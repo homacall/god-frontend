@@ -40,7 +40,19 @@ className="w-[50px] h-[50px] rounded-full"
   useEffect(() => {
     GetAllCompanyInfoSP().then(res => {
       if (res.data || res.status === 200) {
+        
        if(res.data.length > 0){
+        var dateType = '';
+        
+        if(res.data[0].coIn_TypeDateTime === 1){
+          dateType = "شمسی";
+
+        }else if(res.data[0].coIn_TypeDateTime === 2){
+          dateType = "میلادی";
+        }else if(res.data[0].coIn_TypeDateTime === 3){
+          dateType = "قمری";
+        }
+ 
         setCompanyInfoObject({
           'نام': res.data[0].coIn_Name,
           'لوگو': renderImage(res.data[0].coIn_Logo),
@@ -54,6 +66,7 @@ className="w-[50px] h-[50px] rounded-full"
           'آدرس شرکت': res.data[0].coIn_Address,
           'درباره شرکت': res.data[0].coIn_About,
           'زبان پیشفرض': res.data[0].coIn_LangName,
+          'نوع تاریخ':  dateType,
         })
       }
         const newData = [];
@@ -71,6 +84,7 @@ className="w-[50px] h-[50px] rounded-full"
               className="w-[50px] h-[50px] rounded-full"
             />
           ),
+          coIn_TypeDateTime: dateType,
         })
       )
         setCompanyInfo(newData)

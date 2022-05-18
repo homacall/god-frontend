@@ -48,4 +48,11 @@ export const apiUrls = {
   insertRoleUserPermissionGod: GodHOST.concat('/RoleUserPermissionGod/Insert'),
   deleteAllRoleUserPermissionGod: GodHOST.concat('/RoleUserPermissionGod/DeleteAllPermissionUser'),
   getAllPermissionUserRoutePath: GodHOST.concat('/RoleUserPermissionGod/GetAllPermissionUserRoutePath'),
+  getAllServerConnections: GodHOST.concat('/ServerConnectionGod/GetAll'),
+  insertServerConnections: GodHOST.concat('/ServerConnectionGod/Insert'),
+  deleteServerConnections: GodHOST.concat('/ServerConnectionGod/Delete'),
+  updateServerConnections: GodHOST.concat('/ServerConnectionGod/Update'),
+  getServerConnectionsById: GodHOST.concat('/ServerConnectionGod/GetByID'),
+  getAllRoutesByParent: GodHOST.concat('/RouteStructureGod/GetAllByParent'),
+
 }

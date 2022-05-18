@@ -14,6 +14,7 @@ import { createCompanyBreadcrumb } from '../constant/createCompanyBreadcrumb'
 import validate from '../constant/validate'
 import { GetAllLanguage } from '../../../service/languageService'
 import { GetCompanyById, InsertCompany, UpdateCompany } from '../../../service/companyService'
+import { dateTypes } from '../constant/dateTypes'
 
 
 export const CreateCompany = () => {
@@ -35,7 +36,8 @@ export const CreateCompany = () => {
     CoIn_Instagram: '',
     CoIn_About: '',
     CoIn_LangID: '',
-    CoIn_SmsNumber: ''
+    CoIn_SmsNumber: '',
+    CoIn_TypeDateTime: '',
   })
 
   const location = useLocation();
@@ -76,6 +78,7 @@ const fetchCompany = useCallback(()=>{
     }else{
        //initialize for formik
        setImageUrl(companyById.coIn_Logo);
+
        setInitialValues({
         CoIn_Name: companyById.coIn_Name,
         CoIn_Address: companyById.coIn_Address,
@@ -87,7 +90,8 @@ const fetchCompany = useCallback(()=>{
         CoIn_Instagram: companyById.coIn_Instagram,
         CoIn_About: companyById.coIn_About,
         CoIn_LangID: companyById.coIn_LangID,
-        CoIn_SmsNumber: companyById.coIn_SmsNumber
+        CoIn_SmsNumber: companyById.coIn_SmsNumber,
+        CoIn_TypeDateTime: companyById.coIn_TypeDateTime,
       })
     }
   }, [location.pathname, navigate, companyById])
@@ -115,7 +119,7 @@ const fetchCompany = useCallback(()=>{
   }
 
 const handleUpdateCompany = formData => { 
-    
+  
     UpdateCompany(formData)
     .then(res => {
       setShowMessage(true)
@@ -140,7 +144,6 @@ const handleUpdateCompany = formData => {
     initialValues,
     validate,
     onSubmit: values => {
-      
       if (!imageUrl) {
         return setImageError(true)
       } else {
@@ -291,7 +294,6 @@ const handleUpdateCompany = formData => {
         </span>
 
         <span className="p-float-label" dir='ltr'>
-          
           <Dropdown 
              options={languages} 
              id="CoIn_LangID"
@@ -299,9 +301,6 @@ const handleUpdateCompany = formData => {
              optionLabel="name"
              optionValue="id"
              value={formik.values.CoIn_LangID}
-             filter 
-             showClear 
-             filterBy="name"
              placeholder="انتخاب زبان" 
              onChange={formik.handleChange}
              dir="rtl"
@@ -309,6 +308,24 @@ const handleUpdateCompany = formData => {
            />
            {formik.touched.CoIn_LangID && formik.errors.CoIn_LangID ? (
          <div className='text-red-600'>{formik.errors.CoIn_LangID}</div>
+       ) : null}
+         </span>
+
+         <span className="p-float-label" dir='ltr'>
+          <Dropdown 
+             options={dateTypes} 
+             id="CoIn_TypeDateTime"
+             name="CoIn_TypeDateTime"  
+             optionLabel="name"
+             optionValue="id"
+             value={formik.values.CoIn_TypeDateTime} 
+             placeholder="انتخاب نوع تاریخ" 
+             onChange={formik.handleChange}
+             dir="rtl"
+             style={{ width: '70%'}}
+           />
+           {formik.touched.CoIn_TypeDateTime && formik.errors.CoIn_TypeDateTime ? (
+         <div className='text-red-600'>{formik.errors.CoIn_TypeDateTime}</div>
        ) : null}
          </span>
 

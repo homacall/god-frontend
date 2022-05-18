@@ -39,6 +39,10 @@ const validate = values => {
         errors.CoIn_LangID = 'زبان الزامی است';
     }
 
+    if (!values.CoIn_TypeDateTime) {
+      errors.CoIn_TypeDateTime = 'نوع تاریخ الزامی است';
+    }
+
     if (!values.CoIn_SmsNumber) {
       errors.CoIn_SmsNumber = 'شماره سامانه پیامک الزامی است';
   }
