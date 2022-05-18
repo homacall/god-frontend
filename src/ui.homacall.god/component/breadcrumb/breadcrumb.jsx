@@ -8,7 +8,6 @@ const Breadcrumb = ({ item }) => {
       <ul className="flex h-12 place-item-center text-gray-700">
         <li className="pt-[11px] pr-[15px] hover:text-indigo-600">
           <Link to="/">
-            {' '}
             <i className="pi pi-home" />
           </Link>
         </li>

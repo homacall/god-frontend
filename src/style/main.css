@@ -5,14 +5,15 @@
     
 @font-face {
     font-family: "vazir";
-    src: url(../style/font/Vazir.ttf);
+    src: url(./font/Vazir.ttf);
 }
 
 :root{
-    --vazir:"vazir"
+    --vazir:"vazir";
+    --toastify-font-family:"vazir";
 }
 body{
-    font-family: var(--vazir);
+    font-family:"vazir";
     background: #f1f5f9;
 }
 
@@ -39,4 +40,13 @@ body{
 }
 .p-password-input{
     width: 100%;
+}
+.p-dropdown-items-wrapper{
+    direction: rtl;
+}
+.Toastify__toast-body{
+    font-family:"vazir";
+}
+.p-dropdown .p-dropdown-label{
+    font-size: 14px;
 }

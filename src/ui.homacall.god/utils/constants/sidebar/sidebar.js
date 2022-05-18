@@ -19,7 +19,7 @@ const items = [
   {
     id: 4,
     label: 'مدیریت شرکت',
-    url: `${sidebar.tag}`,
+    url: `${sidebar.manage}`,
   },
   {
     id: 5,
@@ -28,8 +28,13 @@ const items = [
   },
   {
     id: 6,
-    label: 'انتصاب مسیر',
-    url: `${sidebar.tag}`,
+    label: 'مدیریت پایگاه داده',
+    url: `${sidebar.serverConnection}`,
+  },
+  {
+    id: 7,
+    label: 'انتساب مسیر',
+    url: `${sidebar.routeStretcher}`,
   },
 ]
 
