@@ -13,6 +13,7 @@ import { createServerConnectionBreadcrumb } from '../constant/createServerConnec
 import validate from '../constant/validate'
 import {GetServerConnectionsById, InsertServerConnections, UpdateServerConnections} from '../../../service/serverConnectionService'
 import { GetAllCompanyInfo } from '../../../service/companyService'
+import {GetAllRoutesByParent} from '../../../service/routeStretcherService'
 
 const CreateEditServerConnection = () => {
   const [loading, setLoading] = useState(false);
@@ -20,6 +21,8 @@ const CreateEditServerConnection = () => {
   const [showMessage, setShowMessage] = useState(false)
   const [message, setMessage] = useState('')
   const [companies, setCompanies] = useState([])
+  const [routes, setRoutes] = useState([])
+  const [systemName, setSystemName] = useState('')
   const [initialValues, setInitialValues] = useState({
     SerConn_IP: '',
     SerConn_Port: '',
@@ -43,6 +46,16 @@ const CreateEditServerConnection = () => {
     })
   }
 
+  const fetchRouteStructure = () => {
+    const formData = new FormData()
+    formData.append("ID", 0)
+    GetAllRoutesByParent(formData).then(res => {
+      if (res.data || res.status === 200) {
+        setRoutes(res.data.map(item => ({ id: item.routStr_ID, name: item.routStr_Trans_Tag_Name, sys: item.routStr_Tag_Name })))
+      }
+    })
+  }
+
   const fetchServerConnection = useCallback(()=>{
     const formData = new FormData()
     formData.append("ID", ServerId)
@@ -55,14 +68,21 @@ const CreateEditServerConnection = () => {
 
 useEffect(() => {
     fetchCompany()
+    fetchRouteStructure()
     fetchServerConnection()
 }, [fetchServerConnection])
+
+const fetchSystemName = useCallback(()=>{
+  setSystemName(routes.filter(({ id }) => id === serverConnectionById.serConn_SysID).map(({ sys }) => sys))
+},[routes, serverConnectionById.serConn_SysID])
 
 useEffect(() => {
     let path = location.pathname;
     if(path.split("/")[2] === "edit"){
       if( Object.keys(serverConnectionById).length > 0){
          //initialize for formik
+         
+        fetchSystemName()
         setInitialValues({
             SerConn_IP: serverConnectionById.serConn_IP,
             SerConn_Port: serverConnectionById.serConn_Port,
@@ -70,13 +90,13 @@ useEffect(() => {
             SerConn_UsrID: serverConnectionById.serConn_UsrID,
             SerConn_HPass: serverConnectionById.serConn_HPass,
             SerConn_SysID: serverConnectionById.serConn_SysID,
-            SerConn_SysName: serverConnectionById.serConn_SysName,
+            //SerConn_SysName: systemName,
             SerConn_CoInID: serverConnectionById.serConn_CoInID,
           })
       }
         
     }
-  }, [location.pathname, serverConnectionById])
+  }, [location.pathname, serverConnectionById, fetchSystemName ])
 
   const handleUpdateCompany = formData => {
    UpdateServerConnections(formData)
@@ -125,7 +145,7 @@ useEffect(() => {
     initialValues,
     validate,
     onSubmit: values => { 
-        
+        values.SerConn_SysName = systemName
         setLoading(); 
         const formData = new FormData()
         values.SerConn_SysID = parseInt(values.SerConn_SysID)
@@ -227,14 +247,18 @@ useEffect(() => {
         </span>
 
         <span className="p-float-label" dir='ltr'>
-          <InputText
-            id="SerConn_SysID"
-            name="SerConn_SysID" 
-            value={formik.values.SerConn_SysID}
-            className="p-inputtext p-component"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
+        <Dropdown 
+             options={routes} 
+             id="SerConn_SysID"
+             name="SerConn_SysID"  
+             optionLabel="name"
+             optionValue="id"
+             value={formik.values.SerConn_SysID} 
+             placeholder="انتخاب  سیستم" 
+             onChange={(e)=> {formik.handleChange(e); setSystemName(routes.filter(({ id }) => id === e.target.value).map(({ sys }) => sys)) }}
+             dir="rtl"
+             style={{ width: '70%'}}
+           />
           <label htmlFor="SerConn_SysID">System ID</label>
           {formik.touched.SerConn_SysID && formik.errors.SerConn_SysID ? (
          <div className='text-red-600'>{formik.errors.SerConn_SysID}</div>
@@ -245,15 +269,11 @@ useEffect(() => {
           <InputText
             id="SerConn_SysName"
             name="SerConn_SysName" 
-            value={formik.values.SerConn_SysName}
+            readOnly={true}
+            value={systemName}
             className="p-inputtext p-component"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
           />
           <label htmlFor="SerConn_SysName">نام سیستم</label>
-          {formik.touched.SerConn_SysName && formik.errors.SerConn_SysName ? (
-         <div className='text-red-600'>{formik.errors.SerConn_SysName}</div>
-       ) : null} 
         </span>
 
         <span className="p-float-label" dir='ltr'>

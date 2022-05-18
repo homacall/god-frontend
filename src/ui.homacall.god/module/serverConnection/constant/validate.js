@@ -25,9 +25,9 @@ const validate = values => {
         errors.SerConn_SysID = 'System ID الزامی است';
     }
 
-    if (!values.SerConn_SysName) {
-      errors.SerConn_SysName = 'نام سیستم الزامی است';
-    }
+    // if (!values.SerConn_SysName) {
+    //   errors.SerConn_SysName = 'نام سیستم الزامی است';
+    // }
 
     if (!values.SerConn_CoInID) {
         errors.SerConn_CoInID = 'نام شرکت الزامی است';

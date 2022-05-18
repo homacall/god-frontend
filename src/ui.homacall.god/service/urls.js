@@ -43,5 +43,6 @@ export const apiUrls = {
   deleteServerConnections: GodHOST.concat('/ServerConnectionGod/Delete'),
   updateServerConnections: GodHOST.concat('/ServerConnectionGod/Update'),
   getServerConnectionsById: GodHOST.concat('/ServerConnectionGod/GetByID'),
+  getAllRoutesByParent: GodHOST.concat('/RouteStructureGod/GetAllByParent'),
 
 }
