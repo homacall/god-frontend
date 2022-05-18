@@ -12,7 +12,7 @@ import { CreateTag } from '../module/tag/components/CreateTag'
 import LoginForm from '../module/auth/login/loginForm'
 import { Company } from '../module/company'
 import { CreateCompany } from '../module/company/components/CreateCompany'
-import { language, users, rolls, authRoutes, routeStretcher, tags,manage } from '../utils/constants/routes/publicRoute'
+import { language, users, rolls, authRoutes, routeStretcher, tags, manage } from '../utils/constants/routes/publicRoute'
 import { RouteStretcher } from '../module/routeStretcher'
 import { CreateAndEditStretcher } from '../module/routeStretcher/components/CreateStretcher'
 

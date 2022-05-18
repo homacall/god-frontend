@@ -1,6 +1,6 @@
 export const GodHOST = process.env.REACT_APP_GOD_API_HOST || ''
 export const apiUrls = {
-  login: GodHOST.concat('AuthenticationGod/Login'),
+  login: GodHOST.concat('/AuthenticationGod/Login'),
   createLanguage: GodHOST.concat('/LanguageGod/insert'),
   getAllLanguage: GodHOST.concat('/LanguageGod/GetAll'),
   deleteLanguage: GodHOST.concat('/LanguageGod/Delete'),
@@ -27,6 +27,7 @@ export const apiUrls = {
   userRoleInsert: GodHOST.concat('/UserRoleGod/Insert'),
   getAllRoutes: GodHOST.concat('/RouteStructureGod/GetAll'),
   getAllRoutesByType: GodHOST.concat('/RouteStructureGod/GetAllByTypeRoute'),
+  getAllRoutesByTypeForTree: GodHOST.concat('/RouteStructureGod/GetAllByTypeRouteForTree'),
   createRoteStructure: GodHOST.concat('/RouteStructureGod/Insert'),
   deleteRoteStructure: GodHOST.concat('/RouteStructureGod/Delete'),
   getAllTagsTranslate: GodHOST.concat('/TagsknowledgeGod/GetAllTagsTranslate'),
@@ -43,4 +44,8 @@ export const apiUrls = {
   updateUserRole: GodHOST.concat('/UserRoleGod/Update'),
   deleteAllUserRole: GodHOST.concat('/UserRoleGod/DeleteAllUserRole'),
   getAllRoutesStrByParentType: GodHOST.concat('/RouteStructureGod/GetAllByParentTypeRoute'),
+  getAllPermissionUserActions: GodHOST.concat('/RoleUserPermissionGod/GetAllPermissionUserActions'),
+  insertRoleUserPermissionGod: GodHOST.concat('/RoleUserPermissionGod/Insert'),
+  deleteAllRoleUserPermissionGod: GodHOST.concat('/RoleUserPermissionGod/DeleteAllPermissionUser'),
+  getAllPermissionUserRoutePath: GodHOST.concat('/RoleUserPermissionGod/GetAllPermissionUserRoutePath'),
 }

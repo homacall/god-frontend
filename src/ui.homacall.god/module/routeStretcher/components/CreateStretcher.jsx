@@ -13,7 +13,7 @@ import { useLocation, useParams } from 'react-router'
 import { TreeView } from '../../userPermissions/components/treeView'
 import {
   CreateRouteStructure,
-  GetAllRoutesGodByType,
+  GetAllRoutesGodByTypeRouteTree,
   GetByIdRouteStructure,
   UpdateRouteStructure,
 } from '../../../service/routeStretcherService'
@@ -46,7 +46,7 @@ export const CreateAndEditStretcher = () => {
       .catch(error => console.log(error))
   }
   const fetchRoutes = () => {
-    GetAllRoutesGodByType()
+    GetAllRoutesGodByTypeRouteTree()
       .then(res => {
         if (res.data || res.status === 200) {
           setRoutes(res.data)

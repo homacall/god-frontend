@@ -11,10 +11,13 @@ import { routeColumns } from './constant/tableColumn'
 import { DeleteRouteStructure, GetAllRoutesGodByType } from '../../service/routeStretcherService'
 import { routeTypes } from './constant/routeTypes'
 import { Alert } from '../common/alert'
+import { Dropdown } from 'primereact/dropdown'
 
 export const RouteStretcher = () => {
   const [globalFilter, setGlobalFilter] = useState(null)
+  const [routeFilter, setRouteFilter] = useState(null)
   const [allRoutes, setAllRoutes] = useState([])
+  const [filteredRoutes, setFilteredRoutes] = useState([])
   const [message, setMessage] = useState('')
   const [showMessage, setShowMessage] = useState(false)
   const navigate = useNavigate()
@@ -59,11 +62,31 @@ export const RouteStretcher = () => {
   useEffect(() => {
     fetchRouteStructure()
   }, [])
+  const filterByType = value => {
+    const route = allRoutes.find(rout => rout.value === value)
+    const newData = allRoutes.includes(route.label)
+    setAllRoutes(newData)
+    console.log({ value, allRoutes })
+  }
   const header = (
     <div className="table-header">
       <span className="p-input-icon-left">
         <i className="pi pi-search text-sm" />
-        <InputText type="search" onInput={e => setGlobalFilter(e.target.value)} placeholder="جستوجو ..." className="h-10 text-sm" />
+        <InputText type="search" onInput={e => setGlobalFilter(e.target.value)} placeholder="جستجو ..." className="h-10 text-sm" />
+      </span>
+      <span className="p-input-icon-left mr-5 translate-y-1">
+        <i className="pi pi-search text-sm" />
+        <Dropdown
+          type="search"
+          options={routeTypes}
+          onChange={e => {
+            setRouteFilter(e.target.value)
+            filterByType(e.target.value)
+          }}
+          value={routeFilter}
+          placeholder=" جستجو مسیر ..."
+          className="h-10  	"
+        />
       </span>
     </div>
   )

@@ -75,24 +75,28 @@ export const UserTable = ({ data, fetchAgain }) => {
             >
               {item.usr_IsA ? 'غیرفعال' : 'فعال'}
             </Button>
-            <Button
-              className="p-button-primary text-xs rtl ml-1 p-1 mt-1"
-              onClick={() => {
-                setUserInfoForPermission(data)
-                setShowPermissions(perv => !perv)
-              }}
-            >
-              سطح دسترسی
-            </Button>
-            <Button
-              className="p-button-help text-xs rtl  p-1 mt-1"
-              onClick={() => {
-                setUserIdForRole(item.usr_ID)
-                roleDialogHandler()
-              }}
-            >
-              نقش
-            </Button>
+            {item.usr_IsA && (
+              <Button
+                className="p-button-primary text-xs rtl ml-1 p-1 mt-1"
+                onClick={() => {
+                  setUserInfoForPermission(item)
+                  setShowPermissions(perv => !perv)
+                }}
+              >
+                سطح دسترسی
+              </Button>
+            )}
+            {item.usr_IsA && (
+              <Button
+                className="p-button-help text-xs rtl  p-1 mt-1"
+                onClick={() => {
+                  setUserIdForRole(item.usr_ID)
+                  roleDialogHandler()
+                }}
+              >
+                نقش
+              </Button>
+            )}
           </TableActions>
         ),
         usr_IsA: item.usr_IsA ? 'فعال' : 'غیرفعال',

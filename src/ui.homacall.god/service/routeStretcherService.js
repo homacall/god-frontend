@@ -19,6 +19,25 @@ export const GetAllRoutesGodByType = () => {
       }
     })
 }
+export const GetAllRoutesGodByTypeRouteTree = () => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .get(apiUrls.getAllRoutesByTypeForTree, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}
 export const CreateRouteStructure = data => {
   const token = localStorage.getItem('token')
   let config = {

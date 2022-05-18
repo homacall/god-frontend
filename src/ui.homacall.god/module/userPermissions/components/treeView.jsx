@@ -4,10 +4,10 @@ import { useCallback } from 'react'
 import { Fragment, useEffect, useState } from 'react'
 import { SelectActions } from './selectActions'
 
-export const TreeView = ({ setSelectedRoute, closeButton, data, hasPermission = false }) => {
+export const TreeView = ({ setSelectedRoute, closeButton, data, hasPermission = false, user, onHide, fetchAgain }) => {
   const [dataView, setDataView] = useState([])
   const [selected, setSelected] = useState([])
-
+  const [selectButton, setSelectButton] = useState(false)
   const filterData = useCallback(
     route => {
       const newData = data.filter(d => d.routStr_PID === route.routStr_ID)
@@ -35,6 +35,7 @@ export const TreeView = ({ setSelectedRoute, closeButton, data, hasPermission = 
       setSelected(newHeaders)
     }
   }
+
   return (
     <div className="min-h-[300px]">
       <div className=" w-full border-b shadow-sm border-gray-200 rtl mt-4 ">
@@ -85,7 +86,7 @@ export const TreeView = ({ setSelectedRoute, closeButton, data, hasPermission = 
 
       {!dataView.length && selected && selected.length > 0 && hasPermission ? (
         selected[selected.length - 1].routStr_TypeRout === 1 ? (
-          <SelectActions selectedRoute={selected} />
+          <SelectActions selectedRoute={selected} user={user} onHide={onHide} fetchAgain={fetchAgain} />
         ) : (
           <h5 className="mt-5 text-amber-500	text-center ">ابتدا یک فرم یا مسیر جدید تعریف کنید</h5>
         )
@@ -103,6 +104,18 @@ export const TreeView = ({ setSelectedRoute, closeButton, data, hasPermission = 
           انتخاب مسیر
         </Button>
       )}
+      {!!dataView.length && selected && selected.length > 0 && selected[selected.length - 1].routStr_TypeRout === 1 && hasPermission && (
+        <Button
+          className="p-button-primary absolute bottom-[25px] left-[130px]"
+          onClick={() => {
+            setSelectedRoute(selected[selected.length - 1])
+            setDataView([])
+          }}
+        >
+          انتخاب فرم
+        </Button>
+      )}
+
       {closeButton}
     </div>
   )

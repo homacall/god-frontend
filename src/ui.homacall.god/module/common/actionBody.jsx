@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from 'primereact/button'
 import UpdateDialog from './updateDialog'
 import DeleteDialog from './deleteDialog'
@@ -20,6 +20,8 @@ const TableActions = ({
   updateIcon,
   deleteLoading,
   updateHasView = true,
+  updateHasFooter = true,
+  updateDialogClassName,
 }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
@@ -71,6 +73,8 @@ const TableActions = ({
             handleUpdateDialog()
           }}
           UpdateView={updateView}
+          updateHasFooter={updateHasFooter}
+          className={updateDialogClassName}
         />
       )}
       {children}

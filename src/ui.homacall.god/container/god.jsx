@@ -7,7 +7,6 @@ import { PublicRoutes } from './publicRoutes'
 
 function God() {
   const navigate = useNavigate()
-  localStorage.setItem('token', 'token')
   const token = localStorage.getItem('token')
   const setToken = useSetRecoilState(userData)
 
