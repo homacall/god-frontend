@@ -9,13 +9,13 @@ import { Toolbar } from 'primereact/toolbar'
 import TableActions from '../common/actionBody'
 import { routeColumns } from './constant/tableColumn'
 import { DeleteRouteStructure, GetAllRoutesGodByType } from '../../service/routeStretcherService'
-import { routeTypes } from './constant/routeTypes'
+import { routeTypes, routeTypesForSearch } from './constant/routeTypes'
 import { Alert } from '../common/alert'
 import { Dropdown } from 'primereact/dropdown'
 
 export const RouteStretcher = () => {
   const [globalFilter, setGlobalFilter] = useState(null)
-  const [routeFilter, setRouteFilter] = useState(null)
+  const [routeFilter, setRouteFilter] = useState(-1)
   const [allRoutes, setAllRoutes] = useState([])
   const [filteredRoutes, setFilteredRoutes] = useState([])
   const [message, setMessage] = useState('')
@@ -31,16 +31,15 @@ export const RouteStretcher = () => {
       </>
     )
   }
-
   const fetchRouteStructure = () => {
     GetAllRoutesGodByType().then(res => {
       if (res.data || res.status === 200) {
-        setAllRoutes(
-          res.data.map(item => {
-            const type = routeTypes.find(type => type.value === item.routStr_TypeRout.toString())
-            return { ...item, routStr_TypeRout: type.label }
-          }),
-        )
+        const routes = res.data.map(item => {
+          const type = routeTypes.find(type => type.value === item.routStr_TypeRout.toString())
+          return { ...item, routStr_TypeRout: type.label }
+        })
+        setAllRoutes(routes)
+        setFilteredRoutes(routes)
       }
     })
   }
@@ -63,10 +62,14 @@ export const RouteStretcher = () => {
     fetchRouteStructure()
   }, [])
   const filterByType = value => {
-    const route = allRoutes.find(rout => rout.value === value)
-    const newData = allRoutes.includes(route.label)
-    setAllRoutes(newData)
-    console.log({ value, allRoutes })
+    if (value == -1) {
+      setFilteredRoutes(allRoutes)
+      console.log(value)
+      return
+    }
+    const route = routeTypes.find(rout => rout.value === value)
+    const newData = allRoutes.filter(item => item.routStr_TypeRout.includes(route.label))
+    setFilteredRoutes(newData)
   }
   const header = (
     <div className="table-header">
@@ -78,7 +81,7 @@ export const RouteStretcher = () => {
         <i className="pi pi-search text-sm" />
         <Dropdown
           type="search"
-          options={routeTypes}
+          options={routeTypesForSearch}
           onChange={e => {
             setRouteFilter(e.target.value)
             filterByType(e.target.value)
@@ -98,7 +101,7 @@ export const RouteStretcher = () => {
         <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
 
         <DataTable
-          value={allRoutes}
+          value={filteredRoutes}
           paginator
           rows={10}
           rowsPerPageOptions={[5, 10, 25]}
