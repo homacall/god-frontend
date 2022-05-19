@@ -184,7 +184,7 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Name">نام</label>
           {formik.touched.CoIn_Name && formik.errors.CoIn_Name ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Name}</div>
+           <div className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_Name}</small></div>
        ) : null}
         </span>
 
@@ -199,7 +199,7 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_SmsNumber">شماره سامانه پیامک</label>
           {formik.touched.CoIn_SmsNumber && formik.errors.CoIn_SmsNumber ? (
-         <div className='text-red-600'>{formik.errors.CoIn_SmsNumber}</div>
+           <div  className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_SmsNumber}</small></div>
        ) : null} 
         </span>
 
@@ -214,7 +214,7 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Phone">تلفن</label>
           {formik.touched.CoIn_Phone && formik.errors.CoIn_Phone ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Phone}</div>
+           <div className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_Phone}</small></div>
        ) : null} 
         </span>
 
@@ -229,7 +229,7 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Mobile">موبایل</label>
           {formik.touched.CoIn_Mobile && formik.errors.CoIn_Mobile ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Mobile}</div>
+          <div className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_Mobile}</small></div>
        ) : null} 
         </span>
 
@@ -244,7 +244,7 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Fax">فکس</label>
           {formik.touched.CoIn_Fax && formik.errors.CoIn_Fax ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Fax}</div>
+          <div className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_Fax}</small></div>
        ) : null} 
         </span>
 
@@ -259,7 +259,7 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Email">ایمیل</label>
           {formik.touched.CoIn_Email && formik.errors.CoIn_Email ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Email}</div>
+           <div className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_Email}</small></div>
        ) : null} 
         </span>
 
@@ -274,7 +274,7 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Site">سایت</label>
           {formik.touched.CoIn_Site && formik.errors.CoIn_Site ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Site}</div>
+           <div className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_Site}</small></div>
        ) : null} 
         </span>
 
@@ -289,7 +289,7 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Instagram">اینستاگرام</label>
           {formik.touched.CoIn_Instagram && formik.errors.CoIn_Instagram ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Instagram}</div>
+            <div className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_Instagram}</small></div>
        ) : null}
         </span>
 
@@ -303,11 +303,11 @@ const handleUpdateCompany = formData => {
              value={formik.values.CoIn_LangID}
              placeholder="انتخاب زبان" 
              onChange={formik.handleChange}
-             dir="rtl"
+             className="rtl"
              style={{ width: '70%'}}
            />
-           {formik.touched.CoIn_LangID && formik.errors.CoIn_LangID ? (
-         <div className='text-red-600'>{formik.errors.CoIn_LangID}</div>
+           {formik.errors.CoIn_LangID ? (
+             <div className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_LangID}</small></div>
        ) : null}
          </span>
 
@@ -321,11 +321,11 @@ const handleUpdateCompany = formData => {
              value={formik.values.CoIn_TypeDateTime} 
              placeholder="انتخاب نوع تاریخ" 
              onChange={formik.handleChange}
-             dir="rtl"
+             className="rtl"
              style={{ width: '70%'}}
            />
-           {formik.touched.CoIn_TypeDateTime && formik.errors.CoIn_TypeDateTime ? (
-         <div className='text-red-600'>{formik.errors.CoIn_TypeDateTime}</div>
+           {formik.errors.CoIn_TypeDateTime ? (
+            <div className="text-right"><small className='mr-[8%] p-error'>{formik.errors.CoIn_TypeDateTime}</small></div>
        ) : null}
          </span>
 
@@ -341,31 +341,30 @@ const handleUpdateCompany = formData => {
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />   
-             {/* <label htmlFor="Comp_Address">آدرس</label>   */}
-           {formik.touched.CoIn_Address && formik.errors.CoIn_Address ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Address}</div>
+           {formik.errors.CoIn_Address ? (
+             <div className="w-[250px]"><small className='mr-[8%] p-error'>{formik.errors.CoIn_Address}</small></div>
        ) : null}  
         </div>
      
          <div className='w-full mt-5 flex flex-col items-end content-center'>
             <InputTextarea 
-            id="CoIn_About" 
-            name="CoIn_About" 
-            value={formik.values.CoIn_About}
-            rows={5} 
-            placeholder="درباره شرکت" 
-            className='p-inputtextarea w-11/12'
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
+             id="CoIn_About" 
+             name="CoIn_About" 
+             value={formik.values.CoIn_About}
+             rows={5} 
+             placeholder="درباره شرکت" 
+             className='p-inputtextarea w-11/12'
+             onBlur={formik.handleBlur}
+             onChange={formik.handleChange}
             />
             
-            {formik.touched.CoIn_About && formik.errors.CoIn_About ? (
-         <div className='text-red-600'>{formik.errors.CoIn_About}</div>
+            {formik.errors.CoIn_About ? (
+            <div className="w-[250px]"><small className='mr-[8%] p-error'>{formik.errors.CoIn_About}</small></div>
        ) : null}
          </div>
 
          <div className="mt-10 col-span-3 flex justify-center items-center">
-         <InputImage setImageUrl={setImageUrl} imageError={imageError}/>
+          <InputImage setImageUrl={setImageUrl} imageError={imageError} />
          </div>
 
          <div className="mt-10 flex justify-end justify-items-end">

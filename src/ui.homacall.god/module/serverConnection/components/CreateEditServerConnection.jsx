@@ -254,12 +254,14 @@ useEffect(() => {
              optionValue="id"
              value={formik.values.SerConn_SysID} 
              placeholder="انتخاب  سیستم" 
+             onBlur={formik.handleBlur}
              onChange={(e)=> {formik.handleChange(e); setSystemName(routes.filter(({ id }) => id === e.target.value).map(({ sys }) => sys)) }}
+
              dir="rtl"
              style={{ width: '70%'}}
            />
-          <label htmlFor="SerConn_SysID">System ID</label>
-          {formik.touched.SerConn_SysID && formik.errors.SerConn_SysID ? (
+         
+          {formik.errors.SerConn_SysID ? (
          <div className='text-red-600'>{formik.errors.SerConn_SysID}</div>
        ) : null} 
         </span>
@@ -283,12 +285,13 @@ useEffect(() => {
              optionLabel="name"
              optionValue="id"
              value={formik.values.SerConn_CoInID} 
-             placeholder="انتخاب  شرکت" 
+             placeholder="انتخاب  شرکت"
              onChange={formik.handleChange}
              dir="rtl"
              style={{ width: '70%'}}
            />
-           {formik.touched.SerConn_CoInID && formik.errors.SerConn_CoInID ? (
+           
+           {formik.errors.SerConn_CoInID ? (
          <div className='text-red-600'>{formik.errors.SerConn_CoInID}</div>
        ) : null}
          </span>
