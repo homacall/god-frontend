@@ -5,14 +5,13 @@ import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { item } from './constant/BreadcampItem'
 import { CreateTagService } from '../../../service/tagManagerService'
 import { classNames } from 'primereact/utils'
-import { Alert } from '../../common/alert'
 import { useNavigate } from 'react-router'
+import { ToastAlert } from '../../common/toastAlert'
 
 export const CreateTag = () => {
   const [value, setValue] = useState('')
   const [error, setError] = useState(false)
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   const submitHandler = e => {
@@ -26,11 +25,14 @@ export const CreateTag = () => {
     formData.append('Tag_Name', value)
     CreateTagService(formData)
       .then(res => {
-        setShowMessage(true)
         if (res.status === 200 || res.data === 'Succeed') {
-          setMessage('ساخت تگ با موفقیت انجام شد ')
+          ToastAlert.success('ساخت تگ با موفقیت انجام شد ')
+          navigate('/tag')
+          setLoading(true)
+
         } else {
-          setMessage('خطا در ساخت تگ ')
+          ToastAlert.error('خطا در ساخت تگ ')
+          setLoading(false)
         }
       })
       .catch(e => console.log(e))
@@ -38,13 +40,6 @@ export const CreateTag = () => {
 
   return (
     <>
-      <Alert
-        message={message}
-        setMessage={setMessage}
-        setShowMessage={setShowMessage}
-        showMessage={showMessage}
-        callBack={() => navigate('/tag')}
-      />
       <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
         <Breadcrumb item={item} />
         <div className=" flex justify-start mr-[8%] mt-10 ">
@@ -60,7 +55,9 @@ export const CreateTag = () => {
             </label>
           </span>
         </div>
-        <Button label="ثبت" onClick={submitHandler} disabled={value ? false : true} className="relative right-[86%] text-sm mt-3 h-10" />
+        <div className="mt-10 flex justify-end justify-items-end">
+          <Button loading={loading} onClick={submitHandler} disabled={value ? false : true} label="ثبت" className=" ml-10 text-sm mt-3 h-10 bg-indigo-600" type="submit" />
+        </div>
       </div>
     </>
   )

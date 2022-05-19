@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { RadioButton } from 'primereact/radiobutton'
 import { Button } from 'primereact/button'
@@ -6,14 +6,12 @@ import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { newLanguage } from '../../../service/languageService'
 import { useFormik } from 'formik'
 import { classNames } from 'primereact/utils'
-import { Alert } from '../../common/alert'
+import { ToastAlert } from '../../common/toastAlert'
 
 const NewLanguage = () => {
   const [layout, setLayout] = useState(null)
   const [handleError, setHandleError] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
 
   const item = [
     { id: 1, label: 'مدیریت زبان', url: '/language' },
@@ -54,12 +52,11 @@ const NewLanguage = () => {
 
     try {
       const { status } = await newLanguage(formData)
-      setShowMessage(true)
       if (status === 200) {
-        setMessage('زبان با موفقیت ثبت شد')
+        ToastAlert.success('زبان با موفقیت ثبت شد')
         formik.resetForm()
       } else {
-        setMessage('خطا در ثبت زبان')
+        ToastAlert.error('خطا در ثبت زبان')
       }
     } catch (error) {
       console.log(error)
@@ -71,7 +68,6 @@ const NewLanguage = () => {
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={item} />
-      <Alert message={message} setMessage={setMessage} showMessage={showMessage} setShowMessage={setShowMessage} />
       <form onSubmit={formik.handleSubmit}>
         <div className=" flex justify-start mr-[8%] mt-10 ">
           <span className="p-float-label">
@@ -122,7 +118,9 @@ const NewLanguage = () => {
           </div>
           {handleError && <small className="mr-[8%] p-error">نوع چیدمان را انتخاب کنید</small>}
         </div>
-        <Button label="ثبت" type="submit" className="relative right-[86%] text-sm mt-3 h-10 bg-indigo-600" loading={loading} />
+        <div className="mt-10 flex justify-end justify-items-end">
+          <Button loading={loading} label="ثبت" className=" ml-10 text-sm mt-3 h-10 bg-indigo-600" type="submit" />
+        </div>
       </form>
     </div>
   )

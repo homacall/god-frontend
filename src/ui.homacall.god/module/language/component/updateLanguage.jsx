@@ -4,14 +4,12 @@ import { RadioButton } from 'primereact/radiobutton'
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
 import { UpdateLanguage } from '../../../service/languageService'
-import { Alert } from '../../common/alert'
+import { ToastAlert } from '../../common/toastAlert'
 
 const UpdateDialog = props => {
   const [value, setValue] = useState(props.lang_Name)
   const [layout, setLayout] = useState(props.lang_Rtl === true ? 'RTL' : 'LTR')
   const [loading, setLoading] = useState()
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
 
   useEffect(() => {
     if (props) {
@@ -38,17 +36,16 @@ const UpdateDialog = props => {
     setLoading(true)
     try {
       const { data, status } = await UpdateLanguage(formData)
-      setShowMessage(true)
 
       if (status === 200 || data) {
-        setMessage('ویرایش زبان با موفقیت انجام شد.')
         props.fetchAgain()
+        props.setShowUpdateDialog(!props.showUpdateDialog)
+        ToastAlert.success('ویرایش زبان با موفقیت انجام شد.')
       } else {
-        setMessage('خطا در ویرایش زبان')
+        ToastAlert.error('خطا در ویرایش زبان')
       }
     } catch (error) {
-      setMessage('خطا در ویرایش زبان')
-
+      ToastAlert.error('خطا در ویرایش زبان')
       console.log(error)
     } finally {
       setLoading(false)
@@ -63,13 +60,6 @@ const UpdateDialog = props => {
       }}
       footer={footer}
     >
-      <Alert
-        callBack={() => props.setShowUpdateDialog(!props.showUpdateDialog)}
-        message={message}
-        setMessage={setMessage}
-        setShowMessage={setShowMessage}
-        showMessage={showMessage}
-      />
       <form onSubmit={handleSubmit}>
         <div className="w-[400px] pb-4 rounded-md m-auto container bg-white rtl">
           <div className=" flex justify-start mr-[8%] mt-10 ">

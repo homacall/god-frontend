@@ -8,7 +8,8 @@ import { InputImage } from '../../common/fileUploader'
 import { Button } from 'primereact/button'
 
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { Alert } from '../../common/alert'
+import { ToastAlert } from '../../common/toastAlert'
+
 
 import { createCompanyBreadcrumb } from '../constant/createCompanyBreadcrumb'
 import validate from '../constant/validate'
@@ -16,14 +17,13 @@ import { GetAllLanguage } from '../../../service/languageService'
 import { GetCompanyById, InsertCompany, UpdateCompany } from '../../../service/companyService'
 import { dateTypes } from '../constant/dateTypes'
 
+import '../style/company.css'
 
 export const CreateCompany = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
   const [companyById, setCompanyBYId] = useState([]);
   const [languages, setLanguages] = useState([]);
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false);
   const [initialValues, setInitialValues] = useState({
     CoIn_Name: '',
@@ -59,7 +59,7 @@ const fetchCompany = useCallback(()=>{
       setCompanyBYId(res.data)
   
     }
-  }).catch(err=> console.log("error: ", err))},[CompanyId]) 
+  }).catch(err=>{ console.log("error: ", err); ToastAlert.error('خطا در ارتباط با سرور ')} )},[CompanyId]) 
 
   useEffect(() => {
     fetchLanguage() 
@@ -99,17 +99,16 @@ const fetchCompany = useCallback(()=>{
   const handleInsetCompany = formData => {
     InsertCompany(formData)
     .then(res => {
-      setShowMessage(true)
       if (res.status === 200 || res.data) {
         formik.resetForm()
-        setMessage('ثبت شرکت جدید با موفقیت انجام شد')
+        ToastAlert.success('ثبت شرکت جدید با موفقیت انجام شد')
+        navigate("/company")
         
       } else {
-        setMessage('ثبت شرکت جدید با خطا مواجه شد')
+        ToastAlert.error('ثبت شرکت جدید با خطا مواجه شد')
       }
     }).catch(err => {
-      setShowMessage(true)
-      setMessage('ثبت شرکت جدید با خطا مواجه شد')
+      ToastAlert.error('ثبت شرکت جدید با خطا مواجه شد')
       console.log(err)
     })
     .finally(() => {
@@ -122,17 +121,17 @@ const handleUpdateCompany = formData => {
   
     UpdateCompany(formData)
     .then(res => {
-      setShowMessage(true)
+      
       if (res.status === 200 || res.data === "Succeed") {
         //formik.resetForm()
-        setMessage('ویرایش شرکت با موفقیت انجام شد')
+        ToastAlert.success('ویرایش شرکت با موفقیت انجام شد')
+        navigate("/company")
         
       } else {
-        setMessage('ویرایش شرکت با خطا مواجه شد')
+        ToastAlert.error('ویرایش شرکت با خطا مواجه شد')
       }
     }).catch(err => {
-      setShowMessage(true)
-      setMessage('ویرایش شرکت با خطا مواجه شد')
+      ToastAlert.error('ویرایش شرکت با خطا مواجه شد')
       console.log(err)
     })
     .finally(() => {
@@ -153,7 +152,7 @@ const handleUpdateCompany = formData => {
           const value = values[key]
           formData.append(key, value)
         })
-        
+        setLoading(true);
        if(CompanyId){
          formData.append("CoIn_ID", CompanyId);
          handleUpdateCompany(formData)
@@ -170,15 +169,14 @@ const handleUpdateCompany = formData => {
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createCompanyBreadcrumb} />
-      <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} callBack={()=>navigate("/company")} />
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-7">
-        <span className="p-float-label" dir='ltr'>
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 rtl">
+        <span className="p-float-label rtl" dir='ltr'>
           <InputText
             id="CoIn_Name"
             name="CoIn_Name" 
             value={formik.values.CoIn_Name}
-            className="p-inputtext p-component"
+            className="p-inputtext p-component rtl"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
@@ -188,14 +186,20 @@ const handleUpdateCompany = formData => {
        ) : null}
         </span>
 
-        <span className="p-float-label" dir='ltr'>
+        <span className="p-float-label rtl" dir='ltr'>
         <InputText
             id="CoIn_SmsNumber"
             name="CoIn_SmsNumber"
+            rtl
             value={formik.values.CoIn_SmsNumber}
-            className="p-inputtext p-component"
+            className="p-inputtext p-component rtl"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
+            onKeyPress={event => {
+              if (!/[0-9]/.test(event.key)) {
+                event.preventDefault()
+              }
+            }}
           />
           <label htmlFor="CoIn_SmsNumber">شماره سامانه پیامک</label>
           {formik.touched.CoIn_SmsNumber && formik.errors.CoIn_SmsNumber ? (
@@ -203,14 +207,19 @@ const handleUpdateCompany = formData => {
        ) : null} 
         </span>
 
-        <span className="p-float-label" dir='ltr'>
+        <span className="p-float-label rtl" dir='ltr'>
           <InputText
             id="CoIn_Phone"
             name="CoIn_Phone"
             value={formik.values.CoIn_Phone}
-            className="p-inputtext p-component"
+            className="p-inputtext p-component rtl"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
+            onKeyPress={event => {
+              if (!/[0-9]/.test(event.key)) {
+                event.preventDefault()
+              }
+            }}
           />
           <label htmlFor="CoIn_Phone">تلفن</label>
           {formik.touched.CoIn_Phone && formik.errors.CoIn_Phone ? (
@@ -218,14 +227,19 @@ const handleUpdateCompany = formData => {
        ) : null} 
         </span>
 
-        <span className="p-float-label" dir='ltr'>
+        <span className="p-float-label rtl" dir='ltr'>
           <InputText
             id="CoIn_Mobile"
             name="CoIn_Mobile" 
             value={formik.values.CoIn_Mobile}
-            className="p-inputtext p-component"
+            className="p-inputtext p-component rtl"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
+            onKeyPress={event => {
+              if (!/[0-9]/.test(event.key)) {
+                event.preventDefault()
+              }
+            }}
           />
           <label htmlFor="CoIn_Mobile">موبایل</label>
           {formik.touched.CoIn_Mobile && formik.errors.CoIn_Mobile ? (
@@ -233,14 +247,19 @@ const handleUpdateCompany = formData => {
        ) : null} 
         </span>
 
-        <span className="p-float-label" dir='ltr'>
+        <span className="p-float-label rtl" dir='ltr'>
           <InputText
             id="CoIn_Fax"
             name="CoIn_Fax" 
             value={formik.values.CoIn_Fax}
-            className="p-inputtext p-component"
+            className="p-inputtext p-component rtl"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
+            onKeyPress={event => {
+              if (!/[0-9]/.test(event.key)) {
+                event.preventDefault()
+              }
+            }}
           />
           <label htmlFor="CoIn_Fax">فکس</label>
           {formik.touched.CoIn_Fax && formik.errors.CoIn_Fax ? (
@@ -248,12 +267,12 @@ const handleUpdateCompany = formData => {
        ) : null} 
         </span>
 
-        <span className="p-float-label" dir='ltr'>
+        <span className="p-float-label rtl" dir='ltr'>
           <InputText
             id="CoIn_Email"
             name="CoIn_Email" 
             value={formik.values.CoIn_Email}
-            className="p-inputtext p-component"
+            className="p-inputtext p-component rtl"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
@@ -263,12 +282,12 @@ const handleUpdateCompany = formData => {
        ) : null} 
         </span>
 
-        <span className="p-float-label" dir='ltr'>
+        <span className="p-float-label rtl" dir='ltr'>
           <InputText
             id="CoIn_Site"
             name="CoIn_Site" 
             value={formik.values.CoIn_Site}
-            className="p-inputtext p-component"
+            className="p-inputtext p-component rtl"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
@@ -278,12 +297,12 @@ const handleUpdateCompany = formData => {
        ) : null} 
         </span>
 
-        <span className="p-float-label" dir='ltr'>
+        <span className="p-float-label rtl" dir='ltr'>
           <InputText
             id="CoIn_Instagram"
             name="CoIn_Instagram" 
             value={formik.values.CoIn_Instagram}
-            className="p-inputtext p-component"
+            className="p-inputtext p-component rtl"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
@@ -293,7 +312,7 @@ const handleUpdateCompany = formData => {
        ) : null}
         </span>
 
-        <span className="p-float-label" dir='ltr'>
+        <span className="p-float-label rtl" dir='ltr'>
           <Dropdown 
              options={languages} 
              id="CoIn_LangID"
@@ -301,17 +320,17 @@ const handleUpdateCompany = formData => {
              optionLabel="name"
              optionValue="id"
              value={formik.values.CoIn_LangID}
-             placeholder="انتخاب زبان" 
              onChange={formik.handleChange}
-             dir="rtl"
+            className="rtl"
              style={{ width: '70%'}}
            />
+            <label htmlFor="CoIn_LangID">زبان پیشفرض</label>
            {formik.touched.CoIn_LangID && formik.errors.CoIn_LangID ? (
          <div className='text-red-600'>{formik.errors.CoIn_LangID}</div>
        ) : null}
          </span>
 
-         <span className="p-float-label" dir='ltr'>
+         <span className="p-float-label rtl" dir='ltr'>
           <Dropdown 
              options={dateTypes} 
              id="CoIn_TypeDateTime"
@@ -319,11 +338,11 @@ const handleUpdateCompany = formData => {
              optionLabel="name"
              optionValue="id"
              value={formik.values.CoIn_TypeDateTime} 
-             placeholder="انتخاب نوع تاریخ" 
              onChange={formik.handleChange}
-             dir="rtl"
+             className="rtl"
              style={{ width: '70%'}}
            />
+           <label htmlFor="CoIn_TypeDateTime">نوع تاریخ</label>
            {formik.touched.CoIn_TypeDateTime && formik.errors.CoIn_TypeDateTime ? (
          <div className='text-red-600'>{formik.errors.CoIn_TypeDateTime}</div>
        ) : null}
@@ -331,48 +350,48 @@ const handleUpdateCompany = formData => {
 
         </section>
 
-        <div className='w-full mt-5 flex flex-col items-end content-center'>
+        <div className='w-full mt-5 flex flex-col items-start content-center'>
         <InputText
             id="CoIn_Address"
             name="CoIn_Address"
             value={formik.values.CoIn_Address}
-            className="p-inputtext p-component w-11/12"
+            className="p-inputtext p-component w-11/12 rtl"
             placeholder='آدرس'
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
-          />   
-             {/* <label htmlFor="Comp_Address">آدرس</label>   */}
+          />    
            {formik.touched.CoIn_Address && formik.errors.CoIn_Address ? (
          <div className='text-red-600'>{formik.errors.CoIn_Address}</div>
        ) : null}  
         </div>
      
-         <div className='w-full mt-5 flex flex-col items-end content-center'>
-            <InputTextarea 
+         <div className='w-full mt-5 flex flex-col items-start content-center'>
+          <InputTextarea 
             id="CoIn_About" 
             name="CoIn_About" 
             value={formik.values.CoIn_About}
             rows={5} 
             placeholder="درباره شرکت" 
-            className='p-inputtextarea w-11/12'
+            className='p-inputtextarea w-11/12 rtl'
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             />
-            
+             
             {formik.touched.CoIn_About && formik.errors.CoIn_About ? (
          <div className='text-red-600'>{formik.errors.CoIn_About}</div>
        ) : null}
          </div>
 
          <div className="mt-10 col-span-3 flex justify-center items-center">
-         <InputImage setImageUrl={setImageUrl} imageError={imageError}/>
+         <InputImage setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
          </div>
 
          <div className="mt-10 flex justify-end justify-items-end">
-          <Button loading={loading} label="ثبت" className="p-button-success w-[200px] text-sm mt-3 h-10" type="submit" />
+          <Button type="submit" className='bg-blue-500 hover:bg-blue-700 text-white min-w-[90px] px-8 rtl text-sm' loading={loading}>ثبت</Button>
         </div>
-
+        
       </form>
+      
     </div>
   )
 }
