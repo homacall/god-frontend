@@ -10,16 +10,14 @@ import TableActions from '../common/actionBody'
 import { routeColumns } from './constant/tableColumn'
 import { DeleteRouteStructure, GetAllRoutesGodByType } from '../../service/routeStretcherService'
 import { routeTypes, routeTypesForSearch } from './constant/routeTypes'
-import { Alert } from '../common/alert'
 import { Dropdown } from 'primereact/dropdown'
+import { ToastAlert } from '../common/toastAlert'
 
 export const RouteStretcher = () => {
   const [globalFilter, setGlobalFilter] = useState(null)
-  const [routeFilter, setRouteFilter] = useState(-1)
+  const [routeFilter, setRouteFilter] = useState('-1')
   const [allRoutes, setAllRoutes] = useState([])
   const [filteredRoutes, setFilteredRoutes] = useState([])
-  const [message, setMessage] = useState('')
-  const [showMessage, setShowMessage] = useState(false)
   const navigate = useNavigate()
 
   const rightToolbarTemplate = () => {
@@ -32,28 +30,29 @@ export const RouteStretcher = () => {
     )
   }
   const fetchRouteStructure = () => {
-    GetAllRoutesGodByType().then(res => {
-      if (res.data || res.status === 200) {
-        const routes = res.data.map(item => {
-          const type = routeTypes.find(type => type.value === item.routStr_TypeRout.toString())
-          return { ...item, routStr_TypeRout: type.label }
-        })
-        setAllRoutes(routes)
-        setFilteredRoutes(routes)
-      }
-    })
+    GetAllRoutesGodByType()
+      .then(res => {
+        if (res.data || res.status === 200) {
+          const routes = res.data.map(item => {
+            const type = routeTypes.find(type => type.value === item.routStr_TypeRout.toString())
+            return { ...item, routStr_TypeRout: type.label }
+          })
+          setAllRoutes(routes)
+          setFilteredRoutes(routes)
+        }
+      })
+      .catch(error => console.log(error))
   }
   const deleteRoute = id => {
     const formData = new FormData()
     formData.append('ID', id)
     DeleteRouteStructure(formData)
       .then(res => {
-        setShowMessage(true)
         if (res.data || res.status === 200) {
-          setMessage('مسیر با موفقیت حذف شد.')
+          ToastAlert.success('مسیر با موفقیت حذف شد.')
           fetchRouteStructure()
         } else {
-          setMessage('خطا در حذف مسیر')
+          ToastAlert.error('خطا در حذف مسیر')
         }
       })
       .catch(err => console.log(err))
@@ -62,9 +61,8 @@ export const RouteStretcher = () => {
     fetchRouteStructure()
   }, [])
   const filterByType = value => {
-    if (value == -1) {
+    if (value === '-1') {
       setFilteredRoutes(allRoutes)
-      console.log(value)
       return
     }
     const route = routeTypes.find(rout => rout.value === value)
@@ -77,7 +75,7 @@ export const RouteStretcher = () => {
         <i className="pi pi-search text-sm" />
         <InputText type="search" onInput={e => setGlobalFilter(e.target.value)} placeholder="جستجو ..." className="h-10 text-sm" />
       </span>
-      <span className="p-input-icon-left mr-5 translate-y-1">
+      <span className="p-input-icon-left mr-5 translate-y-1 min-w-[150px]">
         <i className="pi pi-search text-sm" />
         <Dropdown
           type="search"
@@ -88,7 +86,7 @@ export const RouteStretcher = () => {
           }}
           value={routeFilter}
           placeholder=" جستجو مسیر ..."
-          className="h-10  	"
+          className="h-10 w-full 	"
         />
       </span>
     </div>
@@ -98,8 +96,6 @@ export const RouteStretcher = () => {
     <div className="w-[95%] mt-4 m-auto container">
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
-        <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
-
         <DataTable
           value={filteredRoutes}
           paginator

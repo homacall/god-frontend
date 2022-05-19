@@ -1,17 +1,15 @@
 import { Dialog } from 'primereact/dialog'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { GetAllRole } from '../../../service/rolService'
 import { Checkbox } from 'primereact/checkbox'
 import { Button } from 'primereact/button'
-import { DeleteAllUserRole, InsertUserRole, UpdateUserRole } from '../../../service/userRole'
-import { Alert } from '../../common/alert'
+import { DeleteAllUserRole, InsertUserRole } from '../../../service/userRole'
 import { GetRoleByUserId } from '../../../service/userService'
+import { ToastAlert } from '../../common/toastAlert'
 
 export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
   const [roles, setRoles] = useState([])
   const [selectedRole, setSelectedRole] = useState([])
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
   const [hasRole, setHasRole] = useState(false)
   const fetchRole = () => {
     GetAllRole()
@@ -27,7 +25,7 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
         console.log(err)
       })
   }
-  const fetchRoleByUserId = () => {
+  const fetchRoleByUserId = useCallback(() => {
     const formData = new FormData()
     formData.append('UserID', userId)
     GetRoleByUserId(formData).then(res => {
@@ -40,7 +38,7 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
         setSelectedRole(res.data.map(item => ({ rol_ID: item.rol_ID, rol_Name: item.transTagText })))
       }
     })
-  }
+  }, [userId])
   const submitHandler = () => {
     const data = selectedRole.map(role => ({ usr_ID: userId, rol_ID: role.rol_ID }))
     const formData = new FormData()
@@ -51,12 +49,11 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
           if ((res.data || res.status === 200) && selectedRole.length) {
             InsertUserRole(data)
               .then(res => {
-                setShowMessage(true)
                 onHide()
                 if (res.data || res.status === 200) {
-                  setMessage('تخصیص نقش با موفقیت انجام شد')
+                  ToastAlert.success('تخصیص نقش با موفقیت انجام شد')
                 } else {
-                  setMessage('خطا در تخصیص نقش به کاربر')
+                  ToastAlert.error('خطا در تخصیص نقش به کاربر')
                 }
               })
               .catch(err => console.log(err))
@@ -66,12 +63,11 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
     } else {
       InsertUserRole(data)
         .then(res => {
-          setShowMessage(true)
           onHide()
           if (res.data || res.status === 200) {
-            setMessage('تخصیص نقش با موفقیت انجام شد')
+            ToastAlert.success('تخصیص نقش با موفقیت انجام شد')
           } else {
-            setMessage('خطا در تخصیص نقش به کاربر')
+            ToastAlert.error('خطا در تخصیص نقش به کاربر')
           }
         })
         .catch(err => console.log(err))
@@ -81,7 +77,7 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
     if (userId !== 0) {
       fetchRoleByUserId()
     }
-  }, [userId])
+  }, [userId, fetchRoleByUserId])
   useEffect(() => {
     fetchRole()
   }, [userId])
@@ -97,8 +93,6 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
   )
   return (
     <>
-      <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
-
       <Dialog
         visible={visible}
         onHide={onHide}

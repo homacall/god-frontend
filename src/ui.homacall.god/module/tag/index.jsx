@@ -11,8 +11,8 @@ import TableActions from '../common/actionBody'
 import { tagColumns } from './constant/tableColumn'
 import ShowTag from './components/ShowTag'
 import { DeleteTag, UpdateTags } from '../../service/tagManagerService'
-import { Alert } from '../common/alert'
 import { GetAllTagsTranslate } from '../../service/translateService'
+import { ToastAlert } from '../common/toastAlert'
 
 export const Tag = () => {
   const [tagName, setTagName] = useState('')
@@ -21,8 +21,6 @@ export const Tag = () => {
   const [id, setId] = useState(0)
   const [data, setData] = useState([])
   const [fetchAgain, setFetchAgain] = useState(false)
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
   //Get Tags List from server with api
   useEffect(() => {
     GetAllTagsTranslate().then(res => {
@@ -68,12 +66,11 @@ export const Tag = () => {
     formData.append('ID', id)
     DeleteTag(formData)
       .then(res => {
-        setShowMessage(true)
         if (res.data || res.status === 200) {
-          setMessage('تگ مورد نظر با موفقیت حذف گردید')
+          ToastAlert.success('تگ مورد نظر با موفقیت حذف گردید')
           fetchAgainHandler()
         } else {
-          setMessage('خطا در حذف تگ')
+          ToastAlert.error('خطا در حذف تگ')
         }
       })
       .catch(err => console.log(err))
@@ -85,12 +82,11 @@ export const Tag = () => {
     formData.append('Tag_Name', newTagName)
     UpdateTags(formData)
       .then(res => {
-        setShowMessage(true)
         if (res.data || res.status === 200) {
-          setMessage('تگ مورد نظر با موفقیت ویرایش گردید')
+          ToastAlert.success('تگ مورد نظر با موفقیت ویرایش گردید')
           fetchAgainHandler()
         } else {
-          setMessage('خطا در ویرایش تگ')
+          ToastAlert.error('خطا در ویرایش تگ')
         }
       })
       .catch(err => console.log(err))
@@ -99,7 +95,6 @@ export const Tag = () => {
   return (
     <>
       <ShowTag visible={openShow} tagId={id} onHide={closeShowTag} tagName={tagName} fetchAgain={fetchAgainHandler} />
-      <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
       <div className="w-[95%] mt-4 m-auto container">
         <div className="card">
           <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>

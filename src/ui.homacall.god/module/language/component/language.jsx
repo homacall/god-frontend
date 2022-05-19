@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
@@ -9,32 +9,32 @@ import TableActions from '../../common/actionBody'
 import UpdateDialog from './updateLanguage'
 import { languageColumns } from '../constant/tableColumn'
 import { DeleteLanguage } from '../../../service/languageService'
-import { Dialog } from 'primereact/dialog'
+import { ToastAlert } from '../../common/toastAlert'
 
 const Language = ({ data, fetchAgain }) => {
   const [globalFilter, setGlobalFilter] = useState(null)
   const [dataTable, setDataTable] = useState([])
   const [editProps, setEditProps] = useState({ lang_Name: '', lang_Rtl: false })
   const [showUpdateDialog, setShowUpdateDialog] = useState(false)
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
-  const deleteRow = async id => {
-    const formData = new FormData()
-    formData.append('ID', id)
-    try {
-      const { data, status } = await DeleteLanguage(formData)
-      setShowMessage(true)
+  const deleteRow = useCallback(
+    async id => {
+      const formData = new FormData()
+      formData.append('ID', id)
+      try {
+        const { data, status } = await DeleteLanguage(formData)
 
-      if (status === 200 || data === 'Succeed') {
-        setMessage('زبان مورد نظر با موفقیت حذف شد')
-        fetchAgain()
-      } else {
-        setMessage('خطا در حذف زبان مورد نظر !!')
+        if (status === 200 || data === 'Succeed') {
+          ToastAlert.success('زبان مورد نظر با موفقیت حذف شد')
+          fetchAgain()
+        } else {
+          ToastAlert.error('خطا در حذف زبان مورد نظر !!')
+        }
+      } catch (error) {
+        console.log(error)
       }
-    } catch (error) {
-      console.log(error)
-    }
-  }
+    },
+    [fetchAgain],
+  )
 
   useEffect(() => {
     const newData = []
@@ -66,7 +66,7 @@ const Language = ({ data, fetchAgain }) => {
       }),
     )
     setDataTable(newData)
-  }, [data])
+  }, [data, deleteRow])
 
   const rightToolbarTemplate = () => {
     return (
@@ -86,37 +86,10 @@ const Language = ({ data, fetchAgain }) => {
       </span>
     </div>
   )
-  const dialogFooter = (
-    <div className="flex justify-content-center">
-      <Button
-        label="باشه"
-        className="p-button-text"
-        autoFocus
-        onClick={() => {
-          setShowMessage(false)
-          setMessage('')
-        }}
-      />
-    </div>
-  )
 
   return (
     <div className="w-[95%] mt-4 m-auto container">
       <UpdateDialog fetchAgain={fetchAgain} showUpdateDialog={showUpdateDialog} setShowUpdateDialog={setShowUpdateDialog} {...editProps} />
-      <Dialog
-        visible={showMessage}
-        onHide={() => setShowMessage(false)}
-        position="top"
-        footer={dialogFooter}
-        showHeader={false}
-        breakpoints={{ '960px': '80vw' }}
-        style={{ width: '30vw' }}
-      >
-        <div className="flex align-items-center flex-column pt-6 px-3">
-          {/* <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i> */}
-          <h5>{message}</h5>
-        </div>
-      </Dialog>
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
 

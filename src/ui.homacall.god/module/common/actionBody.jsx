@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from 'primereact/button'
 import UpdateDialog from './updateDialog'
 import DeleteDialog from './deleteDialog'
