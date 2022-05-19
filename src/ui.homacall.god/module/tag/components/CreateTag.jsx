@@ -11,7 +11,7 @@ import { ToastAlert } from '../../common/toastAlert'
 export const CreateTag = () => {
   const [value, setValue] = useState('')
   const [error, setError] = useState(false)
-
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   const submitHandler = e => {
@@ -28,8 +28,11 @@ export const CreateTag = () => {
         if (res.status === 200 || res.data === 'Succeed') {
           ToastAlert.success('ساخت تگ با موفقیت انجام شد ')
           navigate('/tag')
+          setLoading(true)
+
         } else {
           ToastAlert.error('خطا در ساخت تگ ')
+          setLoading(false)
         }
       })
       .catch(e => console.log(e))
@@ -52,7 +55,9 @@ export const CreateTag = () => {
             </label>
           </span>
         </div>
-        <Button label="ثبت" onClick={submitHandler} disabled={value ? false : true} className="relative right-[86%] text-sm mt-3 h-10" />
+        <div className="mt-10 flex justify-end justify-items-end">
+          <Button loading={loading} onClick={submitHandler} disabled={value ? false : true} label="ثبت" className=" ml-10 text-sm mt-3 h-10 bg-indigo-600" type="submit" />
+        </div>
       </div>
     </>
   )

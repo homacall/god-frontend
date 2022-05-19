@@ -132,12 +132,12 @@ export const Tag = () => {
                     deleteLabel="حذف"
                     updateLabel="ویرایش"
                     updateView={<UpdateTag tagName={tagName} setTagName={setTagName} oldVal={data.title} />}
-                    deleteButtonClassName={'p-button-outlined p-button-danger ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
-                    updateButtonClassName={'p-button-outlined p-button-warning ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
+                    deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
+                    updateButtonClassName={'p-button-warning ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
                   />
                   <Button
                     onClick={() => openShowTag(data.id, data.title)}
-                    className="p-button-outlined p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2"
+                    className=" p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2"
                   >
                     ترجمه
                   </Button>
