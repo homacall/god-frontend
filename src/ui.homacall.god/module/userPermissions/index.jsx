@@ -3,6 +3,7 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { Toolbar } from 'primereact/toolbar'
+import { useCallback } from 'react'
 import { useEffect, useState } from 'react'
 import { DeleteAllRoleUserPermission, GetAllPermissionUserRoutePath } from '../../service/roleUserPermissionGod'
 import { GetAllRoutesGodByTypeRouteTree } from '../../service/routeStretcherService'
@@ -26,9 +27,9 @@ export const UserPermissions = ({ visible, onHide, user }) => {
   const updateDialogHandler = () => {
     setShowUpdateDialog(perv => !perv)
   }
-  const fetchAgainHandler = () => {
+  const fetchAgainHandler = useCallback(() => {
     setFetchAgain(perv => !perv)
-  }
+  }, [])
 
   const dialogFooter = (
     <div className="flex justify-content-center">
@@ -45,21 +46,24 @@ export const UserPermissions = ({ visible, onHide, user }) => {
       <Button label="بستن" className="p-button-text" autoFocus onClick={updateDialogHandler} />
     </div>
   )
-  const deleteUserPermission = parentId => {
-    const formData = new FormData()
-    formData.append('UserID', user.usr_ID)
-    formData.append('ParentID', parentId)
-    DeleteAllRoleUserPermission(formData).then(res => {
-      if (res.data || res.status === 200) {
-        fetchAgainHandler()
-        ToastAlert.success('دسترسی ها با موفقیت حذف شد')
-      } else {
-        ToastAlert.error('خطا در حذف دسترسی ها')
-      }
-    })
-  }
+  const deleteUserPermission = useCallback(
+    parentId => {
+      const formData = new FormData()
+      formData.append('UserID', user.usr_ID)
+      formData.append('ParentID', parentId)
+      DeleteAllRoleUserPermission(formData).then(res => {
+        if (res.data || res.status === 200) {
+          fetchAgainHandler()
+          ToastAlert.success('دسترسی ها با موفقیت حذف شد')
+        } else {
+          ToastAlert.error('خطا در حذف دسترسی ها')
+        }
+      })
+    },
+    [fetchAgainHandler, user?.usr_ID],
+  )
 
-  const fetchUserPermission = () => {
+  const fetchUserPermission = useCallback(() => {
     const formData = new FormData()
     formData.append('UsrRol_ID', user.usr_ID)
     GetAllPermissionUserRoutePath(formData)
@@ -96,7 +100,7 @@ export const UserPermissions = ({ visible, onHide, user }) => {
         }
       })
       .catch(err => console.log(err))
-  }
+  }, [user, deleteUserPermission])
 
   useEffect(() => {
     GetAllRoutesGodByTypeRouteTree()
@@ -109,7 +113,7 @@ export const UserPermissions = ({ visible, onHide, user }) => {
     if (visible) {
       fetchUserPermission()
     }
-  }, [visible, fetchAgain])
+  }, [visible, fetchAgain, fetchUserPermission])
   const rightToolbarTemplate = () => {
     return (
       <>
@@ -168,6 +172,7 @@ export const UserPermissions = ({ visible, onHide, user }) => {
           user={user}
           onHide={handelNewPermissionDialog}
           fetchAgain={fetchAgainHandler}
+          selectedRoute={selectedRoute}
         />
       </Dialog>
       <DataTable
