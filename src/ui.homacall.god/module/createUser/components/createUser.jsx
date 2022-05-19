@@ -192,7 +192,7 @@ const CreateAndEditUser = () => {
 
   const isFormFieldValid = name => !!(formik.touched[name] && formik.errors[name])
   const getFormErrorMessage = name => {
-    return isFormFieldValid(name) && <small className="p-error">{formik.errors[name]}</small>
+    return isFormFieldValid(name) && <small className="p-error absolute right-0 top-12">{formik.errors[name]}</small>
   }
   const dialogFooter = (
     <div className="flex justify-content-center">
@@ -221,39 +221,39 @@ const CreateAndEditUser = () => {
         </div>
       </Dialog>
       <form className="grid grid-cols-3 gap-4 gap-y-10 p-5 mt-10" onSubmit={formik.handleSubmit}>
-        <span className="p-float-label">
+        <span className="p-float-label relative">
           <InputText
             id="Usr_FName"
             value={formik.values.Usr_FName}
             onChange={formik.handleChange}
             name="Usr_FName"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_FName'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_FName'), 'w-full h-9': true })}
           />
-          <label htmlFor="Usr_FName" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_FName') })}`}>
+          <label htmlFor="Usr_FName" className={`right-2 text-sm absolute ${classNames({ 'p-error': isFormFieldValid('Usr_FName') })}`}>
             نام
           </label>
           {getFormErrorMessage('Usr_FName')}
         </span>
-        <span className="p-float-label">
+        <span className="p-float-label relative">
           <InputText
             id="Usr_LName"
             value={formik.values.Usr_LName}
             onChange={formik.handleChange}
             name="Usr_LName"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_LName'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_LName'), 'w-full h-9': true })}
           />
-          <label htmlFor="Usr_LName" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_LName') })}`}>
+          <label htmlFor="Usr_LName" className={`right-2 text-sm absolute ${classNames({ 'p-error': isFormFieldValid('Usr_LName') })}`}>
             نام خانوادگی
           </label>
           {getFormErrorMessage('Usr_LName')}
         </span>
-        <span className="p-float-label p-inputnumber	">
+        <span className="p-float-label p-inputnumber relative	">
           <InputText
             id="Usr_IdentNum"
             value={formik.values.Usr_IdentNum}
             onChange={formik.handleChange}
             name="Usr_IdentNum"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_IdentNum'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_IdentNum'), 'w-full h-9': true })}
             maxLength={10}
             onKeyPress={event => {
               if (!/[0-9]/.test(event.key)) {
@@ -273,7 +273,7 @@ const CreateAndEditUser = () => {
             value={formik.values.Usr_Gender}
             onChange={formik.handleChange}
             name="Usr_Gender"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Gender'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Gender'), 'w-full h-9': true })}
           />
           <label htmlFor="Usr_Gender" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_Gender') })}`}>
             جنسیت
@@ -286,7 +286,7 @@ const CreateAndEditUser = () => {
             value={formik.values.Usr_Mobile}
             onChange={formik.handleChange}
             name="Usr_Mobile"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Mobile'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Mobile'), 'w-full h-9': true })}
             onKeyPress={event => {
               if (!/[0-9]/.test(event.key)) {
                 event.preventDefault()
@@ -306,7 +306,7 @@ const CreateAndEditUser = () => {
             value={formik.values.Usr_mail}
             onChange={formik.handleChange}
             name="Usr_mail"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_mail'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_mail'), 'w-full h-9': true })}
           />
           <label htmlFor="Usr_mail" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_mail') })}`}>
             ایمیل
@@ -319,7 +319,7 @@ const CreateAndEditUser = () => {
             value={formik.values.Usr_UName}
             onChange={formik.handleChange}
             name="Usr_UName"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_UName'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_UName'), 'w-full h-9': true })}
           />
           <label htmlFor="Usr_UName" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_UName') })}`}>
             نام کاربری
@@ -332,7 +332,7 @@ const CreateAndEditUser = () => {
             value={formik.values.Usr_HPass}
             onChange={formik.handleChange}
             name="Usr_HPass"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_HPass'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_HPass'), 'w-full h-9': true })}
           />
           <label htmlFor="Usr_HPass" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_HPass') })}`}>
             رمز عبور
@@ -342,55 +342,49 @@ const CreateAndEditUser = () => {
 
         <span className="p-float-label">
           <Dropdown
-            value={formik.values.Usr_Prov_ID}
             options={provinces}
-            optionLabel="provi_Name"
-            optionValue="provi_ID"
+            id="Usr_Prov_ID"
+            value={formik.values.Usr_Prov_ID}
             onChange={e => {
               formik.handleChange(e)
               fetchCity(e.value)
             }}
-            id="Usr_Prov_ID"
+            optionLabel="provi_Name"
+            optionValue="provi_ID"
             name="Usr_Prov_ID"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Prov_ID'), 'w-full': true })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Prov_ID'), 'w-full h-9': true })}
           />
-
-          <label
-            htmlFor="Usr_Prov_ID"
-            className={`right-2 text-sm 
-          `}
-          >
+          <label htmlFor="Usr_Prov_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid("Usr_Prov_ID") })}`}>
             استان
           </label>
-          {getFormErrorMessage('Usr_Prov_ID')}
+          {getFormErrorMessage('Usr_Gender')}
         </span>
         <span className="p-float-label">
           <Dropdown
-            value={formik.values.Usr_Cty_ID}
             options={cities}
+            id="Usr_Cty_ID"
+            value={formik.values.Usr_Cty_ID}
+            onChange={formik.handleChange}
             optionLabel="cty_Name"
             optionValue="cty_ID"
-            onChange={formik.handleChange}
-            id="Usr_Cty_ID"
             name="Usr_Cty_ID"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Cty_ID'), 'w-full': true })}
-            // className={classNames({ 'p-invalid': isFormFieldValid('Usr_FName') })}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Cty_ID'), 'w-full h-9': true })}
           />
-
-          <label htmlFor="Usr_Cty_ID" className={`right-2 text-sm `}>
+          <label htmlFor="Usr_Cty_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid("Usr_Cty_ID") })}`}>
             شهر
           </label>
           {getFormErrorMessage('Usr_Cty_ID')}
         </span>
-        <span className="p-float-label col-span-2">
+
+        <span className="p-float-label col-span-2 h-0">
           <InputTextarea
             id="Usr_Address"
             value={formik.values.Usr_Address}
             onChange={formik.handleChange}
             name="Usr_Address"
             autoResize="off"
-            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Address'), 'w-full': true, 'h-[95%]': true })}
-            rows={1}
+            style={{ height: '36px' }}
+            className={classNames({ 'p-invalid': isFormFieldValid('Usr_Address'), 'w-full h-9': true })}
           />
           <label htmlFor="Usr_Address" className={`right-2 text-sm  ${classNames({ 'p-error': isFormFieldValid('Usr_Address') })}`}>
             آدرس
@@ -398,12 +392,13 @@ const CreateAndEditUser = () => {
           {getFormErrorMessage('Usr_Address')}
         </span>
 
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-3 flex items-center ">
           <InputImage setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
         </div>
-        <div className="col-span-3 flex justify-center items-center">
-          <Button label="ثبت" className="p-button-success  mx-auto w-[200px]  text-sm mt-3 h-10" type="submit" loading={loading} />
+        <div className="col-span-3 flex justify-end items-end ">
+          <Button label="ثبت" className=" ml-10 bg-indigo-600 text-sm mt-3 h-10" type="submit" loading={loading} />
         </div>
+
       </form>
     </div>
   )

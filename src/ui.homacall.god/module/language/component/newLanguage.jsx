@@ -118,7 +118,9 @@ const NewLanguage = () => {
           </div>
           {handleError && <small className="mr-[8%] p-error">نوع چیدمان را انتخاب کنید</small>}
         </div>
-        <Button label="ثبت" type="submit" className="relative right-[86%] text-sm mt-3 h-10 bg-indigo-600" loading={loading} />
+        <div className="mt-10 flex justify-end justify-items-end">
+          <Button loading={loading} label="ثبت" className=" ml-10 text-sm mt-3 h-10 bg-indigo-600" type="submit" />
+        </div>
       </form>
     </div>
   )
