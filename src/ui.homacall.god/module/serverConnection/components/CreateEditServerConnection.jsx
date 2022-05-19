@@ -161,7 +161,7 @@ const CreateEditServerConnection = () => {
       <Breadcrumb item={createServerConnectionBreadcrumb} />
       <form className="p-5 mt-10 " onSubmit={formik.handleSubmit}>
         <section className="grid grid-cols-3 gap-4  gap-y-7 rtl">
-          <span className="p-float-label relative" >
+          <span className="p-float-label relative mb-5" >
             <InputText
               id="SerConn_IP"
               name="SerConn_IP"
@@ -172,11 +172,11 @@ const CreateEditServerConnection = () => {
             />
             <label htmlFor="SerConn_IP" className={`${formik.touched.SerConn_IP && formik.errors.SerConn_IP && styles.labelError} right-2 text-sm`}>ip</label>
             {formik.touched.SerConn_IP && formik.errors.SerConn_IP ? (
-              <div className='absolute text-red-600 text-sm'>{formik.errors.SerConn_IP}</div>
+              <div className='absolute text-red-600 text-sm my-2'>{formik.errors.SerConn_IP}</div>
             ) : null}
           </span>
 
-          <span className="p-float-label relative" >
+          <span className="p-float-label relative mb-5" >
             <InputText
               id="SerConn_Port"
               name="SerConn_Port"
@@ -191,7 +191,7 @@ const CreateEditServerConnection = () => {
             ) : null}
           </span>
 
-          <span className="p-float-label relative" >
+          <span className="p-float-label relative mb-5" >
             <InputText
               id="SerConn_DbName"
               name="SerConn_DbName"
@@ -206,7 +206,7 @@ const CreateEditServerConnection = () => {
             ) : null}
           </span>
 
-          <span className="p-float-label relative">
+          <span className="p-float-label relative mb-5">
             <InputText
               id="SerConn_UsrID"
               name="SerConn_UsrID"
@@ -221,7 +221,7 @@ const CreateEditServerConnection = () => {
             ) : null}
           </span>
 
-          <span className="p-float-label relative">
+          <span className="p-float-label relative mb-5">
             <Password
               id="SerConn_HPass"
               name="SerConn_HPass"
@@ -236,7 +236,7 @@ const CreateEditServerConnection = () => {
             ) : null}
           </span>
 
-          <span className="p-float-label relative">
+          <span className="p-float-label relative mb-5">
             <Dropdown
               options={routes}
               id="SerConn_SysID"
@@ -254,7 +254,7 @@ const CreateEditServerConnection = () => {
             ) : null}
           </span>
 
-          <span className="p-float-label relative" >
+          <span className="p-float-label relative mb-5" >
             <InputText
               id="SerConn_SysName"
               name="SerConn_SysName"
@@ -265,7 +265,7 @@ const CreateEditServerConnection = () => {
             <label htmlFor="SerConn_SysName" className={`${formik.touched.SerConn_SysName && formik.errors.SerConn_SysName && styles.labelError} right-2 text-sm`}>نام سیستم</label>
           </span>
 
-          <span className="p-float-label relative" >
+          <span className="p-float-label relative mb-5" >
             <Dropdown
               options={companies}
               id="SerConn_CoInID"
@@ -283,23 +283,6 @@ const CreateEditServerConnection = () => {
             ) : null}
           </span>
 
-          <span className="p-float-label" dir="ltr">
-            <Dropdown
-              options={companies}
-              id="SerConn_CoInID"
-              name="SerConn_CoInID"
-              optionLabel="name"
-              optionValue="id"
-              value={formik.values.SerConn_CoInID}
-              placeholder="انتخاب  شرکت"
-              onChange={formik.handleChange}
-              dir="rtl"
-              style={{ width: '70%' }}
-            />
-            {formik.touched.SerConn_CoInID && formik.errors.SerConn_CoInID ? (
-              <div className="text-red-600">{formik.errors.SerConn_CoInID}</div>
-            ) : null}
-          </span>
         </section>
 
         <div className="mt-10 flex justify-end justify-items-end">
