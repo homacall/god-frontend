@@ -12,6 +12,7 @@ export const CreateTag = () => {
   const [value, setValue] = useState('')
   const [error, setError] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
 
@@ -29,8 +30,10 @@ export const CreateTag = () => {
         setShowMessage(true)
         if (res.status === 200 || res.data === 'Succeed') {
           setMessage('ساخت تگ با موفقیت انجام شد ')
+          setLoading(true)
         } else {
           setMessage('خطا در ساخت تگ ')
+          setLoading(false)
         }
       })
       .catch(e => console.log(e))
@@ -60,7 +63,9 @@ export const CreateTag = () => {
             </label>
           </span>
         </div>
-        <Button label="ثبت" onClick={submitHandler} disabled={value ? false : true} className="relative right-[86%] text-sm mt-3 h-10" />
+        <div className="mt-10 flex justify-end justify-items-end">
+          <Button loading={loading} onClick={submitHandler} disabled={value ? false : true} label="ثبت" className=" ml-10 text-sm mt-3 h-10 bg-indigo-600" type="submit" />
+        </div>
       </div>
     </>
   )

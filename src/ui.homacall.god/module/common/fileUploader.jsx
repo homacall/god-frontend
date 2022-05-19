@@ -22,14 +22,7 @@ export function InputImage({ setImageUrl, imageError, imageUrl }) {
 
   return (
     <div
-      style={{
-        display: 'block',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 'auto',
-      }}
-      className="mx-auto  "
+      className="mx-auto flex flex-col items-center  justify-center h-auto"
     >
       <input
         type="file"
@@ -44,7 +37,7 @@ export function InputImage({ setImageUrl, imageError, imageUrl }) {
         <img
           src={imageUrl || '/assets/img/user.png'}
           ref={uploadedImage}
-          className="w-[200px] h-[200px] relative rounded-[20px]"
+          className="w-[100px] h-[100px] relative rounded-[20px]"
           alt="..."
         />
       </div>

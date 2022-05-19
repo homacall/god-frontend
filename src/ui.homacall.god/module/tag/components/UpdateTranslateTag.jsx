@@ -63,7 +63,7 @@ const UpdateTranslateTag = ({ visible, onHide, tagId, oldVal, langId, data, setD
     <Dialog visible={visible} onHide={onHide} footer={footer}>
       <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
 
-      <div className="w-[400px] pb-4 rounded-md m-auto container bg-white rtl">
+      <div className="w-[400px] pb-4 rounded-md m-auto container pt-7 bg-white rtl">
         <span className="p-float-label">
           <InputText id="inputtext" value={translateValue} onChange={e => setTranslateValue(e.target.value)} className="h-9 w-96" />
           <label htmlFor="inputtext" className="right-2 text-sm">
