@@ -11,6 +11,7 @@ import TableActions from '../common/actionBody'
 import { roleColumn } from './constant/tableColumn'
 import { DeleteRole, GetAllRole, UpdateRole } from '../../service/rolService'
 import { Alert } from '../common/alert'
+import { rolls } from '../../utils/constants/routes/publicRoute'
 
 export const Roll = () => {
   const [rollName, setRollName] = useState(0)
@@ -19,16 +20,7 @@ export const Roll = () => {
   const [fetchAgain, setFetchAgain] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
   const [message, setMessage] = useState('')
-  // const dataL = [
-  //   {
-  //     id: 1,
-  //     name: 'Admin',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Employee',
-  //   },
-  // ]
+
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
@@ -42,7 +34,7 @@ export const Roll = () => {
   const rightToolbarTemplate = () => {
     return (
       <>
-        <Link to="/roll/new-roll">
+        <Link to={rolls.newRoll}>
           <Button label="ثبت نقش جدید" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
         </Link>
       </>

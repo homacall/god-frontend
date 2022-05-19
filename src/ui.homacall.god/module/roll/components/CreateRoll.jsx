@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from 'primereact/button'
-import Breadcrumb from '../../component/breadcrumb/breadcrumb'
-import { InsertRole } from '../../service/rolService'
-import { Alert } from '../common/alert'
-import { GetAllTags } from '../../service/tagManagerService'
+import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
+import { InsertRole } from '../../../service/rolService'
+import { Alert } from '../../common/alert'
+import { GetAllTags } from '../../../service/tagManagerService'
 import { Dropdown } from 'primereact/dropdown'
+import { useNavigate } from 'react-router'
+import { rolls } from '../../../utils/constants/routes/publicRoute'
 
 export const CreateRoll = () => {
   const [value, setValue] = useState()
@@ -12,9 +14,10 @@ export const CreateRoll = () => {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [tags, setTags] = useState([])
+  const navigate = useNavigate()
   const item = [
-    { id: 1, label: 'مدیریت نقش', url: '/roll' },
-    { id: 2, label: 'ثبت نقش جدید', url: '/roll/new-roll' },
+    { id: 1, label: 'مدیریت نقش', url: rolls.roll },
+    { id: 2, label: 'ثبت نقش جدید', url: rolls.newRoll },
   ]
 
   const fetchTags = () => {
@@ -27,7 +30,6 @@ export const CreateRoll = () => {
   const createRoll = () => {
     setLoading(true)
     const formData = new FormData()
-    console.log(value)
     formData.append('Rol_TgID', value)
     InsertRole(formData)
       .then(res => {
@@ -35,6 +37,7 @@ export const CreateRoll = () => {
         if (res.data || res.status === 200) {
           setMessage('ثبت نقش جدید با موفقیت انجام شد')
           setValue('')
+          navigate('/role')
         } else {
           setMessage('ثبت نقش جدید با خطا مواجه شد')
         }
