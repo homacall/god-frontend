@@ -9,7 +9,7 @@ import { Image } from 'primereact/image'
 import TableActions from '../common/actionBody'
 import { companyColumns } from './constant/tableColumn'
 import PageToolbar from './constant/PageToolbar'
-import { Alert } from '../common/alert'
+import { ToastAlert } from '../common/toastAlert'
 import { GetAllCompanyInfoSP, DeleteCompany } from '../../service/companyService'
 import ShowAllTableData from '../common/ShowAllTableData'
 import {showAllDataBreadcrumb} from './constant/createCompanyBreadcrumb'
@@ -19,8 +19,6 @@ export const Company = () => {
   const [globalFilter, setGlobalFilter] = useState(null);
   const [companyInfo, setCompanyInfo] = useState([]);
   const [fetchAgain, setFetchAgain] = useState(false)
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
   const [showAllData, setShowAllData] = useState(false)
   const [compId, setCompId] = useState(0)
   const [companyInfoObject, setCompanyInfoObject] = useState({})
@@ -89,7 +87,7 @@ className="w-[50px] h-[50px] rounded-full"
       )
         setCompanyInfo(newData)
       }
-    }).catch(err=> console.log("error: ", err))
+    }).catch(err=>{ console.log("error: ", err); ToastAlert.error('خطا در ارتباط با سرور ') })
   }, [fetchAgain])
 
   const fetchAgainHandler = () => {
@@ -114,15 +112,15 @@ const handleDelete = compID => {
   formData.append('ID', compID)
   DeleteCompany(formData)
     .then(res => {
-      setShowMessage(true)
       if (res.data || res.status === 200) {
-        setMessage('حذف شرکت با موفقیت انجام شد')
+        ToastAlert.success('حذف شرکت با موفقیت انجام شد')
         fetchAgainHandler()
+       
       } else {
-        setMessage('خطا در حذف شرکت ')
+        ToastAlert.error('خطا در حذف شرکت ')
       }
     })
-    .catch(err => console.log(err))
+    .catch(err => { console.log(err); ToastAlert.error('خطا در حذف شرکت ') })
 
 }
 
@@ -135,7 +133,6 @@ const handleDelete = compID => {
       <div className="card">
       
         <PageToolbar size={companyInfo.length} />
-        <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
         <ShowAllTableData 
     visible={showAllData} 
     onHide={handleCloseShowAll} 
@@ -179,11 +176,11 @@ const handleDelete = compID => {
                 }}
                 deleteLabel="حذف"
                 updateLabel="ویرایش"
-                deleteButtonClassName={'p-button-danger ml-1 rtl p-1 mb-2'}
-                updateButtonClassName={'p-button-warning ml-1 text-xs rtl p-1'}
+                deleteButtonClassName={'p-button-danger ml-1 rtl text-sm p-1 mb-2'}
+                updateButtonClassName={'p-button-warning ml-1 text-sm rtl p-1'}
               />
-              <Link to={'/company/edit/'+data.coIn_ID}><Button className='p-button-warning ml-1 rtl p-1 ml-2 mb-2'>ویرایش</Button></Link>
-              <Button onClick={()=>handleOpenShowAll(data.coIn_ID)} className='p-button-help rtl p-1 mb-2'>نمایش همه</Button>
+              <Link to={'/company/edit/'+data.coIn_ID}><Button className='p-button-warning ml-1 rtl text-sm p-1 ml-2 mb-2'>ویرایش</Button></Link>
+              <Button onClick={()=>handleOpenShowAll(data.coIn_ID)} className='p-button-help rtl text-sm p-1 mb-2'>نمایش همه</Button>
              </>
             )}
             
