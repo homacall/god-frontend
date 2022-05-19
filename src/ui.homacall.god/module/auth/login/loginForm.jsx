@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { loginUser } from '../../../service/loginService'
 import { useSetRecoilState } from 'recoil'
 import { userData } from '../../../store/atom'
+import { ToastAlert } from '../../common/toastAlert'
 
 const NewLanguage = () => {
   const [UserName, setUserName] = useState('')
@@ -34,12 +35,14 @@ const NewLanguage = () => {
       const { data, status } = await loginUser(formData)
 
       if (status === 200 || data) {
+        ToastAlert.success('خوش آمدید :)')
         localStorage.setItem('token', data.token)
         setToken(data.token)
         navigate('/')
         reset()
       }
     } catch (error) {
+      ToastAlert.error('خطا در ورود لطفا دوباره امتحان کنید.')
       setLoading(false)
       console.log(error)
     }
