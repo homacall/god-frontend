@@ -160,7 +160,7 @@ const CreateEditServerConnection = () => {
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createServerConnectionBreadcrumb} />
       <form className="p-5 mt-10 " onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-3 gap-4  gap-y-7 rtl">
+        <section className="grid grid-cols-3 gap-4  gap-y-10 rtl">
           <span className="p-float-label relative mb-5" >
             <InputText
               id="SerConn_IP"
@@ -202,7 +202,7 @@ const CreateEditServerConnection = () => {
             />
             <label htmlFor="SerConn_DbName" className={`${formik.touched.SerConn_DbName && formik.errors.SerConn_DbName && styles.labelError} right-2 text-sm`}>نام پایگاه داده</label>
             {formik.touched.SerConn_DbName && formik.errors.SerConn_DbName ? (
-              <div className='absolute text-red-600'>{formik.errors.SerConn_DbName}</div>
+              <div className='absolute text-red-600 text-sm'>{formik.errors.SerConn_DbName}</div>
             ) : null}
           </span>
 
