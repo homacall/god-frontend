@@ -5,7 +5,6 @@ import { useFormik } from 'formik'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
 import { Checkbox } from 'primereact/checkbox'
-
 import { routeBreadcrumb } from '../constant/breadcrumb'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { routeTypes } from '../constant/routeTypes'
@@ -17,8 +16,8 @@ import {
   GetByIdRouteStructure,
   UpdateRouteStructure,
 } from '../../../service/routeStretcherService'
-import { Alert } from '../../common/alert'
 import { GetAllTagsTranslate } from '../../../service/translateService'
+import { ToastAlert } from '../../common/toastAlert'
 
 export const CreateAndEditStretcher = () => {
   const location = useLocation()
@@ -33,8 +32,6 @@ export const CreateAndEditStretcher = () => {
   const [selectedRoute, setSelectedRoute] = useState(undefined)
   const [routes, setRoutes] = useState([])
   const [tags, setTags] = useState([])
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
-  const [message, setMessage] = useState('')
   const [editMode, setEditMode] = useState(location.pathname.includes('/route-stretcher/update/'))
   const fetchTags = () => {
     GetAllTagsTranslate()
@@ -57,15 +54,17 @@ export const CreateAndEditStretcher = () => {
   const fetchRouteById = id => {
     const formData = new FormData()
     formData.append('RotID', id)
-    GetByIdRouteStructure(formData).then(res => {
-      if (res.data || res.status === 200) {
-        setSelectedRoute(res.data)
-        setInitialValue({
-          RoutStr_Tag_ID: res.data.routStr_Tag_ID,
-          RoutStr_TypeRout: res.data.routStr_TypeRout.toString(),
-        })
-      }
-    })
+    GetByIdRouteStructure(formData)
+      .then(res => {
+        if (res.data || res.status === 200) {
+          setSelectedRoute(res.data)
+          setInitialValue({
+            RoutStr_Tag_ID: res.data.routStr_Tag_ID,
+            RoutStr_TypeRout: res.data.routStr_TypeRout.toString(),
+          })
+        }
+      })
+      .catch(err => console.log(err))
   }
   useEffect(() => {
     if (location.pathname.includes('/route-stretcher/update/')) {
@@ -96,15 +95,13 @@ export const CreateAndEditStretcher = () => {
     }
     CreateRouteStructure(formData)
       .then(res => {
-        setShowSuccessMessage(true)
-
         if (res.data || res.status === 200) {
           fetchRoutes()
-          setMessage('مسیر جدید با موفقیت ثبت شد')
+          ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
           setIsParent(false)
           formik.resetForm()
         } else {
-          setMessage('خطا در ثبت مسیر جدید')
+          ToastAlert.error('خطا در ثبت مسیر جدید')
         }
       })
       .catch(err => console.log(err))
@@ -121,15 +118,13 @@ export const CreateAndEditStretcher = () => {
     }
     UpdateRouteStructure(formData)
       .then(res => {
-        setShowSuccessMessage(true)
-
         if (res.data || res.status === 200) {
           fetchRoutes()
-          setMessage('مسیر جدید با موفقیت ثبت شد')
+          ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
           setIsParent(false)
           formik.resetForm()
         } else {
-          setMessage('خطا در ثبت مسیر جدید')
+          ToastAlert.error('خطا در ثبت مسیر جدید')
         }
       })
       .catch(err => console.log(err))
@@ -178,8 +173,6 @@ export const CreateAndEditStretcher = () => {
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={routeBreadcrumb} />
-      <Alert message={message} setMessage={setMessage} setShowMessage={setShowSuccessMessage} showMessage={showSuccessMessage} />
-
       <Dialog
         visible={showMessage}
         onHide={() => setShowMessage(false)}

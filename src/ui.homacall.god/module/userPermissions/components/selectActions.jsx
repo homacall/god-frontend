@@ -10,34 +10,36 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
   const [loading, setLoading] = useState(false)
   const [loadingActions, setLoadingActions] = useState(false)
   useEffect(() => {
-    const formData = new FormData()
-    formData.append('UsrRol_ID', user.usr_ID)
-    formData.append('FormID', parentId ? parentId : selectedRoute[selectedRoute.length - 1].routStr_ID)
-    setLoadingActions(true)
-    GetAllPermissionUserActions(formData)
-      .then(res => {
-        if (res.data || res.status === 200) {
-          setActions(res.data)
+    if (parentId || selectedRoute) {
+      const formData = new FormData()
+      formData.append('UsrRol_ID', user.usr_ID)
+      formData.append('FormID', parentId ? parentId : selectedRoute[selectedRoute.length - 1].routStr_ID)
+      setLoadingActions(true)
+      GetAllPermissionUserActions(formData)
+        .then(res => {
+          if (res.data || res.status === 200) {
+            setActions(res.data)
 
-          const selected = []
-          res.data.forEach(item => {
-            if (item.action_State === true) {
-              selected.push({
-                rlUsrPer_RolID_UsrID: user.usr_ID,
-                rlUsrPer_RoutStrID: item.routstructure_ID,
-                rlUsrPer_BitMrge: item.action_State,
-                rlUsrPer_ParentID: parentId ? parentId : selectedRoute[selectedRoute.length - 1].routStr_ID,
-              })
-            }
-          })
-          setSelectedAction(selected)
-        }
-      })
-      .catch(err => console.log(err))
-      .finally(() => {
-        setLoadingActions(false)
-      })
-  }, [])
+            const selected = []
+            res.data.forEach(item => {
+              if (item.action_State === true) {
+                selected.push({
+                  rlUsrPer_RolID_UsrID: user.usr_ID,
+                  rlUsrPer_RoutStrID: item.routstructure_ID,
+                  rlUsrPer_BitMrge: item.action_State,
+                  rlUsrPer_ParentID: parentId ? parentId : selectedRoute[selectedRoute.length - 1].routStr_ID,
+                })
+              }
+            })
+            setSelectedAction(selected)
+          }
+        })
+        .catch(err => console.log(err))
+        .finally(() => {
+          setLoadingActions(false)
+        })
+    }
+  }, [parentId, selectedRoute, user?.usr_ID])
   const submitHandler = () => {
     setLoading(true)
     const formData = new FormData()
@@ -102,7 +104,11 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
       ) : (
         <h5 className="mt-5 text-amber-500	text-center ">ابتدا یک اکشن برای این فرم تعریف کنید</h5>
       )}
-      <Button className={`p-button-primary absolute bottom-[25px] left-[130px] ${buttonClass}`} loading={loading} onClick={submitHandler}>
+      <Button
+        className={`p-button-primary absolute bottom-[25px] min-w-[90px] justify-center left-[${'130px'}] ${buttonClass}`}
+        loading={loading}
+        onClick={submitHandler}
+      >
         {editMode ? 'ویرایش' : 'ثبت'}
       </Button>
     </div>

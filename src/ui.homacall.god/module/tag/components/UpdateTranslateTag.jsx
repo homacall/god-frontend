@@ -3,12 +3,11 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { UpdateTranslate } from '../../../service/translateService'
-import { Alert } from '../../common/alert'
+import { ToastAlert } from '../../common/toastAlert'
 
 const UpdateTranslateTag = ({ visible, onHide, tagId, oldVal, langId, data, setData, translateId }) => {
   const [translateValue, setTranslateValue] = useState('')
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
+
   useEffect(() => {
     setTranslateValue(oldVal)
   }, [oldVal, setTranslateValue])
@@ -29,9 +28,9 @@ const UpdateTranslateTag = ({ visible, onHide, tagId, oldVal, langId, data, setD
         })
         setData(newTranslate)
         onHide()
+        ToastAlert.success('ویرایش ترجمه با موفقیت انجام شد.')
       } else {
-        setMessage('خطا در')
-        setShowMessage(true)
+        ToastAlert.error(' خطا در ویرایش ترجمه')
       }
     })
 
@@ -61,9 +60,7 @@ const UpdateTranslateTag = ({ visible, onHide, tagId, oldVal, langId, data, setD
 
   return (
     <Dialog visible={visible} onHide={onHide} footer={footer}>
-      <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
-
-      <div className="w-[400px] pb-4 rounded-md m-auto container bg-white rtl">
+      <div className="w-[400px] pb-4 rounded-md m-auto container pt-7 bg-white rtl">
         <span className="p-float-label">
           <InputText id="inputtext" value={translateValue} onChange={e => setTranslateValue(e.target.value)} className="h-9 w-96" />
           <label htmlFor="inputtext" className="right-2 text-sm">

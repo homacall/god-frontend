@@ -10,25 +10,15 @@ import { UpdateRoll } from './components/updateRoll'
 import TableActions from '../common/actionBody'
 import { roleColumn } from './constant/tableColumn'
 import { DeleteRole, GetAllRole, UpdateRole } from '../../service/rolService'
-import { Alert } from '../common/alert'
+import { rolls } from '../../utils/constants/routes/publicRoute'
+import { ToastAlert } from '../common/toastAlert'
 
 export const Roll = () => {
   const [rollName, setRollName] = useState(0)
   const [globalFilter, setGlobalFilter] = useState(null)
   const [dataL, setDataL] = useState([])
   const [fetchAgain, setFetchAgain] = useState(false)
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
-  // const dataL = [
-  //   {
-  //     id: 1,
-  //     name: 'Admin',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Employee',
-  //   },
-  // ]
+
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
@@ -42,7 +32,7 @@ export const Roll = () => {
   const rightToolbarTemplate = () => {
     return (
       <>
-        <Link to="/roll/new-roll">
+        <Link to={rolls.newRoll}>
           <Button label="ثبت نقش جدید" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
         </Link>
       </>
@@ -53,12 +43,11 @@ export const Roll = () => {
     formData.append('ID', id)
     DeleteRole(formData)
       .then(res => {
-        setShowMessage(true)
         if (res.data || res.status === 200) {
-          setMessage('حذف نقش با موفقیت انجام شد')
+          ToastAlert.success('حذف نقش با موفقیت انجام شد')
           fetchAgainHandler()
         } else {
-          setMessage('خطا در حذف نقش ')
+          ToastAlert.error('خطا در حذف نقش ')
         }
       })
       .catch(err => console.log(err))
@@ -70,12 +59,11 @@ export const Roll = () => {
     formData.append('Rol_TgID', rol_TagID)
     UpdateRole(formData)
       .then(res => {
-        setShowMessage(true)
         if (res.data || res.status === 200) {
-          setMessage('ویرایش نقش با موفقیت انجام شد')
+          ToastAlert.success('ویرایش نقش با موفقیت انجام شد')
           fetchAgainHandler()
         } else {
-          setMessage('خطا در ویرایش نقش ')
+          ToastAlert.error('خطا در ویرایش نقش ')
         }
       })
       .catch(err => console.log(err))
@@ -94,7 +82,6 @@ export const Roll = () => {
     <div className="w-[95%] mt-4 m-auto container">
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
-        <Alert message={message} setMessage={setMessage} setShowMessage={setShowMessage} showMessage={showMessage} />
         <DataTable
           value={dataL}
           paginator

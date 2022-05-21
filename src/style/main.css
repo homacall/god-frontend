@@ -2,51 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
-    
+
 @font-face {
     font-family: "vazir";
     src: url(./font/Vazir.ttf);
 }
 
-:root{
-    --vazir:"vazir";
-    --toastify-font-family:"vazir";
+:root {
+    --vazir: "vazir";
+    --toastify-font-family: "vazir";
 }
-body{
-    font-family:"vazir";
+
+body {
+    font-family: "vazir";
     background: #f1f5f9;
 }
 
 .rtl {
     direction: rtl;
 }
-.p-datatable .p-column-header-content{
+
+.p-datatable .p-column-header-content {
     display: block !important;
     text-align: center;
 }
-.p-datatable .p-datatable-tbody>tr>td{
+
+.p-datatable .p-datatable-tbody>tr>td {
     text-align: center !important;
 }
+
 .p-button .p-button-icon-left {
     margin-left: 0.5rem;
     margin-right: 0rem;
 }
-.p-button:enabled:focus{
+
+.p-button:enabled:focus {
     box-shadow: none;
     border-color: none;
 }
-.p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus{
+
+.p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
     box-shadow: none;
 }
-.p-password-input{
+
+.p-password-input {
     width: 100%;
 }
-.p-dropdown-items-wrapper{
+
+.p-dropdown-items-wrapper {
     direction: rtl;
 }
-.Toastify__toast-body{
-    font-family:"vazir";
+
+.Toastify__toast-body {
+    font-family: "vazir";
 }
-.p-dropdown .p-dropdown-label{
+
+.p-dropdown .p-dropdown-label {
     font-size: 14px;
 }
+
+.p-datatable .p-datatable-tbody>tr>td {
+    padding: 0.5rem 1rem;
+}
+
+.p-datatable .p-datatable-tbody>.p-row-odd {
+    background: #f3f4f6;
+}
+
+.p-dropdown .p-dropdown-label {
+    padding-top: 5px;
+}
+

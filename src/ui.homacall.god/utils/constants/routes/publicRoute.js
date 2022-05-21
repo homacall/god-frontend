@@ -7,7 +7,7 @@ export const sidebar = {
   tagTable: '/tag',
   users: '/users',
   home: '/',
-  roll: '/roll',
+  roll: '/role',
   tag: '/tag',
   manage: '/company',
   routeStretcher: '/route-stretcher',
@@ -26,8 +26,8 @@ export const home = {
   home: '/',
 }
 export const rolls = {
-  roll: '/roll',
-  newRoll: '/roll/new-roll',
+  roll: '/role',
+  newRoll: '/role/new-role',
 }
 
 export const tags = {
