@@ -24,15 +24,7 @@ export const Company = () => {
   const navigate = useNavigate()
 
   const renderImage = img => (
-    <Image
-      src={'/assets/img/' + img}
-      template="نمایش"
-      alt="تصویر"
-      width={50}
-      height={50}
-      preview={true}
-      className="w-[50px] h-[50px] rounded-full"
-    />
+    <Image src={img} template="نمایش" alt="تصویر" width={50} height={50} preview={true} className="w-[50px] h-[50px] rounded-full" />
   )
 
   useEffect(() => {
@@ -74,7 +66,7 @@ export const Company = () => {
               ...comp,
               coIn_Logo: (
                 <Image
-                  src={'/assets/img/' + comp.coIn_Logo}
+                  src={comp.coIn_Logo}
                   template="نمایش"
                   alt={comp.coIn_Name}
                   width={50}
