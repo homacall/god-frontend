@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export function InputImage({ setImageUrl, imageError, imageUrl }) {
+export function InputImage({ setImageUrl, imageError, imageUrl, title }) {
   const uploadedImage = React.useRef(null)
   const imageUploader = React.useRef(null)
   const [state, setState] = useState({ url: false })
@@ -21,9 +21,7 @@ export function InputImage({ setImageUrl, imageError, imageUrl }) {
   }
 
   return (
-    <div
-      className="mx-auto flex flex-col items-center  justify-center h-auto"
-    >
+    <div className="mx-auto flex flex-col items-center  justify-center h-auto">
       <input
         type="file"
         accept="image/*"
@@ -42,7 +40,7 @@ export function InputImage({ setImageUrl, imageError, imageUrl }) {
         />
       </div>
       {!state.url ? (
-        <div className={`mt-3 text-center ${imageError && 'p-error'}`}>{' تصویر خود را انتخاب کنید.'}</div>
+        <div className={`mt-3 text-center ${imageError && 'p-error'}`}>{title ? title : ' تصویر خود را انتخاب کنید.'}</div>
       ) : (
         <div className="p-success mt-3 text-center">تصویر با موفقیت انتخاب شد.</div>
       )}

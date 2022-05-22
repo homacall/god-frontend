@@ -10,7 +10,6 @@ import { Button } from 'primereact/button'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { ToastAlert } from '../../common/toastAlert'
 
-
 import { createCompanyBreadcrumb } from '../constant/createCompanyBreadcrumb'
 import validate from '../constant/validate'
 import { GetAllLanguage } from '../../../service/languageService'
@@ -22,9 +21,13 @@ import '../style/company.css'
 export const CreateCompany = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
-  const [companyById, setCompanyBYId] = useState([]);
-  const [languages, setLanguages] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loginImg, setLoginImg] = useState('')
+  const [loginImgError, setLoginImgError] = useState(false)
+  const [pathImg, setPathImg] = useState(false)
+  const [pathImgError, setPathImgError] = useState(false)
+  const [companyById, setCompanyBYId] = useState([])
+  const [languages, setLanguages] = useState([])
+  const [loading, setLoading] = useState(false)
   const [initialValues, setInitialValues] = useState({
     CoIn_Name: '',
     CoIn_Address: '',
@@ -40,9 +43,9 @@ export const CreateCompany = () => {
     CoIn_TypeDateTime: '',
   })
 
-  const location = useLocation();
-  let { CompanyId } = useParams();
-  const navigate = useNavigate();
+  const location = useLocation()
+  let { CompanyId } = useParams()
+  const navigate = useNavigate()
 
   const fetchLanguage = () => {
     GetAllLanguage().then(res => {
@@ -51,35 +54,41 @@ export const CreateCompany = () => {
       }
     })
   }
-const fetchCompany = useCallback(()=>{
-  const formData = new FormData()
-  formData.append("ID", CompanyId)
-  GetCompanyById(formData).then(res => {
-    if (res.data) {
-      setCompanyBYId(res.data)
-  
-    }
-  }).catch(err=>{ console.log("error: ", err); ToastAlert.error('خطا در ارتباط با سرور ')} )},[CompanyId]) 
+  const fetchCompany = useCallback(() => {
+    const formData = new FormData()
+    formData.append('ID', CompanyId)
+    GetCompanyById(formData)
+      .then(res => {
+        if (res.data) {
+          setCompanyBYId(res.data)
+        }
+      })
+      .catch(err => {
+        console.log('error: ', err)
+        ToastAlert.error('خطا در ارتباط با سرور ')
+      })
+  }, [CompanyId])
 
   useEffect(() => {
-    fetchLanguage() 
+    fetchLanguage()
     fetchCompany()
   }, [fetchCompany])
-  
+
   useEffect(() => {
-    let path = location.pathname;
+    let path = location.pathname
 
-    if(path.split("/")[2] === "new-company"){
-       //if company info is exist redirect to company index page 
-       if(companyById.length > 0){
-        navigate("/company");   
-    }
-        
-    }else{
-       //initialize for formik
-       setImageUrl(companyById.coIn_Logo);
+    if (path.split('/')[2] === 'new-company') {
+      //if company info is exist redirect to company index page
+      if (companyById.length > 0) {
+        navigate('/company')
+      }
+    } else {
+      //initialize for formik
+      setImageUrl(companyById.coIn_Logo)
+      setLoginImg(companyById.coIn_Login_Img)
+      setPathImg(companyById.coIn_Usr_Path_Img)
 
-       setInitialValues({
+      setInitialValues({
         CoIn_Name: companyById.coIn_Name,
         CoIn_Address: companyById.coIn_Address,
         CoIn_Fax: companyById.coIn_Fax,
@@ -98,46 +107,43 @@ const fetchCompany = useCallback(()=>{
 
   const handleInsetCompany = formData => {
     InsertCompany(formData)
-    .then(res => {
-      if (res.status === 200 || res.data) {
-        formik.resetForm()
-        ToastAlert.success('ثبت شرکت جدید با موفقیت انجام شد')
-        navigate("/company")
-        
-      } else {
+      .then(res => {
+        if (res.status === 200 || res.data) {
+          formik.resetForm()
+          ToastAlert.success('ثبت شرکت جدید با موفقیت انجام شد')
+          navigate('/company')
+        } else {
+          ToastAlert.error('ثبت شرکت جدید با خطا مواجه شد')
+        }
+      })
+      .catch(err => {
         ToastAlert.error('ثبت شرکت جدید با خطا مواجه شد')
-      }
-    }).catch(err => {
-      ToastAlert.error('ثبت شرکت جدید با خطا مواجه شد')
-      console.log(err)
-    })
-    .finally(() => {
-      setLoading(false)
-    })
-
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
-const handleUpdateCompany = formData => { 
-  
+  const handleUpdateCompany = formData => {
     UpdateCompany(formData)
-    .then(res => {
-      
-      if (res.status === 200 || res.data === "Succeed") {
-        //formik.resetForm()
-        ToastAlert.success('ویرایش شرکت با موفقیت انجام شد')
-        navigate("/company")
-        
-      } else {
+      .then(res => {
+        if (res.status === 200 || res.data === 'Succeed') {
+          //formik.resetForm()
+          ToastAlert.success('ویرایش شرکت با موفقیت انجام شد')
+          navigate('/company')
+        } else {
+          ToastAlert.error('ویرایش شرکت با خطا مواجه شد')
+        }
+      })
+      .catch(err => {
         ToastAlert.error('ویرایش شرکت با خطا مواجه شد')
-      }
-    }).catch(err => {
-      ToastAlert.error('ویرایش شرکت با خطا مواجه شد')
-      console.log(err)
-    })
-    .finally(() => {
-      setLoading(false)
-    })
-   }
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
 
   const formik = useFormik({
     initialValues,
@@ -145,253 +151,257 @@ const handleUpdateCompany = formData => {
     onSubmit: values => {
       if (!imageUrl) {
         return setImageError(true)
+      } else if (!loginImg) {
+        return setLoginImgError(true)
+      } else if (!pathImg) {
+        return setPathImgError(true)
       } else {
         const formData = new FormData()
-        values.CoIn_Logo = imageUrl;
+        values.CoIn_Logo = imageUrl
+        values.CoIn_Login_Img = loginImg
+        values.CoIn_Usr_Path_Img = pathImg
+
         Object.keys(values).forEach(key => {
           const value = values[key]
           formData.append(key, value)
         })
-        setLoading(true);
-       if(CompanyId){
-         formData.append("CoIn_ID", CompanyId);
-         handleUpdateCompany(formData)
-       }else{
-         handleInsetCompany(formData) 
-       }
-        
+        setLoading(true)
+        if (CompanyId) {
+          formData.append('CoIn_ID', CompanyId)
+          handleUpdateCompany(formData)
+        } else {
+          handleInsetCompany(formData)
+        }
+
         setImageError(false)
       }
     },
-   enableReinitialize: true,
-  });
+    enableReinitialize: true,
+  })
 
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createCompanyBreadcrumb} />
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
-        <span className="p-float-label rtl relative" dir='ltr'>
-          <InputText
-            id="CoIn_Name"
-            name="CoIn_Name" 
-            value={formik.values.CoIn_Name}
-            className="p-inputtext p-component rtl"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <label htmlFor="CoIn_Name">نام</label>
-          {formik.touched.CoIn_Name && formik.errors.CoIn_Name ? (
-           <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Name}</div>
-       ) : null}
-        </span>
+          <span className="p-float-label rtl relative" dir="ltr">
+            <InputText
+              id="CoIn_Name"
+              name="CoIn_Name"
+              value={formik.values.CoIn_Name}
+              className="p-inputtext p-component rtl"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+            />
+            <label htmlFor="CoIn_Name">نام</label>
+            {formik.touched.CoIn_Name && formik.errors.CoIn_Name ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Name}</div>
+            ) : null}
+          </span>
 
-        <span className="p-float-label rtl relative" dir='ltr'>
-        <InputText
-            id="CoIn_SmsNumber"
-            name="CoIn_SmsNumber"
-            rtl
-            value={formik.values.CoIn_SmsNumber}
-            className="p-inputtext p-component rtl"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            onKeyPress={event => {
-              if (!/[0-9]/.test(event.key)) {
-                event.preventDefault()
-              }
-            }}
-          />
-          <label htmlFor="CoIn_SmsNumber">شماره سامانه پیامک</label>
-          {formik.touched.CoIn_SmsNumber && formik.errors.CoIn_SmsNumber ? (
-           <div  className="absolute text-red-600 text-sm">{formik.errors.CoIn_SmsNumber}</div>
-       ) : null} 
-        </span>
+          <span className="p-float-label rtl relative" dir="ltr">
+            <InputText
+              id="CoIn_SmsNumber"
+              name="CoIn_SmsNumber"
+              rtl
+              value={formik.values.CoIn_SmsNumber}
+              className="p-inputtext p-component rtl"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              onKeyPress={event => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault()
+                }
+              }}
+            />
+            <label htmlFor="CoIn_SmsNumber">شماره سامانه پیامک</label>
+            {formik.touched.CoIn_SmsNumber && formik.errors.CoIn_SmsNumber ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_SmsNumber}</div>
+            ) : null}
+          </span>
 
-        <span className="p-float-label rtl relative" dir='ltr'>
-          <InputText
-            id="CoIn_Phone"
-            name="CoIn_Phone"
-            value={formik.values.CoIn_Phone}
-            className="p-inputtext p-component rtl"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            onKeyPress={event => {
-              if (!/[0-9]/.test(event.key)) {
-                event.preventDefault()
-              }
-            }}
-          />
-          <label htmlFor="CoIn_Phone">تلفن</label>
-          {formik.touched.CoIn_Phone && formik.errors.CoIn_Phone ? (
-           <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Phone}</div>
-       ) : null} 
-        </span>
+          <span className="p-float-label rtl relative" dir="ltr">
+            <InputText
+              id="CoIn_Phone"
+              name="CoIn_Phone"
+              value={formik.values.CoIn_Phone}
+              className="p-inputtext p-component rtl"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              onKeyPress={event => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault()
+                }
+              }}
+            />
+            <label htmlFor="CoIn_Phone">تلفن</label>
+            {formik.touched.CoIn_Phone && formik.errors.CoIn_Phone ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Phone}</div>
+            ) : null}
+          </span>
 
-        <span className="p-float-label rtl relative" dir='ltr'>
-          <InputText
-            id="CoIn_Mobile"
-            name="CoIn_Mobile" 
-            value={formik.values.CoIn_Mobile}
-            className="p-inputtext p-component rtl"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            onKeyPress={event => {
-              if (!/[0-9]/.test(event.key)) {
-                event.preventDefault()
-              }
-            }}
-          />
-          <label htmlFor="CoIn_Mobile">موبایل</label>
-          {formik.touched.CoIn_Mobile && formik.errors.CoIn_Mobile ? (
-          <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Mobile}</div>
-       ) : null} 
-        </span>
+          <span className="p-float-label rtl relative" dir="ltr">
+            <InputText
+              id="CoIn_Mobile"
+              name="CoIn_Mobile"
+              value={formik.values.CoIn_Mobile}
+              className="p-inputtext p-component rtl"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              onKeyPress={event => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault()
+                }
+              }}
+            />
+            <label htmlFor="CoIn_Mobile">موبایل</label>
+            {formik.touched.CoIn_Mobile && formik.errors.CoIn_Mobile ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Mobile}</div>
+            ) : null}
+          </span>
 
-        <span className="p-float-label rtl relative" dir='ltr'>
-          <InputText
-            id="CoIn_Fax"
-            name="CoIn_Fax" 
-            value={formik.values.CoIn_Fax}
-            className="p-inputtext p-component rtl"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            onKeyPress={event => {
-              if (!/[0-9]/.test(event.key)) {
-                event.preventDefault()
-              }
-            }}
-          />
-          <label htmlFor="CoIn_Fax">فکس</label>
-          {formik.touched.CoIn_Fax && formik.errors.CoIn_Fax ? (
-          <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Fax}</div>
-       ) : null} 
-        </span>
+          <span className="p-float-label rtl relative" dir="ltr">
+            <InputText
+              id="CoIn_Fax"
+              name="CoIn_Fax"
+              value={formik.values.CoIn_Fax}
+              className="p-inputtext p-component rtl"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              onKeyPress={event => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault()
+                }
+              }}
+            />
+            <label htmlFor="CoIn_Fax">فکس</label>
+            {formik.touched.CoIn_Fax && formik.errors.CoIn_Fax ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Fax}</div>
+            ) : null}
+          </span>
 
-        <span className="p-float-label rtl relative" dir='ltr'>
-          <InputText
-            id="CoIn_Email"
-            name="CoIn_Email" 
-            value={formik.values.CoIn_Email}
-            className="p-inputtext p-component rtl"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <label htmlFor="CoIn_Email">ایمیل</label>
-          {formik.touched.CoIn_Email && formik.errors.CoIn_Email ? (
-           <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Email}</div>
-       ) : null} 
-        </span>
+          <span className="p-float-label rtl relative" dir="ltr">
+            <InputText
+              id="CoIn_Email"
+              name="CoIn_Email"
+              value={formik.values.CoIn_Email}
+              className="p-inputtext p-component rtl"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+            />
+            <label htmlFor="CoIn_Email">ایمیل</label>
+            {formik.touched.CoIn_Email && formik.errors.CoIn_Email ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Email}</div>
+            ) : null}
+          </span>
 
-        <span className="p-float-label rtl relative" dir='ltr'>
-          <InputText
-            id="CoIn_Site"
-            name="CoIn_Site" 
-            value={formik.values.CoIn_Site}
-            className="p-inputtext p-component rtl"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <label htmlFor="CoIn_Site">سایت</label>
-          {formik.touched.CoIn_Site && formik.errors.CoIn_Site ? (
-           <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Site}</div>
-       ) : null} 
-        </span>
+          <span className="p-float-label rtl relative" dir="ltr">
+            <InputText
+              id="CoIn_Site"
+              name="CoIn_Site"
+              value={formik.values.CoIn_Site}
+              className="p-inputtext p-component rtl"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+            />
+            <label htmlFor="CoIn_Site">سایت</label>
+            {formik.touched.CoIn_Site && formik.errors.CoIn_Site ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Site}</div>
+            ) : null}
+          </span>
 
-        <span className="p-float-label rtl relative" dir='ltr'>
-          <InputText
-            id="CoIn_Instagram"
-            name="CoIn_Instagram" 
-            value={formik.values.CoIn_Instagram}
-            className="p-inputtext p-component rtl"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-          />
-          <label htmlFor="CoIn_Instagram">اینستاگرام</label>
-          {formik.touched.CoIn_Instagram && formik.errors.CoIn_Instagram ? (
-            <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Instagram}</div>
-       ) : null}
-        </span>
+          <span className="p-float-label rtl relative" dir="ltr">
+            <InputText
+              id="CoIn_Instagram"
+              name="CoIn_Instagram"
+              value={formik.values.CoIn_Instagram}
+              className="p-inputtext p-component rtl"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+            />
+            <label htmlFor="CoIn_Instagram">اینستاگرام</label>
+            {formik.touched.CoIn_Instagram && formik.errors.CoIn_Instagram ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Instagram}</div>
+            ) : null}
+          </span>
 
-        <span className="p-float-label rtl relative" dir='ltr'>
-          <Dropdown 
-             options={languages} 
-             id="CoIn_LangID"
-             name="CoIn_LangID"  
-             optionLabel="name"
-             optionValue="id"
-             value={formik.values.CoIn_LangID}
-             onChange={formik.handleChange}
-             className="rtl"
-             style={{ width: '70%'}}
-           />
-           {formik.errors.CoIn_LangID ? (
-             <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_LangID}</div>
+          <span className="p-float-label rtl relative" dir="ltr">
+            <Dropdown
+              options={languages}
+              id="CoIn_LangID"
+              name="CoIn_LangID"
+              optionLabel="name"
+              optionValue="id"
+              value={formik.values.CoIn_LangID}
+              onChange={formik.handleChange}
+              className="rtl"
+              style={{ width: '70%' }}
+            />
+            {formik.errors.CoIn_LangID ? <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_LangID}</div> : null}
+          </span>
 
-       ) : null}
-         </span>
-
-         <span className="p-float-label rtl relative" dir='ltr'>
-          <Dropdown 
-             options={dateTypes} 
-             id="CoIn_TypeDateTime"
-             name="CoIn_TypeDateTime"  
-             optionLabel="name"
-             optionValue="id"
-             value={formik.values.CoIn_TypeDateTime} 
-             onChange={formik.handleChange}
-             className="rtl"
-             style={{ width: '70%'}}
-           />
-           {formik.errors.CoIn_TypeDateTime ? (
-            <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_TypeDateTime}</div>
-       ) : null}
-         </span>
-
+          <span className="p-float-label rtl relative" dir="ltr">
+            <Dropdown
+              options={dateTypes}
+              id="CoIn_TypeDateTime"
+              name="CoIn_TypeDateTime"
+              optionLabel="name"
+              optionValue="id"
+              value={formik.values.CoIn_TypeDateTime}
+              onChange={formik.handleChange}
+              className="rtl"
+              style={{ width: '70%' }}
+            />
+            {formik.errors.CoIn_TypeDateTime ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_TypeDateTime}</div>
+            ) : null}
+          </span>
         </section>
 
-        <div className='w-full mt-5 py-3 flex flex-col items-start content-center'>
-        <InputText
+        <div className="w-full mt-5 py-3 flex flex-col items-start content-center">
+          <InputText
             id="CoIn_Address"
             name="CoIn_Address"
             value={formik.values.CoIn_Address}
             className="p-inputtext p-component w-11/12 rtl"
-            placeholder='آدرس'
+            placeholder="آدرس"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
-          />   
-           {formik.touched.CoIn_Address && formik.errors.CoIn_Address ? (
-             <div className="text-red-600 text-sm">{formik.errors.CoIn_Address}</div>
-       ) : null}  
+          />
+          {formik.touched.CoIn_Address && formik.errors.CoIn_Address ? (
+            <div className="text-red-600 text-sm">{formik.errors.CoIn_Address}</div>
+          ) : null}
         </div>
-     
-         <div className='w-full mt-3 flex flex-col items-start content-center'>
-            <InputTextarea 
-             id="CoIn_About" 
-             name="CoIn_About" 
-             value={formik.values.CoIn_About}
-             rows={5} 
-             placeholder="درباره شرکت" 
-             className='p-inputtextarea w-11/12'
-             onBlur={formik.handleBlur}
-             onChange={formik.handleChange}
-            />
-            
-            {formik.touched.CoIn_About && formik.errors.CoIn_About ? (
+
+        <div className="w-full mt-3 flex flex-col items-start content-center">
+          <InputTextarea
+            id="CoIn_About"
+            name="CoIn_About"
+            value={formik.values.CoIn_About}
+            rows={5}
+            placeholder="درباره شرکت"
+            className="p-inputtextarea w-11/12"
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+          />
+
+          {formik.touched.CoIn_About && formik.errors.CoIn_About ? (
             <div className="text-red-600 text-sm">{formik.errors.CoIn_About}</div>
-       ) : null}
-         </div>
-
-         <div className="mt-10 col-span-3 flex justify-center items-center">
-         <InputImage setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
-         </div>
-
-         <div className="mt-10 flex justify-end justify-items-end">
-          <Button type="submit" className='bg-blue-500 hover:bg-blue-700 text-white min-w-[90px] px-8 rtl text-sm' loading={loading}>ثبت</Button>
+          ) : null}
         </div>
-        
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 mt-8">
+          <InputImage title="انتخاب تصویر لوگو" setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
+          <InputImage title="انتخاب تصویر صفحه ورود" setImageUrl={setLoginImg} imageError={loginImgError} imageUrl={loginImg} />
+          <InputImage title="انتخاب تصویر مسیر کاربر" setImageUrl={setPathImg} imageError={pathImgError} imageUrl={pathImg} />
+        </div>
+
+        <div className="mt-10 flex justify-end justify-items-end">
+          <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white min-w-[90px] px-8 rtl text-sm" loading={loading}>
+            ثبت
+          </Button>
+        </div>
       </form>
-      
     </div>
   )
 }
-
