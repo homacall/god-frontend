@@ -12,82 +12,87 @@ import PageToolbar from './constant/PageToolbar'
 import { ToastAlert } from '../common/toastAlert'
 import { GetAllCompanyInfoSP, DeleteCompany } from '../../service/companyService'
 import ShowAllTableData from '../common/ShowAllTableData'
-import {showAllDataBreadcrumb} from './constant/createCompanyBreadcrumb'
-
+import { showAllDataBreadcrumb } from './constant/createCompanyBreadcrumb'
 
 export const Company = () => {
-  const [globalFilter, setGlobalFilter] = useState(null);
-  const [companyInfo, setCompanyInfo] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState(null)
+  const [companyInfo, setCompanyInfo] = useState([])
   const [fetchAgain, setFetchAgain] = useState(false)
   const [showAllData, setShowAllData] = useState(false)
   const [compId, setCompId] = useState(0)
   const [companyInfoObject, setCompanyInfoObject] = useState({})
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
- 
-const renderImage =  coIn_Logo => <Image
-src={'/assets/img/'+coIn_Logo}
-template="نمایش"
-alt="لوگو"
-width={50}
-height={50}
-preview={true}
-className="w-[50px] h-[50px] rounded-full"
-/>
+  const renderImage = img => (
+    <Image
+      src={'/assets/img/' + img}
+      template="نمایش"
+      alt="تصویر"
+      width={50}
+      height={50}
+      preview={true}
+      className="w-[50px] h-[50px] rounded-full"
+    />
+  )
 
   useEffect(() => {
-    GetAllCompanyInfoSP().then(res => {
-      if (res.data || res.status === 200) {
-        
-       if(res.data.length > 0){
-        var dateType = '';
-        
-        if(res.data[0].coIn_TypeDateTime === 1){
-          dateType = "شمسی";
+    GetAllCompanyInfoSP()
+      .then(res => {
+        if (res.data || res.status === 200) {
+          if (res.data.length > 0) {
+            var dateType = ''
 
-        }else if(res.data[0].coIn_TypeDateTime === 2){
-          dateType = "میلادی";
-        }else if(res.data[0].coIn_TypeDateTime === 3){
-          dateType = "قمری";
+            if (res.data[0].coIn_TypeDateTime === 1) {
+              dateType = 'شمسی'
+            } else if (res.data[0].coIn_TypeDateTime === 2) {
+              dateType = 'میلادی'
+            } else if (res.data[0].coIn_TypeDateTime === 3) {
+              dateType = 'قمری'
+            }
+
+            setCompanyInfoObject({
+              'نام': res.data[0].coIn_Name,
+              'لوگو': renderImage(res.data[0].coIn_Logo),
+              'تصویر صفحه ورود': renderImage(res.data[0].coIn_Login_Img),
+              'تصویر مسیر': renderImage(res.data[0].coIn_Usr_Path_Img),
+              'تلفن': res.data[0].coIn_Phone,
+              'موبایل': res.data[0].coIn_Mobile,
+              'فکس': res.data[0].coIn_Fax,
+              'پنل پیامک': res.data[0].coIn_SmsNumber,
+              'ایمیل': res.data[0].coIn_Email,
+              'اینستاگرام': res.data[0].coIn_Instagram,
+              'سایت': res.data[0].coIn_Site,
+              'آدرس شرکت': res.data[0].coIn_Address,
+              'درباره شرکت': res.data[0].coIn_About,
+              'زبان پیشفرض': res.data[0].coIn_LangName,
+              'نوع تاریخ': dateType,
+            })
+          }
+          const newData = []
+          res.data.forEach(comp =>
+            newData.push({
+              ...comp,
+              coIn_Logo: (
+                <Image
+                  src={'/assets/img/' + comp.coIn_Logo}
+                  template="نمایش"
+                  alt={comp.coIn_Name}
+                  width={50}
+                  height={50}
+                  preview={true}
+                  className="w-[50px] h-[50px] rounded-full"
+                />
+              ),
+              coIn_TypeDateTime: dateType,
+            }),
+          )
+          setCompanyInfo(newData)
         }
- 
-        setCompanyInfoObject({
-          'نام': res.data[0].coIn_Name,
-          'لوگو': renderImage(res.data[0].coIn_Logo),
-          'تلفن': res.data[0].coIn_Phone,
-          'موبایل': res.data[0].coIn_Mobile,
-          'فکس': res.data[0].coIn_Fax,
-          'پنل پیامک': res.data[0].coIn_SmsNumber,
-          'ایمیل': res.data[0].coIn_Email,
-          'اینستاگرام': res.data[0].coIn_Instagram,
-          'سایت': res.data[0].coIn_Site,
-          'آدرس شرکت': res.data[0].coIn_Address,
-          'درباره شرکت': res.data[0].coIn_About,
-          'زبان پیشفرض': res.data[0].coIn_LangName,
-          'نوع تاریخ':  dateType,
-        })
-      }
-        const newData = [];
-      res.data.forEach(comp =>
-        newData.push({
-          ...comp,
-          coIn_Logo: (
-            <Image
-              src={'/assets/img/'+comp.coIn_Logo}
-              template="نمایش"
-              alt={comp.coIn_Name}
-              width={50}
-              height={50}
-              preview={true}
-              className="w-[50px] h-[50px] rounded-full"
-            />
-          ),
-          coIn_TypeDateTime: dateType,
-        })
-      )
-        setCompanyInfo(newData)
-      }
-    }).catch(err=>{ console.log("error: ", err); ToastAlert.error('خطا در ارتباط با سرور ') })
+      })
+      .catch(err => {
+        console.log('error: ', err)
+        ToastAlert.error('خطا در ارتباط با سرور ')
+      })
   }, [fetchAgain])
 
   const fetchAgainHandler = () => {
@@ -96,98 +101,114 @@ className="w-[50px] h-[50px] rounded-full"
 
   const header = (
     <div className="table-header">
-        <span className="p-input-icon-left">
-            <i className="pi pi-search text-sm" />
-            <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value) } placeholder="جستجو ..." className='h-10 text-sm' />
-        </span>
+      <span className="p-input-icon-left">
+        <i className="pi pi-search text-sm" />
+        <InputText type="search" onInput={e => setGlobalFilter(e.target.value)} placeholder="جستجو ..." className="h-10 text-sm" />
+      </span>
     </div>
-);
+  )
 
-const handleOpenShowAll = id=>{ setCompId(id); setShowAllData(true); }
+  const handleOpenShowAll = id => {
+    setCompId(id)
+    setShowAllData(true)
+  }
 
-const handleCloseShowAll = ()=>{ setCompId(0); setShowAllData(false) }
+  const handleCloseShowAll = () => {
+    setCompId(0)
+    setShowAllData(false)
+  }
 
-const handleDelete = compID => {
-  const formData = new FormData()
-  formData.append('ID', compID)
-  DeleteCompany(formData)
-    .then(res => {
-      if (res.data || res.status === 200) {
-        ToastAlert.success('حذف شرکت با موفقیت انجام شد')
-        fetchAgainHandler()
-       
-      } else {
+  const handleDelete = compID => {
+    const formData = new FormData()
+    formData.append('ID', compID)
+    DeleteCompany(formData)
+      .then(res => {
+        if (res.data || res.status === 200) {
+          ToastAlert.success('حذف شرکت با موفقیت انجام شد')
+          fetchAgainHandler()
+        } else {
+          ToastAlert.error('خطا در حذف شرکت ')
+        }
+      })
+      .catch(err => {
+        console.log(err)
         ToastAlert.error('خطا در حذف شرکت ')
-      }
-    })
-    .catch(err => { console.log(err); ToastAlert.error('خطا در حذف شرکت ') })
-
-}
-
+      })
+  }
 
   return (
     <>
-    
+      <div className="w-[95%] mt-4 m-auto container">
+        <div className="card">
+          <PageToolbar size={companyInfo.length} />
+          <ShowAllTableData
+            visible={showAllData}
+            onHide={handleCloseShowAll}
+            data={companyInfoObject}
+            headerTitle="نمایش اطلاعات شرکت"
+            hasBreadCamp={false}
+            breadCamp={showAllDataBreadcrumb}
+            hasButton={true}
+            buttonTitle={'ویرایش'}
+            buttonClasses="text-sm mt-2 h-10"
+            buttonCallBack={() => navigate('/company/edit/' + compId)}
+          />
+          <DataTable
+            value={companyInfo}
+            paginator
+            rows={10}
+            rowsPerPageOptions={[5, 10, 25]}
+            emptyMessage="رکوردی یافت نشد"
+            globalFilter={globalFilter}
+            header={header}
+            paginatorTemplate="NextPageLink LastPageLink PageLinks FirstPageLink PrevPageLink "
+            responsiveLayout="scroll"
+            className="rtl"
+          >
+            {companyColumns.map((col, index) => {
+              return (
+                <Column
+                  field={col.field}
+                  header={col.header}
+                  sortable
+                  key={index}
+                  filterBy="#{data.name}"
+                  className={col.className}
+                ></Column>
+              )
+            })}
 
-     <div className="w-[95%] mt-4 m-auto container"> 
-      <div className="card">
-      
-        <PageToolbar size={companyInfo.length} />
-        <ShowAllTableData 
-    visible={showAllData} 
-    onHide={handleCloseShowAll} 
-    data={companyInfoObject} 
-    headerTitle="نمایش اطلاعات شرکت" 
-    hasBreadCamp={false} 
-    breadCamp={showAllDataBreadcrumb}  
-    hasButton={true}
-    buttonTitle={"ویرایش"}
-    buttonClasses='relative right-[80%] text-sm mt-2 h-10'
-    buttonCallBack={()=>navigate('/company/edit/'+compId)}
-    />
-        <DataTable
-          value={companyInfo}
-          paginator
-          rows={10}
-          rowsPerPageOptions={[5, 10, 25]}
-          emptyMessage="رکوردی یافت نشد"
-          globalFilter={globalFilter}
-          header={header}
-          paginatorTemplate="NextPageLink LastPageLink PageLinks FirstPageLink PrevPageLink "
-          responsiveLayout="scroll"
-          className="rtl"
-        >
-          {companyColumns.map((col, index) => {
-              return <Column field={col.field} header={col.header} sortable key={index} filterBy="#{data.name}" className={col.className}></Column>
-           })
-          }
-          
-          <Column
-            field="image"
-            header="عملیات"
-            body={(data) => (
-              <>
-              <TableActions
-                deleteAction={() => { handleDelete(data.coIn_ID); }}
-                hasDelete={true}
-                hasUpdate={false}
-                updateAction={() => {
-                  alert(data.coIn_ID)
-                }}
-                deleteLabel="حذف"
-                updateLabel="ویرایش"
-                deleteButtonClassName={'p-button-danger ml-1 rtl text-sm p-1 mb-2'}
-                updateButtonClassName={'p-button-warning ml-1 text-sm rtl p-1'}
-              />
-              <Link to={'/company/edit/'+data.coIn_ID}><Button className='p-button-warning ml-1 rtl text-sm p-1 ml-2 mb-2'>ویرایش</Button></Link>
-              <Button onClick={()=>handleOpenShowAll(data.coIn_ID)} className='p-button-help rtl text-sm p-1 mb-2'>نمایش همه</Button>
-             </>
-            )}
-            
-          ></Column>
-        </DataTable>
+            <Column
+              field="image"
+              header="عملیات"
+              body={data => (
+                <>
+                  <TableActions
+                    deleteAction={() => {
+                      handleDelete(data.coIn_ID)
+                    }}
+                    hasDelete={true}
+                    hasUpdate={false}
+                    updateAction={() => {
+                      alert(data.coIn_ID)
+                    }}
+                    deleteLabel="حذف"
+                    updateLabel="ویرایش"
+                    deleteButtonClassName={'p-button-danger ml-1 rtl text-sm p-1 mb-2'}
+                    updateButtonClassName={'p-button-warning ml-1 text-sm rtl p-1'}
+                  />
+                  <Link to={'/company/edit/' + data.coIn_ID}>
+                    <Button className="p-button-warning ml-1 rtl text-sm p-1 ml-2 mb-2">ویرایش</Button>
+                  </Link>
+                  <Button onClick={() => handleOpenShowAll(data.coIn_ID)} className="p-button-help rtl text-sm p-1 mb-2">
+                    نمایش همه
+                  </Button>
+                </>
+              )}
+            ></Column>
+          </DataTable>
+        </div>
       </div>
-    </div>
     </>
   )
 }
