@@ -63,18 +63,12 @@ export const CreateRoll = () => {
             value={value}
             onChange={e => setValue(e.target.value)}
             name="Rol_TgID"
-            className={'h-[50px] w-96'}
+            className={'h-9 w-96'}
           />
           <label htmlFor="Rol_TgID" className={`right-2 text-sm w-full`}>
             نقش
           </label>
         </span>
-        {/* <span className="p-float-label">
-          <InputText id="inputtext" value={value} onChange={e => setValue(e.target.value)} className="h-9 w-96" />
-          <label htmlFor="inputtext" className="right-2 text-sm">
-            نقش
-          </label>
-        </span> */}
       </div>
       <Button
         loading={loading}

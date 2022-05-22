@@ -18,6 +18,7 @@ import { ProvinceServiceGetAll } from '../../../service/province'
 import { GetByUserId, insertUser, UpdateUser } from '../../../service/userService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { useLocation, useParams } from 'react-router'
+import { ToastAlert } from '../../common/toastAlert'
 
 const CreateAndEditUser = () => {
   const location = useLocation()
@@ -157,8 +158,13 @@ const CreateAndEditUser = () => {
     setLoading(true)
     const formData = new FormData()
     Object.keys(data).forEach(key => {
-      const value = data[key]
-      formData.append(key, value)
+      if (key === 'Usr_Gender') {
+        const value = parseInt(data[key])
+        formData.append(key, value)
+      } else {
+        const value = data[key]
+        formData.append(key, value)
+      }
     })
     if (editMode) {
       formData.append('Usr_ID', params.userId)
@@ -168,18 +174,6 @@ const CreateAndEditUser = () => {
       UpdateUser(formData)
         .then(res => {
           if (res.data || res.status === 200) {
-            setShowMessage(true)
-          }
-        })
-        .catch(err => console.log(err))
-        .finally(() => {
-          setLoading(false)
-        })
-    } else {
-      insertUser(formData)
-        .then(res => {
-          if (res.status === 200 || res.data === 'success') {
-            formik.resetForm()
             setShowMessage(true)
           }
         })
@@ -221,7 +215,7 @@ const CreateAndEditUser = () => {
         </div>
       </Dialog>
       <form className="grid grid-cols-3 gap-4 gap-y-10 p-5 mt-10" onSubmit={formik.handleSubmit}>
-        <span className="p-float-label relative">
+        <span className="p-float-label relative mb-5">
           <InputText
             id="Usr_FName"
             value={formik.values.Usr_FName}
@@ -234,7 +228,7 @@ const CreateAndEditUser = () => {
           </label>
           {getFormErrorMessage('Usr_FName')}
         </span>
-        <span className="p-float-label relative">
+        <span className="p-float-label relative mb-5">
           <InputText
             id="Usr_LName"
             value={formik.values.Usr_LName}
@@ -247,7 +241,7 @@ const CreateAndEditUser = () => {
           </label>
           {getFormErrorMessage('Usr_LName')}
         </span>
-        <span className="p-float-label p-inputnumber relative	">
+        <span className="p-float-label p-inputnumber relative	mb-5">
           <InputText
             id="Usr_IdentNum"
             value={formik.values.Usr_IdentNum}
@@ -266,7 +260,7 @@ const CreateAndEditUser = () => {
           </label>
           {getFormErrorMessage('Usr_IdentNum')}
         </span>
-        <span className="p-float-label">
+        <span className="p-float-label mb-5">
           <Dropdown
             options={createUserGender}
             id="Usr_Gender"
@@ -280,7 +274,7 @@ const CreateAndEditUser = () => {
           </label>
           {getFormErrorMessage('Usr_Gender')}
         </span>
-        <span className="p-float-label">
+        <span className="p-float-label mb-5">
           <InputText
             id="Usr_Mobile"
             value={formik.values.Usr_Mobile}
@@ -299,7 +293,7 @@ const CreateAndEditUser = () => {
           </label>
           {getFormErrorMessage('Usr_Mobile')}
         </span>
-        <span className="p-float-label">
+        <span className="p-float-label mb-5">
           <InputText
             type={'email'}
             id="Usr_mail"
@@ -313,7 +307,7 @@ const CreateAndEditUser = () => {
           </label>
           {getFormErrorMessage('Usr_mail')}
         </span>
-        <span className="p-float-label">
+        <span className="p-float-label mb-5">
           <InputText
             id="Usr_UName"
             value={formik.values.Usr_UName}
@@ -326,7 +320,7 @@ const CreateAndEditUser = () => {
           </label>
           {getFormErrorMessage('Usr_UName')}
         </span>
-        <span className="p-float-label">
+        <span className="p-float-label mb-5">
           <Password
             id="Usr_HPass"
             value={formik.values.Usr_HPass}
@@ -340,7 +334,7 @@ const CreateAndEditUser = () => {
           {getFormErrorMessage('Usr_HPass')}
         </span>
 
-        <span className="p-float-label">
+        <span className="p-float-label mb-5">
           <Dropdown
             options={provinces}
             id="Usr_Prov_ID"
@@ -354,12 +348,12 @@ const CreateAndEditUser = () => {
             name="Usr_Prov_ID"
             className={classNames({ 'p-invalid': isFormFieldValid('Usr_Prov_ID'), 'w-full h-9': true })}
           />
-          <label htmlFor="Usr_Prov_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid("Usr_Prov_ID") })}`}>
+          <label htmlFor="Usr_Prov_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_Prov_ID') })}`}>
             استان
           </label>
           {getFormErrorMessage('Usr_Gender')}
         </span>
-        <span className="p-float-label">
+        <span className="p-float-label mb-5">
           <Dropdown
             options={cities}
             id="Usr_Cty_ID"
@@ -370,13 +364,13 @@ const CreateAndEditUser = () => {
             name="Usr_Cty_ID"
             className={classNames({ 'p-invalid': isFormFieldValid('Usr_Cty_ID'), 'w-full h-9': true })}
           />
-          <label htmlFor="Usr_Cty_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid("Usr_Cty_ID") })}`}>
+          <label htmlFor="Usr_Cty_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_Cty_ID') })}`}>
             شهر
           </label>
           {getFormErrorMessage('Usr_Cty_ID')}
         </span>
 
-        <span className="p-float-label col-span-2 h-0">
+        <span className="p-float-label col-span-2 h-0 mb-5">
           <InputTextarea
             id="Usr_Address"
             value={formik.values.Usr_Address}
@@ -392,13 +386,12 @@ const CreateAndEditUser = () => {
           {getFormErrorMessage('Usr_Address')}
         </span>
 
-        <div className="col-span-3 flex items-center ">
+        <div className="col-span-3 flex items-center mb-5">
           <InputImage setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
         </div>
         <div className="col-span-3 flex justify-end items-end ">
           <Button label="ثبت" className=" ml-10 bg-indigo-600 text-sm mt-3 h-10" type="submit" loading={loading} />
         </div>
-
       </form>
     </div>
   )

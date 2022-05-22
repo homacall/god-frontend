@@ -183,17 +183,21 @@ export const CreateCompany = () => {
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createCompanyBreadcrumb} />
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
+        <section className="grid grid-cols-3 gap-4 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
+
           <span className="p-float-label rtl relative" dir="ltr">
             <InputText
               id="CoIn_Name"
               name="CoIn_Name"
               value={formik.values.CoIn_Name}
-              className="p-inputtext p-component rtl"
+              className="p-inputtext p-component w-full h-9  rtl text-xs"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <label htmlFor="CoIn_Name">نام</label>
+            <label htmlFor="CoIn_Name" className="text-sm">
+              نام
+            </label>
+
             {formik.touched.CoIn_Name && formik.errors.CoIn_Name ? (
               <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Name}</div>
             ) : null}
@@ -205,7 +209,7 @@ export const CreateCompany = () => {
               name="CoIn_SmsNumber"
               rtl
               value={formik.values.CoIn_SmsNumber}
-              className="p-inputtext p-component rtl"
+              className="p-inputtext p-component rtl text-sm w-full h-9"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               onKeyPress={event => {
@@ -214,7 +218,10 @@ export const CreateCompany = () => {
                 }
               }}
             />
-            <label htmlFor="CoIn_SmsNumber">شماره سامانه پیامک</label>
+            <label htmlFor="CoIn_SmsNumber" className="text-sm">
+              شماره سامانه پیامک
+            </label>
+
             {formik.touched.CoIn_SmsNumber && formik.errors.CoIn_SmsNumber ? (
               <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_SmsNumber}</div>
             ) : null}
@@ -225,7 +232,8 @@ export const CreateCompany = () => {
               id="CoIn_Phone"
               name="CoIn_Phone"
               value={formik.values.CoIn_Phone}
-              className="p-inputtext p-component rtl"
+              className="p-inputtext p-component w-full h-9 rtl"
+
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               onKeyPress={event => {
@@ -234,7 +242,10 @@ export const CreateCompany = () => {
                 }
               }}
             />
-            <label htmlFor="CoIn_Phone">تلفن</label>
+            <label htmlFor="CoIn_Phone" className="text-sm">
+              تلفن
+            </label>
+
             {formik.touched.CoIn_Phone && formik.errors.CoIn_Phone ? (
               <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Phone}</div>
             ) : null}
@@ -245,7 +256,7 @@ export const CreateCompany = () => {
               id="CoIn_Mobile"
               name="CoIn_Mobile"
               value={formik.values.CoIn_Mobile}
-              className="p-inputtext p-component rtl"
+              className="p-inputtext p-component w-full h-9 rtl"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               onKeyPress={event => {
@@ -254,9 +265,12 @@ export const CreateCompany = () => {
                 }
               }}
             />
-            <label htmlFor="CoIn_Mobile">موبایل</label>
+            <label htmlFor="CoIn_Mobile" className="text-sm">
+              موبایل
+            </label>
             {formik.touched.CoIn_Mobile && formik.errors.CoIn_Mobile ? (
-              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Mobile}</div>
+              <div className="absolute text-red-600 text-xs">{formik.errors.CoIn_Mobile}</div>
+
             ) : null}
           </span>
 
@@ -265,7 +279,7 @@ export const CreateCompany = () => {
               id="CoIn_Fax"
               name="CoIn_Fax"
               value={formik.values.CoIn_Fax}
-              className="p-inputtext p-component rtl"
+              className="p-inputtext p-component w-full h-9 rtl"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               onKeyPress={event => {
@@ -274,9 +288,12 @@ export const CreateCompany = () => {
                 }
               }}
             />
-            <label htmlFor="CoIn_Fax">فکس</label>
+            <label htmlFor="CoIn_Fax" className="text-sm">
+              فکس
+            </label>
             {formik.touched.CoIn_Fax && formik.errors.CoIn_Fax ? (
-              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Fax}</div>
+              <div className="absolute text-red-600 text-xs">{formik.errors.CoIn_Fax}</div>
+
             ) : null}
           </span>
 
@@ -285,13 +302,16 @@ export const CreateCompany = () => {
               id="CoIn_Email"
               name="CoIn_Email"
               value={formik.values.CoIn_Email}
-              className="p-inputtext p-component rtl"
+              className="p-inputtext p-component w-full h-9 rtl"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <label htmlFor="CoIn_Email">ایمیل</label>
+            <label htmlFor="CoIn_Email" className="text-sm">
+              ایمیل
+            </label>
             {formik.touched.CoIn_Email && formik.errors.CoIn_Email ? (
-              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Email}</div>
+              <div className="absolute text-red-600 text-xs">{formik.errors.CoIn_Email}</div>
+
             ) : null}
           </span>
 
@@ -300,13 +320,16 @@ export const CreateCompany = () => {
               id="CoIn_Site"
               name="CoIn_Site"
               value={formik.values.CoIn_Site}
-              className="p-inputtext p-component rtl"
+              className="p-inputtext p-component w-full h-9 rtl"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <label htmlFor="CoIn_Site">سایت</label>
+            <label htmlFor=" CoIn_Site" className="text-sm">
+              سایت
+            </label>
             {formik.touched.CoIn_Site && formik.errors.CoIn_Site ? (
-              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Site}</div>
+              <div className="absolute text-red-600 text-xs">{formik.errors.CoIn_Site}</div>
+
             ) : null}
           </span>
 
@@ -315,13 +338,16 @@ export const CreateCompany = () => {
               id="CoIn_Instagram"
               name="CoIn_Instagram"
               value={formik.values.CoIn_Instagram}
-              className="p-inputtext p-component rtl"
+              className="p-inputtext p-component w-full h-9 rtl"
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <label htmlFor="CoIn_Instagram">اینستاگرام</label>
+            <label htmlFor="CoIn_Instagram" className="text-sm">
+              اینستاگرام
+            </label>
             {formik.touched.CoIn_Instagram && formik.errors.CoIn_Instagram ? (
-              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Instagram}</div>
+              <div className="absolute text-red-600 text-xs">{formik.errors.CoIn_Instagram}</div>
+
             ) : null}
           </span>
 
@@ -334,10 +360,11 @@ export const CreateCompany = () => {
               optionValue="id"
               value={formik.values.CoIn_LangID}
               onChange={formik.handleChange}
-              className="rtl"
-              style={{ width: '70%' }}
+              placeholder="انتخاب زبان"
+              className="rtl w-full h-9 "
             />
-            {formik.errors.CoIn_LangID ? <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_LangID}</div> : null}
+            {formik.errors.CoIn_LangID ? <div className="absolute text-red-600 text-xs">{formik.errors.CoIn_LangID}</div> : null}
+
           </span>
 
           <span className="p-float-label rtl relative" dir="ltr">
@@ -349,11 +376,12 @@ export const CreateCompany = () => {
               optionValue="id"
               value={formik.values.CoIn_TypeDateTime}
               onChange={formik.handleChange}
-              className="rtl"
-              style={{ width: '70%' }}
+              className="rtl w-full h-9"
+              placeholder="انتخاب نوع سال"
             />
             {formik.errors.CoIn_TypeDateTime ? (
-              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_TypeDateTime}</div>
+              <div className="absolute text-red-600 text-xs">{formik.errors.CoIn_TypeDateTime}</div>
+
             ) : null}
           </span>
         </section>
@@ -363,13 +391,14 @@ export const CreateCompany = () => {
             id="CoIn_Address"
             name="CoIn_Address"
             value={formik.values.CoIn_Address}
-            className="p-inputtext p-component w-11/12 rtl"
+            className="p-inputtext p-component w-full h-9 rtl text-sm"
+
             placeholder="آدرس"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
           {formik.touched.CoIn_Address && formik.errors.CoIn_Address ? (
-            <div className="text-red-600 text-sm">{formik.errors.CoIn_Address}</div>
+            <div className="text-red-600 text-xs">{formik.errors.CoIn_Address}</div>
           ) : null}
         </div>
 
@@ -380,24 +409,23 @@ export const CreateCompany = () => {
             value={formik.values.CoIn_About}
             rows={5}
             placeholder="درباره شرکت"
-            className="p-inputtextarea w-11/12"
+            className="p-inputtextarea w-full text-sm"
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
           />
 
           {formik.touched.CoIn_About && formik.errors.CoIn_About ? (
-            <div className="text-red-600 text-sm">{formik.errors.CoIn_About}</div>
+            <div className="text-red-600 text-xs">{formik.errors.CoIn_About}</div>
           ) : null}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 mt-8">
-          <InputImage title="انتخاب تصویر لوگو" setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
-          <InputImage title="انتخاب تصویر صفحه ورود" setImageUrl={setLoginImg} imageError={loginImgError} imageUrl={loginImg} />
-          <InputImage title="انتخاب تصویر مسیر کاربر" setImageUrl={setPathImg} imageError={pathImgError} imageUrl={pathImg} />
+        <div className="mt-10 col-span-3 flex justify-center items-center">
+          <InputImage setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
         </div>
 
         <div className="mt-10 flex justify-end justify-items-end">
-          <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white min-w-[90px] px-8 rtl text-sm" loading={loading}>
+          <Button type="submit" className=" ml-10 bg-indigo-600 text-sm mt-3 h-10" loading={loading}>
+
             ثبت
           </Button>
         </div>

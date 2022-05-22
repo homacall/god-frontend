@@ -106,11 +106,11 @@ export const ServerConnection = () => {
                     updateAction={() => {}}
                     deleteLabel="حذف"
                     updateLabel="ویرایش"
-                    deleteButtonClassName={'p-button-danger ml-1 rtl p-1 mb-2'}
-                    updateButtonClassName={'p-button-warning ml-1 text-xs rtl p-1'}
+                    deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
+                    updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
                   />
                   <Link to={'/server-connection/edit/' + data.serConn_ID}>
-                    <Button className="p-button-warning ml-1 rtl p-1 ml-2 mb-2">ویرایش</Button>
+                    <Button className="p-button-warning text-xs rtl h-10 w-25 p-1">ویرایش</Button>
                   </Link>
                 </>
               )}
