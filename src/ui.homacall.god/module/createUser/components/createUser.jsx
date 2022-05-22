@@ -15,10 +15,9 @@ import { InputImage } from '../../common/fileUploader'
 
 import { CityServiceGetByProvinceID } from '../../../service/cityService'
 import { ProvinceServiceGetAll } from '../../../service/province'
-import { GetByUserId, insertUser, UpdateUser } from '../../../service/userService'
+import { GetByUserId,  UpdateUser } from '../../../service/userService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { useLocation, useParams } from 'react-router'
-import { ToastAlert } from '../../common/toastAlert'
 
 const CreateAndEditUser = () => {
   const location = useLocation()

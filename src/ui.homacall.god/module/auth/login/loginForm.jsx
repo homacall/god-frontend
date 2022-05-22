@@ -7,7 +7,6 @@ import { loginUser } from '../../../service/loginService'
 import { useSetRecoilState } from 'recoil'
 import { userData } from '../../../store/atom'
 import { ToastAlert } from '../../common/toastAlert'
-import Title from '../../../component/title/title'
 
 const NewLanguage = () => {
   const [UserName, setUserName] = useState('')
