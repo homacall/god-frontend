@@ -114,8 +114,8 @@ export const Roll = () => {
                 deleteLabel="حذف"
                 updateLabel="ویرایش"
                 updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data.rol_TagID} />}
-                deleteButtonClassName={'p-button-outlined p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
-                updateButtonClassName={'p-button-outlined p-button-warning text-xs rtl h-10 w-25 p-1'}
+                deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
+                updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
               />
             )}
           ></Column>
