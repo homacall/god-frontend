@@ -160,7 +160,7 @@ const CreateEditServerConnection = () => {
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createServerConnectionBreadcrumb} />
       <form className="p-5 mt-10 " onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-3 gap-4  gap-y-7 rtl">
+        <section className="grid grid-cols-3 gap-4  gap-y-10 rtl">
           <span className="p-float-label relative mb-5" >
             <InputText
               id="SerConn_IP"
@@ -202,7 +202,7 @@ const CreateEditServerConnection = () => {
             />
             <label htmlFor="SerConn_DbName" className={`${formik.touched.SerConn_DbName && formik.errors.SerConn_DbName && styles.labelError} right-2 text-sm`}>نام پایگاه داده</label>
             {formik.touched.SerConn_DbName && formik.errors.SerConn_DbName ? (
-              <div className='absolute text-red-600'>{formik.errors.SerConn_DbName}</div>
+              <div className='absolute text-red-600 text-sm'>{formik.errors.SerConn_DbName}</div>
             ) : null}
           </span>
 
@@ -236,23 +236,27 @@ const CreateEditServerConnection = () => {
             ) : null}
           </span>
 
-          <span className="p-float-label relative mb-5">
-            <Dropdown
-              options={routes}
-              id="SerConn_SysID"
-              name="SerConn_SysID"
-              optionLabel="name"
-              optionValue="id"
-              value={formik.values.SerConn_SysID}
-              placeholder="انتخاب  سیستم"
-              onChange={(e) => { formik.handleChange(e); setSystemName(routes.filter(({ id }) => id === e.target.value).map(({ sys }) => sys)) }}
-              dir="rtl"
-              className={`w-full h-9 ${formik.touched.SerConn_SysID && formik.errors.SerConn_SysID && 'border border-red-600'}`}
-            />
-            {formik.touched.SerConn_SysID && formik.errors.SerConn_SysID ? (
-              <div className='absolute text-sm text-red-600'>{formik.errors.SerConn_SysID}</div>
-            ) : null}
-          </span>
+        <span className="p-float-label" dir='ltr'>
+        <Dropdown 
+             options={routes} 
+             id="SerConn_SysID"
+             name="SerConn_SysID"  
+             optionLabel="name"
+             optionValue="id"
+             value={formik.values.SerConn_SysID} 
+             placeholder="انتخاب  سیستم" 
+             onBlur={formik.handleBlur}
+             onChange={(e)=> {formik.handleChange(e); setSystemName(routes.filter(({ id }) => id === e.target.value).map(({ sys }) => sys)) }}
+
+             dir="rtl"
+             style={{ width: '100%'}}
+           />
+         
+          {formik.errors.SerConn_SysID ? (
+         <div className='text-right'><small className='p-error'>{formik.errors.SerConn_SysID}</small></div>
+       ) : null} 
+        </span>
+
 
           <span className="p-float-label relative mb-5" >
             <InputText
@@ -265,23 +269,24 @@ const CreateEditServerConnection = () => {
             <label htmlFor="SerConn_SysName" className={`${formik.touched.SerConn_SysName && formik.errors.SerConn_SysName && styles.labelError} right-2 text-sm`}>نام سیستم</label>
           </span>
 
-          <span className="p-float-label relative mb-5" >
-            <Dropdown
-              options={companies}
-              id="SerConn_CoInID"
-              name="SerConn_CoInID"
-              optionLabel="name"
-              optionValue="id"
-              value={formik.values.SerConn_CoInID}
-              placeholder="انتخاب  شرکت"
-              onChange={formik.handleChange}
-              dir="rtl"
-              className={`w-full h-9 ${formik.touched.SerConn_CoInID && formik.errors.SerConn_CoInID && 'border border-red-600'}`}
-            />
-            {formik.touched.SerConn_CoInID && formik.errors.SerConn_CoInID ? (
-              <div className='absolute text-red-600'>{formik.errors.SerConn_CoInID}</div>
-            ) : null}
-          </span>
+        <span className="p-float-label" dir='ltr'>
+          <Dropdown 
+             options={companies} 
+             id="SerConn_CoInID"
+             name="SerConn_CoInID"  
+             optionLabel="name"
+             optionValue="id"
+             value={formik.values.SerConn_CoInID} 
+             placeholder="انتخاب  شرکت"
+             onChange={formik.handleChange}
+             dir="rtl"
+             style={{ width: '100%'}}
+           />
+           
+           {formik.errors.SerConn_CoInID ? (
+         <div className='text-right'><small className='p-error'>{formik.errors.SerConn_CoInID}</small></div>
+       ) : null}
+         </span>
 
         </section>
 

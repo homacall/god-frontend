@@ -170,8 +170,8 @@ const handleUpdateCompany = formData => {
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createCompanyBreadcrumb} />
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 rtl">
-        <span className="p-float-label rtl" dir='ltr'>
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
+        <span className="p-float-label rtl relative" dir='ltr'>
           <InputText
             id="CoIn_Name"
             name="CoIn_Name" 
@@ -182,11 +182,11 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Name">نام</label>
           {formik.touched.CoIn_Name && formik.errors.CoIn_Name ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Name}</div>
+           <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Name}</div>
        ) : null}
         </span>
 
-        <span className="p-float-label rtl" dir='ltr'>
+        <span className="p-float-label rtl relative" dir='ltr'>
         <InputText
             id="CoIn_SmsNumber"
             name="CoIn_SmsNumber"
@@ -203,11 +203,11 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_SmsNumber">شماره سامانه پیامک</label>
           {formik.touched.CoIn_SmsNumber && formik.errors.CoIn_SmsNumber ? (
-         <div className='text-red-600'>{formik.errors.CoIn_SmsNumber}</div>
+           <div  className="absolute text-red-600 text-sm">{formik.errors.CoIn_SmsNumber}</div>
        ) : null} 
         </span>
 
-        <span className="p-float-label rtl" dir='ltr'>
+        <span className="p-float-label rtl relative" dir='ltr'>
           <InputText
             id="CoIn_Phone"
             name="CoIn_Phone"
@@ -223,11 +223,11 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Phone">تلفن</label>
           {formik.touched.CoIn_Phone && formik.errors.CoIn_Phone ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Phone}</div>
+           <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Phone}</div>
        ) : null} 
         </span>
 
-        <span className="p-float-label rtl" dir='ltr'>
+        <span className="p-float-label rtl relative" dir='ltr'>
           <InputText
             id="CoIn_Mobile"
             name="CoIn_Mobile" 
@@ -243,11 +243,11 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Mobile">موبایل</label>
           {formik.touched.CoIn_Mobile && formik.errors.CoIn_Mobile ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Mobile}</div>
+          <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Mobile}</div>
        ) : null} 
         </span>
 
-        <span className="p-float-label rtl" dir='ltr'>
+        <span className="p-float-label rtl relative" dir='ltr'>
           <InputText
             id="CoIn_Fax"
             name="CoIn_Fax" 
@@ -263,11 +263,11 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Fax">فکس</label>
           {formik.touched.CoIn_Fax && formik.errors.CoIn_Fax ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Fax}</div>
+          <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Fax}</div>
        ) : null} 
         </span>
 
-        <span className="p-float-label rtl" dir='ltr'>
+        <span className="p-float-label rtl relative" dir='ltr'>
           <InputText
             id="CoIn_Email"
             name="CoIn_Email" 
@@ -278,11 +278,11 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Email">ایمیل</label>
           {formik.touched.CoIn_Email && formik.errors.CoIn_Email ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Email}</div>
+           <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Email}</div>
        ) : null} 
         </span>
 
-        <span className="p-float-label rtl" dir='ltr'>
+        <span className="p-float-label rtl relative" dir='ltr'>
           <InputText
             id="CoIn_Site"
             name="CoIn_Site" 
@@ -293,11 +293,11 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Site">سایت</label>
           {formik.touched.CoIn_Site && formik.errors.CoIn_Site ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Site}</div>
+           <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Site}</div>
        ) : null} 
         </span>
 
-        <span className="p-float-label rtl" dir='ltr'>
+        <span className="p-float-label rtl relative" dir='ltr'>
           <InputText
             id="CoIn_Instagram"
             name="CoIn_Instagram" 
@@ -308,11 +308,11 @@ const handleUpdateCompany = formData => {
           />
           <label htmlFor="CoIn_Instagram">اینستاگرام</label>
           {formik.touched.CoIn_Instagram && formik.errors.CoIn_Instagram ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Instagram}</div>
+            <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Instagram}</div>
        ) : null}
         </span>
 
-        <span className="p-float-label rtl" dir='ltr'>
+        <span className="p-float-label rtl relative" dir='ltr'>
           <Dropdown 
              options={languages} 
              id="CoIn_LangID"
@@ -321,16 +321,16 @@ const handleUpdateCompany = formData => {
              optionValue="id"
              value={formik.values.CoIn_LangID}
              onChange={formik.handleChange}
-            className="rtl"
+             className="rtl"
              style={{ width: '70%'}}
            />
-            <label htmlFor="CoIn_LangID">زبان پیشفرض</label>
-           {formik.touched.CoIn_LangID && formik.errors.CoIn_LangID ? (
-         <div className='text-red-600'>{formik.errors.CoIn_LangID}</div>
+           {formik.errors.CoIn_LangID ? (
+             <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_LangID}</div>
+
        ) : null}
          </span>
 
-         <span className="p-float-label rtl" dir='ltr'>
+         <span className="p-float-label rtl relative" dir='ltr'>
           <Dropdown 
              options={dateTypes} 
              id="CoIn_TypeDateTime"
@@ -342,15 +342,14 @@ const handleUpdateCompany = formData => {
              className="rtl"
              style={{ width: '70%'}}
            />
-           <label htmlFor="CoIn_TypeDateTime">نوع تاریخ</label>
-           {formik.touched.CoIn_TypeDateTime && formik.errors.CoIn_TypeDateTime ? (
-         <div className='text-red-600'>{formik.errors.CoIn_TypeDateTime}</div>
+           {formik.errors.CoIn_TypeDateTime ? (
+            <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_TypeDateTime}</div>
        ) : null}
          </span>
 
         </section>
 
-        <div className='w-full mt-5 flex flex-col items-start content-center'>
+        <div className='w-full mt-5 py-3 flex flex-col items-start content-center'>
         <InputText
             id="CoIn_Address"
             name="CoIn_Address"
@@ -359,26 +358,26 @@ const handleUpdateCompany = formData => {
             placeholder='آدرس'
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
-          />    
+          />   
            {formik.touched.CoIn_Address && formik.errors.CoIn_Address ? (
-         <div className='text-red-600'>{formik.errors.CoIn_Address}</div>
+             <div className="text-red-600 text-sm">{formik.errors.CoIn_Address}</div>
        ) : null}  
         </div>
      
-         <div className='w-full mt-5 flex flex-col items-start content-center'>
-          <InputTextarea 
-            id="CoIn_About" 
-            name="CoIn_About" 
-            value={formik.values.CoIn_About}
-            rows={5} 
-            placeholder="درباره شرکت" 
-            className='p-inputtextarea w-11/12 rtl'
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
+         <div className='w-full mt-3 flex flex-col items-start content-center'>
+            <InputTextarea 
+             id="CoIn_About" 
+             name="CoIn_About" 
+             value={formik.values.CoIn_About}
+             rows={5} 
+             placeholder="درباره شرکت" 
+             className='p-inputtextarea w-11/12'
+             onBlur={formik.handleBlur}
+             onChange={formik.handleChange}
             />
-             
+            
             {formik.touched.CoIn_About && formik.errors.CoIn_About ? (
-         <div className='text-red-600'>{formik.errors.CoIn_About}</div>
+            <div className="text-red-600 text-sm">{formik.errors.CoIn_About}</div>
        ) : null}
          </div>
 
