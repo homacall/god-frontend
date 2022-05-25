@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { DeleteAllRoleUserPermission, GetAllPermissionUserActions, InsertRoleUserPermission } from '../../../service/roleUserPermissionGod'
 import { ToastAlert } from '../../common/toastAlert'
 
-export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonClass, fetchAgain, editMode = false }) => {
+export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonClass, fetchAgain, editMode = false, role }) => {
   const [actions, setActions] = useState([])
   const [selectedAction, setSelectedAction] = useState([])
   const [loading, setLoading] = useState(false)
@@ -12,7 +12,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
   useEffect(() => {
     if (parentId || selectedRoute) {
       const formData = new FormData()
-      formData.append('UsrRol_ID', user.usr_ID)
+      formData.append('UsrRol_ID', role ? user.rol_ID : user.usr_ID)
       formData.append('FormID', parentId ? parentId : selectedRoute[selectedRoute.length - 1].routStr_ID)
       setLoadingActions(true)
       GetAllPermissionUserActions(formData)
@@ -24,7 +24,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
             res.data.forEach(item => {
               if (item.action_State === true) {
                 selected.push({
-                  rlUsrPer_RolID_UsrID: user.usr_ID,
+                  rlUsrPer_RolID_UsrID: role ? user.rol_ID : user.usr_ID,
                   rlUsrPer_RoutStrID: item.routstructure_ID,
                   rlUsrPer_BitMrge: item.action_State,
                   rlUsrPer_ParentID: parentId ? parentId : selectedRoute[selectedRoute.length - 1].routStr_ID,
@@ -43,7 +43,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
   const submitHandler = () => {
     setLoading(true)
     const formData = new FormData()
-    formData.append('UserID', user.usr_ID)
+    formData.append('UserID', role ? user.rol_ID : user.usr_ID)
     formData.append('ParentID', parentId ? parentId : selectedRoute[selectedRoute.length - 1].routStr_ID)
     DeleteAllRoleUserPermission(formData)
       .then(res => {
@@ -81,7 +81,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
                   setSelectedAction(perv => [
                     ...perv,
                     {
-                      rlUsrPer_RolID_UsrID: user.usr_ID,
+                      rlUsrPer_RolID_UsrID: role ? user.rol_ID : user.usr_ID,
                       rlUsrPer_RoutStrID: e.value,
                       rlUsrPer_BitMrge: true,
                       rlUsrPer_ParentID: parentId ? parentId : selectedRoute[selectedRoute.length - 1].routStr_ID,

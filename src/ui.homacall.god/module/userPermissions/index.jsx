@@ -13,7 +13,7 @@ import { SelectActions } from './components/selectActions'
 import { TreeView } from './components/treeView'
 import { permissionColumns } from './constants/permissionColumns'
 
-export const UserPermissions = ({ visible, onHide, user }) => {
+export const UserPermissions = ({ visible, onHide, user, role = false }) => {
   const [newPermissionDialog, setNewPermissionDialog] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(undefined)
   const [routes, setRoutes] = useState([])
@@ -30,7 +30,7 @@ export const UserPermissions = ({ visible, onHide, user }) => {
   const fetchAgainHandler = useCallback(() => {
     setFetchAgain(perv => !perv)
   }, [])
-
+  console.log(user)
   const dialogFooter = (
     <div className="flex justify-content-center">
       <Button label="بستن" className="p-button-text" autoFocus onClick={onHide} />
@@ -65,7 +65,7 @@ export const UserPermissions = ({ visible, onHide, user }) => {
 
   const fetchUserPermission = useCallback(() => {
     const formData = new FormData()
-    formData.append('UsrRol_ID', user.usr_ID)
+    formData.append('UsrRol_ID', role ? user.rol_ID : user.usr_ID)
     GetAllPermissionUserRoutePath(formData)
       .then(res => {
         if (res.data || res.status === 200) {
@@ -148,6 +148,7 @@ export const UserPermissions = ({ visible, onHide, user }) => {
         style={{ borderReduce: 10 }}
       >
         <SelectActions
+          role={role}
           editMode={true}
           user={user}
           parentId={editParentId}

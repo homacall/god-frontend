@@ -15,13 +15,15 @@ import { InputImage } from '../../common/fileUploader'
 
 import { CityServiceGetByProvinceID } from '../../../service/cityService'
 import { ProvinceServiceGetAll } from '../../../service/province'
-import { GetByUserId,  UpdateUser } from '../../../service/userService'
+import { GetByUserId, insertUser, UpdateUser } from '../../../service/userService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { useLocation, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
+import { ToastAlert } from '../../common/toastAlert'
 
 const CreateAndEditUser = () => {
   const location = useLocation()
   const params = useParams()
+  const navigate = useNavigate()
   const [provinces, setProvinces] = useState([])
   const [cities, setCities] = useState([])
   const [imageUrl, setImageUrl] = useState('')
@@ -149,13 +151,14 @@ const CreateAndEditUser = () => {
   }
   const submitHandler = data => {
     if (!imageUrl) {
-      return setImageError(true)
+      data.Usr_Img = 'no-image'
     } else {
       data.Usr_Img = imageUrl
       setImageError(false)
     }
     setLoading(true)
     const formData = new FormData()
+
     Object.keys(data).forEach(key => {
       if (key === 'Usr_Gender') {
         const value = parseInt(data[key])
@@ -165,11 +168,12 @@ const CreateAndEditUser = () => {
         formData.append(key, value)
       }
     })
+
     if (editMode) {
-      formData.append('Usr_ID', params.userId)
       if (!data.Usr_HPass) {
-        formData.delete('Usr_HPass')
+        formData.append('Usr_HPass', null)
       }
+      formData.append('Usr_ID', params.userId)
       UpdateUser(formData)
         .then(res => {
           if (res.data || res.status === 200) {
@@ -177,6 +181,22 @@ const CreateAndEditUser = () => {
           }
         })
         .catch(err => console.log(err))
+        .finally(() => {
+          setLoading(false)
+        })
+    } else {
+      insertUser(formData)
+        .then(res => {
+          if (res.data || res.status === 200) {
+            ToastAlert.success('کاربر جدید با موفقیت ثبت شد')
+            navigate('/users')
+          } else {
+            ToastAlert.error('خطا در ثبت کاربر جدید ')
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
         .finally(() => {
           setLoading(false)
         })

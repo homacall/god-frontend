@@ -12,13 +12,15 @@ import { roleColumn } from './constant/tableColumn'
 import { DeleteRole, GetAllRole, UpdateRole } from '../../service/rolService'
 import { rolls } from '../../utils/constants/routes/publicRoute'
 import { ToastAlert } from '../common/toastAlert'
+import { UserPermissions } from '../userPermissions'
 
 export const Roll = () => {
   const [rollName, setRollName] = useState(0)
   const [globalFilter, setGlobalFilter] = useState(null)
   const [dataL, setDataL] = useState([])
   const [fetchAgain, setFetchAgain] = useState(false)
-
+  const [showPermissions, setShowPermissions] = useState(false)
+  const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
@@ -68,7 +70,9 @@ export const Roll = () => {
       })
       .catch(err => console.log(err))
   }
-
+  const permissionDialogHandler = () => {
+    setShowPermissions(perv => !perv)
+  }
   const header = (
     <div className="table-header">
       <span className="p-input-icon-left">
@@ -99,7 +103,7 @@ export const Roll = () => {
           ))}
 
           <Column
-            field="image"
+            field="action"
             header="عملیات"
             body={data => (
               <TableActions
@@ -116,10 +120,21 @@ export const Roll = () => {
                 updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data.rol_TagID} />}
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
-              />
+              >
+                <Button
+                  className="p-button-primary text-xs rtl ml-1 p-1 mt-1 mr-2 h-10"
+                  onClick={() => {
+                    setUserInfoForPermission(data)
+                    setShowPermissions(perv => !perv)
+                  }}
+                >
+                  سطح دسترسی
+                </Button>
+              </TableActions>
             )}
           ></Column>
         </DataTable>
+        <UserPermissions visible={showPermissions} onHide={permissionDialogHandler} user={userInfoForPermission} role={true} />
       </div>
     </div>
   )
