@@ -43,7 +43,7 @@ export const UserTable = ({ data, fetchAgain }) => {
         usr_Gender: item.usr_Gender === 1 ? 'مرد' : item.usr_Gender === 0 ? 'زن' : 'سایر',
         usr_Img: (
           <Image
-            src={'/assets/img/user.png'}
+            src={item.usr_Img === 'no-image' ? '/assets/img/user.png' : item.usr_Img}
             template="نمایش"
             alt="user image"
             width={50}

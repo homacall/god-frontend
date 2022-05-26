@@ -33,7 +33,7 @@ export function InputImage({ setImageUrl, imageError, imageUrl, title }) {
       />
       <div onClick={() => imageUploader.current.click()}>
         <img
-          src={imageUrl || '/assets/img/user.png'}
+          src={(imageUrl && imageUrl === 'no-image') || !imageUrl ? '/assets/img/user.png' : imageUrl}
           ref={uploadedImage}
           className="w-[100px] h-[100px] relative rounded-[20px]"
           alt="..."
