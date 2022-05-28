@@ -103,7 +103,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>مدیریت کاربران</title>
               </Helmet>
-              <CreateAndEditUser />{' '}
+              <CreateAndEditUser />
             </>
           }
         />
@@ -114,7 +114,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>راهبری نقش</title>
               </Helmet>
-              <Roll />{' '}
+              <Roll />
             </>
           }
         />
@@ -125,7 +125,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>راهبری نقش</title>
               </Helmet>
-              <CreateRoll />{' '}
+              <CreateRoll />
             </>
           }
         />
@@ -191,7 +191,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>انتصاب مسیر</title>
               </Helmet>
-              <RouteStretcher />{' '}
+              <RouteStretcher />
             </>
           }
         />
@@ -202,7 +202,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>انتصاب مسیر</title>
               </Helmet>
-              <CreateAndEditStretcher />{' '}
+              <CreateAndEditStretcher />
             </>
           }
         />
@@ -213,7 +213,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>انتصاب مسیر</title>
               </Helmet>
-              <CreateAndEditStretcher />{' '}
+              <CreateAndEditStretcher />
             </>
           }
         />
@@ -224,7 +224,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>مدیریت پایگاه داده</title>
               </Helmet>
-              <ServerConnection />{' '}
+              <ServerConnection />
             </>
           }
         />
@@ -235,7 +235,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>مدیریت پایگاه داده</title>
               </Helmet>
-              <CreateEditServerConnection />{' '}
+              <CreateEditServerConnection />
             </>
           }
         />
@@ -246,7 +246,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>مدیریت پایگاه داده</title>
               </Helmet>
-              <CreateEditServerConnection />{' '}
+              <CreateEditServerConnection />
             </>
           }
         />
@@ -257,7 +257,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>تعریف انواع سرویس</title>
               </Helmet>
-              <ServiceType />{' '}
+              <ServiceType />
             </>
           }
         />
@@ -268,7 +268,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>تعریف انواع سرویس</title>
               </Helmet>
-              <CreateEditServiceType />{' '}
+              <CreateEditServiceType />
             </>
           }
         />
@@ -279,7 +279,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>تعریف انواع سرویس</title>
               </Helmet>
-              <CreateEditServiceType />{' '}
+              <CreateEditServiceType />
             </>
           }
         />
@@ -288,9 +288,9 @@ export const PrivateRoutes = () => {
           element={
             <>
               <Helmet>
-                <title>مسیر سیتم ها</title>
+                <title>مسیر سیستم ها</title>
               </Helmet>
-              <SystemPath />{' '}
+              <SystemPath />
             </>
           }
         />
@@ -301,7 +301,7 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>مسیر سیستم ها</title>
               </Helmet>
-              <CreateEditSystemPath />{' '}
+              <CreateEditSystemPath />
             </>
           }
         />
@@ -312,7 +312,40 @@ export const PrivateRoutes = () => {
               <Helmet>
                 <title>مسیر سیستم ها</title>
               </Helmet>
-              <CreateEditSystemPath />{' '}
+              <CreateEditSystemPath />
+            </>
+          }
+        />
+        <Route
+          path={`${filePath.main}`}
+          element={
+            <>
+              <Helmet>
+                <title>مسیر فایل ها</title>
+              </Helmet>
+              <FilePath />
+            </>
+          }
+        />
+        <Route
+          path={`${filePath.create}`}
+          element={
+            <>
+              <Helmet>
+                <title>مسیر فایل ها</title>
+              </Helmet>
+              <CreateEditFilePath />
+            </>
+          }
+        />
+        <Route
+          path={`${filePath.edit}`}
+          element={
+            <>
+              <Helmet>
+                <title>مسیر فایل ها</title>
+              </Helmet>
+              <CreateEditFilePath />
             </>
           }
         />
