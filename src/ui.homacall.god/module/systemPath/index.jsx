@@ -9,6 +9,7 @@ import { Toolbar } from 'primereact/toolbar'
 import TableActions from '../common/actionBody'
 import { ToastAlert } from '../common/toastAlert'
 import { serviceTypeColumn } from './constant/tableColumn'
+import { GetAllSystemPath, DeleteSystemPath } from '../../service/systemPathService'
 
 function SystemPath() {
   const [fetchAgain, setFetchAgain] = useState(false)
@@ -19,7 +20,11 @@ function SystemPath() {
     setFetchAgain(perv => !perv)
   }
   useEffect(() => {
-    setDataL([])
+    GetAllSystemPath()
+      .then(res => {
+        if (res.data) setDataL(res.data)
+      })
+      .catch(e => ToastAlert.error('خطا در  ارتباط با سرور '))
   }, [fetchAgain])
 
   const rightToolbarTemplate = () => {
@@ -31,7 +36,24 @@ function SystemPath() {
       </>
     )
   }
-  const deleteSystemPath = id => {}
+
+  const deleteSystemPath = systemID => {
+    const formData = new FormData()
+    formData.append('ID', systemID)
+    DeleteSystemPath(formData)
+      .then(res => {
+        if (res.data || res.status === 200) {
+          ToastAlert.success('حذف سیستم با موفقیت انجام شد')
+          fetchAgainHandler()
+        } else {
+          ToastAlert.error('خطا در حذف سیستم ')
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        ToastAlert.error('خطا در حذف سیستم ')
+      })
+  }
 
   const header = (
     <div className="table-header">
@@ -67,18 +89,23 @@ function SystemPath() {
             body={data => (
               <TableActions
                 deleteAction={() => {
-                  alert('delete')
+                  deleteSystemPath(data.sys_ID)
                 }}
                 hasDelete={true}
-                hasUpdate={true}
+                hasUpdate={false}
                 updateAction={() => {
-                  navigate(systemPath.editPath.concat(data.sysPath_ID))
+                  navigate(systemPath.edit.concat(data.sys_ID))
                 }}
                 deleteLabel="حذف"
                 updateLabel="ویرایش"
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
-              ></TableActions>
+              >
+                {' '}
+                <Link to={'/systems-path/edit/' + data.sys_ID}>
+                  <Button className="p-button-warning ml-2 rtl text-xs  h-10 w-25 p-1">ویرایش</Button>
+                </Link>
+              </TableActions>
             )}
           ></Column>
         </DataTable>

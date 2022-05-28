@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
@@ -7,26 +7,58 @@ import { classNames } from 'primereact/utils'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { ToastAlert } from '../../common/toastAlert'
 import { BreadcrumbItem } from '../constant/BreadcampItem'
-import { useEffect } from 'react'
 import { systemPath } from '../../../utils/constants/routes/publicRoute'
+import { UpdateSystemPath, InsertSystemPath, GetSystemPathById } from '../../../service/systemPathService'
 
 const CreateEditSystemPath = () => {
   const [value, setValue] = useState('')
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const [systemPathId, setSystemPathId] = useState([])
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
 
+  // const fetchSystemPath = useCallback(() => {
+  //   const formData = new FormData()
+  //   formData.append('ID', params.SystemId)
+
+  //   GetSystemPathById(formData)
+  //     .then(res => {
+  //       if (res.data) {
+  //         setSystemPathId(res.data)
+  //       }
+  //     })
+  //     .catch(err => {
+  //       ToastAlert.error('خطا در ارتباط با سرور ')
+  //     })
+  // }, [params.SystemId])
+
+  // useEffect(() => {
+  //   fetchSystemPath()
+  // }, [fetchSystemPath])
+
   useEffect(() => {
     if (location.pathname.includes(systemPath.editPath) && params.SystemId) {
+      const formData = new FormData()
+      formData.append('ID', params.SystemId)
       // fetchDataById
       setEditMode(true)
+      GetSystemPathById(formData)
+        .then(res => {
+          if (res.data) {
+            setSystemPathId(res.data)
+            setValue(res.data.sys_Name)
+          }
+        })
+        .catch(err => {
+          ToastAlert.error('خطا در ارتباط با سرور ')
+        })
     } else {
       setEditMode(false)
     }
-  }, [location, params])
+  }, [location, params.SystemId])
 
   const submitHandler = e => {
     e.preventDefault()
@@ -36,19 +68,35 @@ const CreateEditSystemPath = () => {
       setError(false)
     }
     const formData = new FormData()
-    formData.append('Tag_Name', value)
-    // CreateTagService(formData)
-    //   .then(res => {
-    //     if (res.status === 200 || res.data === 'Succeed') {
-    //       ToastAlert.success('ساخت مسیر سیستم با موفقیت انجام شد ')
-    //       navigate('/tag')
-    //       setLoading(true)
-    //     } else {
-    //       ToastAlert.error('خطا در ساخت مسیر سیستم ')
-    //       setLoading(false)
-    //     }
-    //   })
-    //   .catch(e => console.log(e))
+    formData.append('Sys_Name', value)
+    if (editMode) {
+      formData.append('Sys_ID', params.SystemId)
+      UpdateSystemPath(formData)
+        .then(res => {
+          if (res.status === 200 || res.data === 'Succeed') {
+            ToastAlert.success('ویرایش مسیر سیستم با موفقیت انجام شد ')
+            navigate('/systems-path')
+            setLoading(true)
+          } else {
+            ToastAlert.error('خطا در ویرایش مسیر سیستم ')
+            setLoading(false)
+          }
+        })
+        .catch(e => console.log(e))
+    } else {
+      InsertSystemPath(formData)
+        .then(res => {
+          if (res.status === 200 || res.data === 'Succeed') {
+            ToastAlert.success('ساخت مسیر سیستم با موفقیت انجام شد ')
+            navigate('/systems-path')
+            setLoading(true)
+          } else {
+            ToastAlert.error('خطا در ساخت مسیر سیستم ')
+            setLoading(false)
+          }
+        })
+        .catch(e => console.log(e))
+    }
   }
 
   return (

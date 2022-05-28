@@ -13,7 +13,7 @@ function CreateEditServiceType() {
   const [loading, setLoading] = useState(false)
   const [serviceTypeById, setServiceTypeBYId] = useState([])
   const [initialValues, setInitialValues] = useState({
-    System_Name: '',
+    ServTyp_Name: '',
   })
 
   const location = useLocation()
@@ -28,6 +28,7 @@ function CreateEditServiceType() {
   const fetchServiceType = useCallback(() => {
     const formData = new FormData()
     formData.append('ID', ServiceId)
+
     GetServiceTypeById(formData)
       .then(res => {
         if (res.data) {
@@ -48,12 +49,11 @@ function CreateEditServiceType() {
 
     if (path.split('/')[2] === 'edit') {
       //if serviceType info is exist redirect to company index page
-      if (serviceTypeById.length > 0) {
-        //initialize for formi
-        setInitialValues({
-          System_Name: serviceTypeById.System_Name,
-        })
-      }
+
+      //initialize for formi
+      setInitialValues({
+        ServTyp_Name: serviceTypeById.servTyp_Name,
+      })
     }
   }, [location.pathname, serviceTypeById])
 
@@ -100,8 +100,8 @@ function CreateEditServiceType() {
     initialValues,
     validate: data => {
       let errors = {}
-      if (!data.System_Name) {
-        errors.System_Name = 'نام سرویس را وارد کنید.'
+      if (!data.ServTyp_Name) {
+        errors.ServTyp_Name = 'نام سرویس را وارد کنید.'
       }
       return errors
     },
@@ -113,11 +113,9 @@ function CreateEditServiceType() {
       })
       setLoading(true)
       if (ServiceId) {
-        formData.append('CoIn_ID', ServiceId)
-        console.log('edit: ', ServiceId)
+        formData.append('ServTyp_ID', ServiceId)
         handleUpdateServiceType(formData)
       } else {
-        console.log('create')
         handleInsertServiceType(formData)
       }
     },
@@ -129,6 +127,10 @@ function CreateEditServiceType() {
     return isFormFieldValid(name) && <small className="p-error">{formik.errors[name]}</small>
   }
 
+  const handleForm = () => {
+    alert('Form')
+  }
+
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={item} />
@@ -137,23 +139,23 @@ function CreateEditServiceType() {
           <div className=" flex flex-col justify-start mt-1">
             <span className="p-float-label relative">
               <InputText
-                id="System_Name"
-                name="System_Name"
-                value={formik.values.System_Name}
+                id="ServTyp_Name"
+                name="ServTyp_Name"
+                value={formik.values.ServTyp_Name}
                 onChange={formik.handleChange}
-                className={`${classNames({ 'p-invalid': isFormFieldValid('System_Name'), 'w-full': true })} h-9 w-96`}
+                className={`${classNames({ 'p-invalid': isFormFieldValid('ServTyp_Name'), 'w-full': true })} h-9 w-96`}
               />
               <label
-                htmlFor="System_Name"
-                className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('System_Name') })} right-2 text-sm`}
+                htmlFor="ServTyp_Name"
+                className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('ServTyp_Name') })} right-2 text-sm`}
               >
                 نام
               </label>
             </span>
-            {getFormErrorMessage('System_Name')}
+            {getFormErrorMessage('ServTyp_Name')}
           </div>
         </section>
-        <Button loading={loading} label="ثبت" className="relative right-[86%] text-sm mt-5 h-10" />
+        <Button type="submit" loading={loading} label="ثبت" className="relative bg-indigo-600 right-[86%] text-sm mt-5 h-10" />
       </form>
     </div>
   )

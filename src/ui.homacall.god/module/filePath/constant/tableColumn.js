@@ -1,12 +1,12 @@
 export const serviceTypeColumn = [
   {
     header: 'مسیر فایل',
-    field: 'path',
+    field: 'filPth_Name',
     className: 'text-sm',
   },
   {
     header: 'سیستم',
-    field: 'system',
+    field: 'filPth_Name',
     className: 'text-sm',
   },
 ]

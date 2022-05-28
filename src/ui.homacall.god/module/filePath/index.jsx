@@ -9,17 +9,23 @@ import { Toolbar } from 'primereact/toolbar'
 import TableActions from '../common/actionBody'
 import { ToastAlert } from '../common/toastAlert'
 import { serviceTypeColumn } from './constant/tableColumn'
+import { GetAllFilePath, DeleteFilePath } from '../../service/filePathService'
 
 function FilePath() {
   const [fetchAgain, setFetchAgain] = useState(false)
   const [dataL, setDataL] = useState([])
   const [globalFilter, setGlobalFilter] = useState(null)
   const navigate = useNavigate()
+
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
   useEffect(() => {
-    setDataL([])
+    GetAllFilePath()
+      .then(res => {
+        if (res.data) setDataL(res.data)
+      })
+      .catch(e => ToastAlert.error('خطا در  ارتباط با سرور '))
   }, [fetchAgain])
 
   const rightToolbarTemplate = () => {
@@ -31,7 +37,24 @@ function FilePath() {
       </>
     )
   }
-  const deleteSystemPath = id => {}
+
+  const deleteFilePath = fileID => {
+    const formData = new FormData()
+    formData.append('ID', fileID)
+    DeleteFilePath(formData)
+      .then(res => {
+        if (res.data || res.status === 200) {
+          ToastAlert.success('حذف مسیر فایل با موفقیت انجام شد')
+          fetchAgainHandler()
+        } else {
+          ToastAlert.error('خطا در حذف مسیر فایل ')
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        ToastAlert.error('خطا در حذف مسیر فایل ')
+      })
+  }
 
   const header = (
     <div className="table-header">
@@ -67,10 +90,10 @@ function FilePath() {
             body={data => (
               <TableActions
                 deleteAction={() => {
-                  alert('delete')
+                  deleteFilePath(data.filPth_ID)
                 }}
                 hasDelete={true}
-                hasUpdate={true}
+                hasUpdate={false}
                 updateAction={() => {
                   navigate(filePath.editPath.concat(data.sysPath_ID))
                 }}
@@ -78,7 +101,11 @@ function FilePath() {
                 updateLabel="ویرایش"
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
-              ></TableActions>
+              >
+                <Link to={'/files-path/edit/' + data.filPth_ID}>
+                  <Button className="p-button-warning ml-2 rtl text-xs  h-10 w-25 p-1">ویرایش</Button>
+                </Link>
+              </TableActions>
             )}
           ></Column>
         </DataTable>

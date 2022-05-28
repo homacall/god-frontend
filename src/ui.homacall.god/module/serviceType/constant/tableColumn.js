@@ -1,7 +1,7 @@
 export const serviceTypeColumn = [
   {
     header: 'نام',
-    field: 'System_Name',
+    field: 'servTyp_Name',
     className: 'text-sm',
   },
 ]

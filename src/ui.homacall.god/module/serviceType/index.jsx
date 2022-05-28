@@ -89,7 +89,7 @@ function ServiceType() {
             body={data => (
               <TableActions
                 deleteAction={() => {
-                  handleDelete(data.id)
+                  handleDelete(data.servTyp_ID)
                 }}
                 hasDelete={true}
                 hasUpdate={false}
@@ -101,7 +101,7 @@ function ServiceType() {
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
               >
-                <Link to={'/service-types/edit/' + data.id}>
+                <Link to={'/service-types/edit/' + data.servTyp_ID}>
                   <Button className="p-button-warning ml-2 rtl text-xs  h-10 w-25 p-1">ویرایش</Button>
                 </Link>
               </TableActions>
