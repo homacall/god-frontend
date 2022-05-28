@@ -28,11 +28,26 @@ const items = [
   },
   {
     id: 6,
+    label: 'تعریف انواع سرویس',
+    url: `${sidebar.serviceType}`,
+  },
+  {
+    id: 7,
+    label: 'مسیر سیتم ها',
+    url: `${sidebar.systemPath}`,
+  },
+  {
+    id: 8,
+    label: 'مسیر فایل ها',
+    url: `${sidebar.filePath}`,
+  },
+  {
+    id: 9,
     label: 'مدیریت پایگاه داده',
     url: `${sidebar.serverConnection}`,
   },
   {
-    id: 7,
+    id: 10,
     label: 'انتساب مسیر',
     url: `${sidebar.routeStretcher}`,
   },
