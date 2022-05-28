@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { ToastAlert } from './toastAlert'
 
 export function InputImage({ setImageUrl, imageError, imageUrl, title }) {
   const uploadedImage = React.useRef(null)
@@ -9,6 +10,10 @@ export function InputImage({ setImageUrl, imageError, imageUrl, title }) {
     const [file] = e.target.files
     setState({ url: true })
     if (file) {
+      if (file.size > 1000000) {
+        imageUploader.current.value = null
+        return ToastAlert.error('سایز عکس باید کمتر از یک مگابایت باشد')
+      }
       const reader = new FileReader()
       const { current } = uploadedImage
       current.file = file
@@ -16,7 +21,8 @@ export function InputImage({ setImageUrl, imageError, imageUrl, title }) {
         current.src = e.target.result
       }
       reader.readAsDataURL(file)
-      setImageUrl(file.name)
+
+      setImageUrl(file)
     }
   }
 
@@ -30,6 +36,7 @@ export function InputImage({ setImageUrl, imageError, imageUrl, title }) {
         style={{
           display: 'none',
         }}
+        id="imageInput"
       />
       <div onClick={() => imageUploader.current.click()}>
         <img
