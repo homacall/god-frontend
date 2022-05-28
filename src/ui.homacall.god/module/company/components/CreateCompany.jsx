@@ -60,7 +60,6 @@ export const CreateCompany = () => {
         }
       })
       .catch(err => {
-        console.log('error: ', err)
         ToastAlert.error('خطا در ارتباط با سرور ')
       })
   }, [CompanyId])
@@ -144,11 +143,13 @@ export const CreateCompany = () => {
     validate,
     onSubmit: values => {
       if (!imageUrl) {
+        //return setImageError(true)
         values.CoIn_Logo = 'no-image'
       } else {
-        const formData = new FormData()
         values.CoIn_Logo = imageUrl
         setImageError(false)
+        const formData = new FormData()
+
         Object.keys(values).forEach(key => {
           const value = values[key]
           formData.append(key, value)
@@ -356,7 +357,7 @@ export const CreateCompany = () => {
               value={formik.values.CoIn_TypeDateTime}
               onChange={formik.handleChange}
               className="rtl w-full h-9"
-              placeholder="انتخاب نوع سال"
+              placeholder="انتخاب نوع تاریخ"
             />
             {formik.errors.CoIn_TypeDateTime ? (
               <div className="absolute text-red-600 text-xs">{formik.errors.CoIn_TypeDateTime}</div>
