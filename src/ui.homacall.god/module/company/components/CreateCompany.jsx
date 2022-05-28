@@ -21,10 +21,6 @@ import '../style/company.css'
 export const CreateCompany = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
-  const [loginImg, setLoginImg] = useState('')
-  const [, setLoginImgError] = useState(false)
-  const [pathImg, setPathImg] = useState(false)
-  const [, setPathImgError] = useState(false)
   const [companyById, setCompanyBYId] = useState([])
   const [languages, setLanguages] = useState([])
   const [loading, setLoading] = useState(false)
@@ -85,8 +81,6 @@ export const CreateCompany = () => {
     } else {
       //initialize for formik
       setImageUrl(companyById.coIn_Logo)
-      setLoginImg(companyById.coIn_Login_Img)
-      setPathImg(companyById.coIn_Usr_Path_Img)
 
       setInitialValues({
         CoIn_Name: companyById.coIn_Name,
@@ -150,17 +144,11 @@ export const CreateCompany = () => {
     validate,
     onSubmit: values => {
       if (!imageUrl) {
-        return setImageError(true)
-      } else if (!loginImg) {
-        return setLoginImgError(true)
-      } else if (!pathImg) {
-        return setPathImgError(true)
+        values.CoIn_Logo = 'no-image'
       } else {
         const formData = new FormData()
         values.CoIn_Logo = imageUrl
-        values.CoIn_Login_Img = loginImg
-        values.CoIn_Usr_Path_Img = pathImg
-
+        setImageError(false)
         Object.keys(values).forEach(key => {
           const value = values[key]
           formData.append(key, value)
@@ -206,7 +194,6 @@ export const CreateCompany = () => {
             <InputText
               id="CoIn_SmsNumber"
               name="CoIn_SmsNumber"
-              rtl
               value={formik.values.CoIn_SmsNumber}
               className="p-inputtext p-component rtl text-sm w-full h-9"
               onBlur={formik.handleBlur}

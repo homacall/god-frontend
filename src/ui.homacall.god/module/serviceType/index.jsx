@@ -9,6 +9,7 @@ import { Toolbar } from 'primereact/toolbar'
 import TableActions from '../common/actionBody'
 import { ToastAlert } from '../common/toastAlert'
 import { serviceTypeColumn } from './constant/tableColumn'
+import { GetAllServiceType, DeleteServiceType } from '../../service/serviceTypeService'
 
 function ServiceType() {
   const [fetchAgain, setFetchAgain] = useState(false)
@@ -19,14 +20,18 @@ function ServiceType() {
     setFetchAgain(perv => !perv)
   }
   useEffect(() => {
-    setDataL([])
+    GetAllServiceType()
+      .then(res => {
+        if (res.data) setDataL(res.data)
+      })
+      .catch(e => ToastAlert.error('خطا در  ارتباط با سرور '))
   }, [fetchAgain])
 
   const rightToolbarTemplate = () => {
     return (
       <>
         <Link to={serviceType.create}>
-          <Button label="ثبت سیستم جدید" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
+          <Button label="ثبت سرویس جدید" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
         </Link>
       </>
     )
@@ -40,6 +45,24 @@ function ServiceType() {
       </span>
     </div>
   )
+  const handleDelete = serviceID => {
+    const formData = new FormData()
+    formData.append('ID', serviceID)
+    DeleteServiceType(formData)
+      .then(res => {
+        if (res.data || res.status === 200) {
+          ToastAlert.success('حذف سرویس با موفقیت انجام شد')
+          fetchAgainHandler()
+        } else {
+          ToastAlert.error('خطا در حذف سرویس ')
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        ToastAlert.error('خطا در حذف سرویس ')
+      })
+  }
+
   return (
     <div className="w-[95%] mt-4 m-auto container">
       <div className="card">
@@ -66,10 +89,10 @@ function ServiceType() {
             body={data => (
               <TableActions
                 deleteAction={() => {
-                  alert('delete')
+                  handleDelete(data.id)
                 }}
                 hasDelete={true}
-                hasUpdate={true}
+                hasUpdate={false}
                 updateAction={() => {
                   alert('udpate')
                 }}
@@ -77,7 +100,11 @@ function ServiceType() {
                 updateLabel="ویرایش"
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
-              ></TableActions>
+              >
+                <Link to={'/service-types/edit/' + data.id}>
+                  <Button className="p-button-warning ml-2 rtl text-xs  h-10 w-25 p-1">ویرایش</Button>
+                </Link>
+              </TableActions>
             )}
           ></Column>
         </DataTable>
