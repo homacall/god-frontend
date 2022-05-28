@@ -13,11 +13,29 @@ import { CreateTag } from '../module/tag/components/CreateTag'
 import LoginForm from '../module/auth/login/loginForm'
 import { Company } from '../module/company'
 import { CreateCompany } from '../module/company/components/CreateCompany'
-import { language, users, rolls, authRoutes, routeStretcher, tags, manage, serverConnection } from '../utils/constants/routes/publicRoute'
+import {
+  language,
+  users,
+  rolls,
+  authRoutes,
+  routeStretcher,
+  tags,
+  manage,
+  serverConnection,
+  serviceType,
+  systemPath,
+  filePath,
+} from '../utils/constants/routes/publicRoute'
 import { RouteStretcher } from '../module/routeStretcher'
 import { CreateAndEditStretcher } from '../module/routeStretcher/components/CreateStretcher'
 import { ServerConnection } from '../module/serverConnection'
 import CreateEditServerConnection from '../module/serverConnection/components/CreateEditServerConnection'
+import ServiceType from '../module/serviceType'
+import CreateEditServiceType from '../module/serviceType/components/CreateEditServiceType'
+import SystemPath from '../module/systemPath'
+import CreateEditSystemPath from '../module/systemPath/components/CreateEditSystemPath'
+import FilePath from '../module/filePath'
+import CreateEditFilePath from '../module/filePath/components/CreateEditFilePath'
 
 export const PrivateRoutes = () => {
   return (
@@ -229,6 +247,72 @@ export const PrivateRoutes = () => {
                 <title>مدیریت پایگاه داده</title>
               </Helmet>
               <CreateEditServerConnection />{' '}
+            </>
+          }
+        />
+        <Route
+          path={`${serviceType.main}`}
+          element={
+            <>
+              <Helmet>
+                <title>تعریف انواع سرویس</title>
+              </Helmet>
+              <ServiceType />{' '}
+            </>
+          }
+        />
+        <Route
+          path={`${serviceType.create}`}
+          element={
+            <>
+              <Helmet>
+                <title>تعریف انواع سرویس</title>
+              </Helmet>
+              <CreateEditServiceType />{' '}
+            </>
+          }
+        />
+        <Route
+          path={`${serviceType.edit}`}
+          element={
+            <>
+              <Helmet>
+                <title>تعریف انواع سرویس</title>
+              </Helmet>
+              <CreateEditServiceType />{' '}
+            </>
+          }
+        />
+        <Route
+          path={`${systemPath.main}`}
+          element={
+            <>
+              <Helmet>
+                <title>مسیر سیتم ها</title>
+              </Helmet>
+              <SystemPath />{' '}
+            </>
+          }
+        />
+        <Route
+          path={`${systemPath.create}`}
+          element={
+            <>
+              <Helmet>
+                <title>مسیر سیستم ها</title>
+              </Helmet>
+              <CreateEditSystemPath />{' '}
+            </>
+          }
+        />
+        <Route
+          path={`${systemPath.edit}`}
+          element={
+            <>
+              <Helmet>
+                <title>مسیر سیستم ها</title>
+              </Helmet>
+              <CreateEditSystemPath />{' '}
             </>
           }
         />

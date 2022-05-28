@@ -21,6 +21,7 @@ export const Roll = () => {
   const [fetchAgain, setFetchAgain] = useState(false)
   const [showPermissions, setShowPermissions] = useState(false)
   const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
+
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }

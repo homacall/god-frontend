@@ -12,6 +12,9 @@ export const sidebar = {
   manage: '/company',
   routeStretcher: '/route-stretcher',
   serverConnection: '/server-connection',
+  serviceType: '/service-types',
+  systemPath: '/systems-path',
+  filePath: '/files-path',
 }
 export const language = {
   languageTable: '/language',
@@ -51,4 +54,21 @@ export const serverConnection = {
   main: '/server-connection',
   create: '/server-connection/create',
   edit: '/server-connection/edit/:ServerId',
+}
+
+export const serviceType = {
+  main: '/service-types',
+  create: '/service-types/create',
+  edit: '/service-types/edit/:ServiceId',
+}
+
+export const systemPath = {
+  main: '/systems-path',
+  create: '/systems-path/create',
+  edit: '/systems-path/edit/:SystemId',
+}
+export const filePath = {
+  main: '/files-path',
+  create: '/files-path/create',
+  edit: '/files-path/edit/:ServerId',
 }
