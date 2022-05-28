@@ -28,7 +28,7 @@ const CreateAndEditUser = () => {
   const [emailLanguageError, setEmailLanguageError] = useState(false)
   const [provinces, setProvinces] = useState([])
   const [cities, setCities] = useState([])
-  const [imageUrl, setImageUrl] = useState('')
+  const [imageUrl, setImageUrl] = useState(undefined)
   const [imageError, setImageError] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -153,9 +153,9 @@ const CreateAndEditUser = () => {
   }
   const submitHandler = data => {
     if (!imageUrl) {
-      data.Usr_Img = 'no-image'
+      data.FileUser = 'no-image'
     } else {
-      data.Usr_Img = imageUrl
+      data.FileUser = imageUrl
       setImageError(false)
     }
     setLoading(true)
