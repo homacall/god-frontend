@@ -33,7 +33,7 @@ const items = [
   },
   {
     id: 7,
-    label: 'مسیر سیتم ها',
+    label: 'مسیر سیستم ها',
     url: `${sidebar.systemPath}`,
   },
   {

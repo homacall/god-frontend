@@ -66,9 +66,11 @@ export const systemPath = {
   main: '/systems-path',
   create: '/systems-path/create',
   edit: '/systems-path/edit/:SystemId',
+  editPath: '/systems-path/edit/',
 }
 export const filePath = {
   main: '/files-path',
   create: '/files-path/create',
-  edit: '/files-path/edit/:ServerId',
+  edit: '/files-path/edit/:FilePathId',
+  editPath: '/files-path/edit/',
 }
