@@ -1,0 +1,147 @@
+import { useState, useEffect, useCallback } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router'
+import { InputImage } from '../../common/fileUploader'
+import { Button } from 'primereact/button'
+import { Dropdown } from 'primereact/dropdown'
+import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
+import { GetAllTags } from '../../../service/tagManagerService'
+import { BreadcrumbItem } from '../constant/BreadcampItem'
+import { ToastAlert } from '../../common/toastAlert'
+import { UpdateLoginLogo, InsertLoginLogo, GetLoginLogoById } from '../../../service/loginLogoService'
+import { loginLogo } from '../../../utils/constants/routes/publicRoute'
+
+function CreateEditLoginLogo() {
+  const [imageUrl, setImageUrl] = useState('')
+  const [imageError, setImageError] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [tags, setTags] = useState([])
+  const [tagValue, setTagValue] = useState('')
+  const [loginLogoById, setLoginLogoById] = useState([])
+  const [editMode, setEditMode] = useState(false)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const params = useParams()
+
+  const fetchTags = () => {
+    GetAllTags().then(res => {
+      if (res.data || res.status === 200) {
+        setTags(res.data.map(item => ({ id: item.tag_ID, name: item.tag_Name })))
+      }
+    })
+  }
+
+  const fetchLoginLogo = useCallback(() => {
+    const formData = new FormData()
+    formData.append('ID', params.loginLogoId)
+    GetLoginLogoById(formData)
+      .then(res => {
+        if (res.data) {
+          tagValue(res.data.filPth_Name)
+          setImageUrl(res.data.filPth_SysID)
+          setLoginLogoById(res.data)
+        }
+      })
+      .catch(err => {
+        ToastAlert.error('خطا در ارتباط با سرور ')
+      })
+  }, [params.loginLogoId])
+
+  useEffect(() => {
+    fetchTags()
+    fetchLoginLogo()
+  }, [fetchLoginLogo])
+
+  useEffect(() => {
+    if (location.pathname.includes(loginLogo.edit) && params.loginLogoId) {
+      // fetchDataById
+      setEditMode(true)
+    } else {
+      setEditMode(false)
+    }
+  }, [location, params])
+
+  const handleInsertLoginLogo = formData => {
+    InsertLoginLogo(formData)
+      .then(res => {
+        if (res.status === 200 || res.data === 'Succeed') {
+          ToastAlert.success('ساخت مسیر فایل با موفقیت انجام شد ')
+          navigate('/login-logo')
+          setLoading(true)
+        } else {
+          ToastAlert.error('خطا در ساخت مسیر فایل ')
+          setLoading(false)
+        }
+      })
+      .catch(e => ToastAlert.error('خطا در ساخت مسیر فایل '))
+  }
+
+  const handleUpdateLoginLogo = formData => {
+    UpdateLoginLogo(formData)
+      .then(res => {
+        if (res.status === 200 || res.data === 'Succeed') {
+          ToastAlert.success('ساخت مسیر فایل با موفقیت انجام شد ')
+          navigate('/login-logo')
+          setLoading(true)
+        } else {
+          ToastAlert.error('خطا در ساخت مسیر فایل ')
+          setLoading(false)
+        }
+      })
+      .catch(e => ToastAlert.error('خطا در ساخت مسیر فایل '))
+  }
+
+  const handleLoginLogo = () => {
+    const formData = new FormData()
+    formData.append('LogoCo_TgID', tagValue)
+    formData.append('FileLogo', imageUrl)
+    if (editMode) {
+      formData.append('LogoCo_ID', params.loginLogoId)
+      handleUpdateLoginLogo(formData)
+    } else {
+      handleInsertLoginLogo(formData)
+      console.log(tagValue)
+      console.log(imageUrl)
+    }
+  }
+
+  return (
+    <section className="w-[80%] h-[80vh] mt-5 py-4 rounded-md  m-auto container bg-white rtl ">
+      <Breadcrumb item={BreadcrumbItem} />
+
+      <section className="flex mt-8 justify-center">
+        <span className="p-float-label rtl relative mt-10" dir="ltr">
+          <Dropdown
+            options={tags}
+            id="Tag_ID"
+            name="Tag_Name"
+            optionLabel="name"
+            optionValue="id"
+            value={tagValue}
+            onChange={e => setTagValue(e.target.value)}
+            placeholder="انتخاب تگ"
+            className="rtl w-[80vw] sm:w-[50%] md:w-[30vw] h-9 "
+          />
+        </span>
+      </section>
+
+      <section className="flex justify-center justify-items-center mt-8">
+        <InputImage setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
+      </section>
+
+      <section className="mt-8 flex justify-center justify-items-center">
+        <Button
+          type="submit"
+          disabled={imageUrl && tagValue ? false : true}
+          className="bg-indigo-600 text-sm h-10 text-center min-w-[120px] max-w-[120px]"
+          loading={loading}
+          onClick={handleLoginLogo}
+        >
+          ثبت / آپلود
+        </Button>
+      </section>
+    </section>
+  )
+}
+
+export default CreateEditLoginLogo

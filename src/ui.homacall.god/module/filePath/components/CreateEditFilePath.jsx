@@ -2,12 +2,11 @@ import { useState, useEffect, useCallback } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { CreateTagService } from '../../../service/tagManagerService'
-import { classNames, DomHandler } from 'primereact/utils'
+import { classNames } from 'primereact/utils'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { ToastAlert } from '../../common/toastAlert'
 import { BreadcrumbItem } from '../constant/BreadcampItem'
-import { filePath, systemPath } from '../../../utils/constants/routes/publicRoute'
+import { filePath } from '../../../utils/constants/routes/publicRoute'
 import { Dropdown } from 'primereact/dropdown'
 import { UpdateFilePath, InsertFilePath, GetFilePathById } from '../../../service/filePathService'
 import { GetAllSystemPath } from '../../../service/systemPathService'
@@ -116,37 +115,35 @@ const CreateEditFilePath = () => {
     <>
       <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
         <Breadcrumb item={BreadcrumbItem} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 ">
-          <div>
-            <span className="p-float-label">
-              <Dropdown
-                options={systemPath}
-                id="Sys_ID"
-                name="Sys_Name"
-                optionLabel="name"
-                optionValue="id"
-                value={systems}
-                onChange={e => setSystem(e.target.value)}
-                className={`h-9 ${classNames({ 'p-invalid': error, 'w-full': true })}`}
-              />
-              <label htmlFor="dropDown" className={`right-2 text-sm ${classNames({ 'p-error': error })}`}>
-                سیستم
-              </label>
-            </span>
-          </div>
-          <div>
-            <span className="p-float-label">
-              <InputText
-                id="inputtext"
-                value={value}
-                onChange={e => setValue(e.target.value)}
-                className={`h-9 ${classNames({ 'p-invalid': error, 'w-full': true })}`}
-              />
-              <label htmlFor="inputtext" className={`right-2 text-sm ${classNames({ 'p-error': error })}`}>
-                مسیر فایل
-              </label>
-            </span>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 px-2">
+          <span className="p-float-label">
+            <Dropdown
+              options={systemPath}
+              id="Sys_ID"
+              name="Sys_Name"
+              optionLabel="name"
+              optionValue="id"
+              value={systems}
+              onChange={e => setSystem(e.target.value)}
+              className={`h-9 ${classNames({ 'p-invalid': error, 'w-full': true })}`}
+            />
+            <label htmlFor="dropDown" className={`right-2 text-sm ${classNames({ 'p-error': error })}`}>
+              سیستم
+            </label>
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 px-2">
+          <span className="p-float-label">
+            <InputText
+              id="inputtext"
+              value={value}
+              onChange={e => setValue(e.target.value)}
+              className={`h-9 ${classNames({ 'p-invalid': error, 'w-full': true })}`}
+            />
+            <label htmlFor="inputtext" className={`right-2 text-sm ${classNames({ 'p-error': error })}`}>
+              مسیر فایل
+            </label>
+          </span>
         </div>
         <div className="mt-10 flex justify-end justify-items-end">
           <Button

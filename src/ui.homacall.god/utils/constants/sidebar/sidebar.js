@@ -48,6 +48,11 @@ const items = [
   },
   {
     id: 10,
+    label: 'آپلود لوگو ورود',
+    url: `${sidebar.loginLogo}`,
+  },
+  {
+    id: 11,
     label: 'انتساب مسیر',
     url: `${sidebar.routeStretcher}`,
   },

@@ -25,6 +25,7 @@ import {
   serviceType,
   systemPath,
   filePath,
+  loginLogo,
 } from '../utils/constants/routes/publicRoute'
 import { RouteStretcher } from '../module/routeStretcher'
 import { CreateAndEditStretcher } from '../module/routeStretcher/components/CreateStretcher'
@@ -36,6 +37,8 @@ import SystemPath from '../module/systemPath'
 import CreateEditSystemPath from '../module/systemPath/components/CreateEditSystemPath'
 import FilePath from '../module/filePath'
 import CreateEditFilePath from '../module/filePath/components/CreateEditFilePath'
+import LoginLogo from '../module/loginLogo'
+import CreateEditLoginLogo from '../module/loginLogo/components/CreateEditLoginLogo'
 
 export const PrivateRoutes = () => {
   return (
@@ -346,6 +349,39 @@ export const PrivateRoutes = () => {
                 <title>مسیر فایل ها</title>
               </Helmet>
               <CreateEditFilePath />
+            </>
+          }
+        />
+        <Route
+          path={`${loginLogo.main}`}
+          element={
+            <>
+              <Helmet>
+                <title>آپلود لوگو ورود</title>
+              </Helmet>
+              <LoginLogo />
+            </>
+          }
+        />
+        <Route
+          path={`${loginLogo.create}`}
+          element={
+            <>
+              <Helmet>
+                <title>آپلود لوگو ورود</title>
+              </Helmet>
+              <CreateEditLoginLogo />
+            </>
+          }
+        />
+        <Route
+          path={`${loginLogo.edit}`}
+          element={
+            <>
+              <Helmet>
+                <title>آپلود لوگو ورود</title>
+              </Helmet>
+              <CreateEditLoginLogo />
             </>
           }
         />
