@@ -69,4 +69,5 @@ export const apiUrls = {
   updatefilePath: GodHOST.concat('/FilePathGod/Update'),
   deletefilePath: GodHOST.concat('/FilePathGod/Delete'),
   getfilePathById: GodHOST.concat('/FilePathGod/GetByID'),
+  getAllfilePathSP: GodHOST.concat('/FilePathGod/GetAll_SP'),
 }

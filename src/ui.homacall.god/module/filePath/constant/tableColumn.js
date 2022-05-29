@@ -6,7 +6,7 @@ export const serviceTypeColumn = [
   },
   {
     header: 'سیستم',
-    field: 'filPth_Name',
+    field: 'filPth_SysName',
     className: 'text-sm',
   },
 ]

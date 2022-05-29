@@ -21,6 +21,26 @@ export const GetAllFilePath = () => {
     })
 }
 
+export const GetAllFilePathSP = () => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .get(apiUrls.getAllfilePathSP, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}
+
 export const InsertFilePath = data => {
   const token = localStorage.getItem('token')
   let config = {

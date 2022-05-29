@@ -9,7 +9,7 @@ import { Toolbar } from 'primereact/toolbar'
 import TableActions from '../common/actionBody'
 import { ToastAlert } from '../common/toastAlert'
 import { serviceTypeColumn } from './constant/tableColumn'
-import { GetAllFilePath, DeleteFilePath } from '../../service/filePathService'
+import { GetAllFilePathSP, DeleteFilePath } from '../../service/filePathService'
 
 function FilePath() {
   const [fetchAgain, setFetchAgain] = useState(false)
@@ -21,7 +21,7 @@ function FilePath() {
     setFetchAgain(perv => !perv)
   }
   useEffect(() => {
-    GetAllFilePath()
+    GetAllFilePathSP()
       .then(res => {
         if (res.data) setDataL(res.data)
       })
