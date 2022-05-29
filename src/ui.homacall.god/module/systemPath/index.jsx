@@ -16,6 +16,7 @@ function SystemPath() {
   const [dataL, setDataL] = useState([])
   const [globalFilter, setGlobalFilter] = useState(null)
   const navigate = useNavigate()
+
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
@@ -93,6 +94,7 @@ function SystemPath() {
                 }}
                 hasDelete={true}
                 hasUpdate={false}
+                updateView={false}
                 updateAction={() => {
                   navigate(systemPath.edit.concat(data.sys_ID))
                 }}
@@ -101,7 +103,6 @@ function SystemPath() {
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
               >
-                {' '}
                 <Link to={'/systems-path/edit/' + data.sys_ID}>
                   <Button className="p-button-warning ml-2 rtl text-xs  h-10 w-25 p-1">ویرایش</Button>
                 </Link>

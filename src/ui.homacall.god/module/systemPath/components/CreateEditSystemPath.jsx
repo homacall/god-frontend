@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { CreateTagService } from '../../../service/tagManagerService'
 import { classNames } from 'primereact/utils'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { ToastAlert } from '../../common/toastAlert'
@@ -15,7 +14,7 @@ const CreateEditSystemPath = () => {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [editMode, setEditMode] = useState(false)
-  const [systemPathId, setSystemPathId] = useState([])
+  // const [systemPathId, setSystemPathId] = useState([])
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
@@ -48,7 +47,7 @@ const CreateEditSystemPath = () => {
       GetSystemPathById(formData)
         .then(res => {
           if (res.data) {
-            setSystemPathId(res.data)
+            //setSystemPathId(res.data)
             setValue(res.data.sys_Name)
           }
         })
@@ -103,19 +102,21 @@ const CreateEditSystemPath = () => {
     <>
       <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
         <Breadcrumb item={BreadcrumbItem} />
-        <div className=" flex justify-start mr-[8%] mt-10 ">
-          <span className="p-float-label">
-            <InputText
-              id="inputtext"
-              value={value}
-              onChange={e => setValue(e.target.value)}
-              className={`h-9 w-96 ${classNames({ 'p-invalid': error, 'w-full': true })}`}
-            />
-            <label htmlFor="inputtext" className={`right-2 text-sm ${classNames({ 'p-error': error })}`}>
-              مسیر سیستم
-            </label>
-          </span>
-        </div>
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-y-10 rtl">
+          <div className=" flex justify-start mt-10 mr-2">
+            <span className="p-float-label relative w-[100%]">
+              <InputText
+                id="inputtext"
+                value={value}
+                onChange={e => setValue(e.target.value)}
+                className={`${classNames({ 'p-invalid': error, 'w-full': true })} h-9`}
+              />
+              <label htmlFor="inputtext" className={`right-2 text-sm ${classNames({ 'p-error': error })}`}>
+                مسیر سیستم
+              </label>
+            </span>
+          </div>
+        </section>
         <div className="mt-10 flex justify-end justify-items-end">
           <Button
             loading={loading}

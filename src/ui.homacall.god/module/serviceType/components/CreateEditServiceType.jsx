@@ -127,15 +127,11 @@ function CreateEditServiceType() {
     return isFormFieldValid(name) && <small className="p-error">{formik.errors[name]}</small>
   }
 
-  const handleForm = () => {
-    alert('Form')
-  }
-
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={item} />
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-y-10 rtl">
           <div className=" flex flex-col justify-start mt-1">
             <span className="p-float-label relative">
               <InputText
@@ -143,7 +139,7 @@ function CreateEditServiceType() {
                 name="ServTyp_Name"
                 value={formik.values.ServTyp_Name}
                 onChange={formik.handleChange}
-                className={`${classNames({ 'p-invalid': isFormFieldValid('ServTyp_Name'), 'w-full': true })} h-9 w-96`}
+                className={`${classNames({ 'p-invalid': isFormFieldValid('ServTyp_Name'), 'w-full': true })} h-9 `}
               />
               <label
                 htmlFor="ServTyp_Name"

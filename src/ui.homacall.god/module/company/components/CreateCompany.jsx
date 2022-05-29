@@ -144,9 +144,9 @@ export const CreateCompany = () => {
     onSubmit: values => {
       if (!imageUrl) {
         //return setImageError(true)
-        values.CoIn_Logo = 'no-image'
+        values.FileLogo = 'no-image'
       } else {
-        values.CoIn_Logo = imageUrl
+        values.FileLogo = imageUrl
         setImageError(false)
         const formData = new FormData()
 
@@ -172,7 +172,7 @@ export const CreateCompany = () => {
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createCompanyBreadcrumb} />
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-3 gap-4 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
+        <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
           <span className="p-float-label rtl relative" dir="ltr">
             <InputText
               id="CoIn_Name"
