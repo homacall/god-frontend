@@ -21,10 +21,6 @@ import '../style/company.css'
 export const CreateCompany = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [imageError, setImageError] = useState(false)
-  const [loginImg, setLoginImg] = useState('')
-  const [loginImgError, setLoginImgError] = useState(false)
-  const [pathImg, setPathImg] = useState(false)
-  const [pathImgError, setPathImgError] = useState(false)
   const [companyById, setCompanyBYId] = useState([])
   const [languages, setLanguages] = useState([])
   const [loading, setLoading] = useState(false)
@@ -84,6 +80,7 @@ export const CreateCompany = () => {
     } else {
       //initialize for formik
       setImageUrl(companyById.coIn_Logo)
+
       setInitialValues({
         CoIn_Name: companyById.coIn_Name,
         CoIn_Address: companyById.coIn_Address,
@@ -147,12 +144,12 @@ export const CreateCompany = () => {
     onSubmit: values => {
       if (!imageUrl) {
         //return setImageError(true)
-        values.CoIn_Logo = 'no-image'
+        values.FileLogo = 'no-image'
       } else {
-        values.CoIn_Logo = imageUrl
+        values.FileLogo = imageUrl
         setImageError(false)
         const formData = new FormData()
-        console.log('logo: ', values)
+
         Object.keys(values).forEach(key => {
           const value = values[key]
           formData.append(key, value)
@@ -175,7 +172,7 @@ export const CreateCompany = () => {
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createCompanyBreadcrumb} />
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-3 gap-4 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
+        <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
           <span className="p-float-label rtl relative" dir="ltr">
             <InputText
               id="CoIn_Name"
@@ -198,7 +195,6 @@ export const CreateCompany = () => {
             <InputText
               id="CoIn_SmsNumber"
               name="CoIn_SmsNumber"
-              rtl
               value={formik.values.CoIn_SmsNumber}
               className="p-inputtext p-component rtl text-sm w-full h-9"
               onBlur={formik.handleBlur}

@@ -10,7 +10,7 @@ import { createServerConnectionBreadcrumb } from '../constant/createServerConnec
 import validate from '../constant/validate'
 import { ToastAlert } from '../../common/toastAlert'
 import { GetAllCompanyInfo } from '../../../service/companyService'
-import { GetAllRoutesByParent } from '../../../service/routeStretcherService'
+import { GetAllSystemPath } from '../../../service/systemPathService'
 import { GetServerConnectionsById, InsertServerConnections, UpdateServerConnections } from '../../../service/serverConnectionService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import styles from '../styles/serverConnection.module.css'
@@ -19,7 +19,8 @@ const CreateEditServerConnection = () => {
   const [loading, setLoading] = useState(false)
   const [serverConnectionById, setServerConnectionBYId] = useState([])
   const [companies, setCompanies] = useState([])
-  const [routes, setRoutes] = useState([])
+  //const [routes, setRoutes] = useState([])
+  const [systemsPath, setSystemsPath] = useState([])
   const [systemName, setSystemName] = useState('')
   const [initialValues, setInitialValues] = useState({
     SerConn_IP: '',
@@ -28,7 +29,7 @@ const CreateEditServerConnection = () => {
     SerConn_UsrID: '',
     SerConn_HPass: '',
     SerConn_SysID: '',
-    SerConn_SysName: '',
+    //SerConn_SysName: '',
     SerConn_CoInID: '',
   })
 
@@ -44,14 +45,22 @@ const CreateEditServerConnection = () => {
     })
   }
 
-  const fetchRouteStructure = () => {
-    const formData = new FormData()
-    formData.append('ID', 0)
-    GetAllRoutesByParent(formData).then(res => {
-      if (res.data || res.status === 200) {
-        setRoutes(res.data.map(item => ({ id: item.routStr_ID, name: item.routStr_Trans_Tag_Name, sys: item.routStr_Tag_Name })))
-      }
-    })
+  // const fetchRouteStructure = () => {
+  //   const formData = new FormData()
+  //   formData.append('ID', 0)
+  //   GetAllRoutesByParent(formData).then(res => {
+  //     if (res.data || res.status === 200) {
+  //       setRoutes(res.data.map(item => ({ id: item.routStr_ID, name: item.routStr_Trans_Tag_Name, sys: item.routStr_Tag_Name })))
+  //     }
+  //   })
+  // }
+
+  const fetchSystemPath = () => {
+    GetAllSystemPath()
+      .then(res => {
+        if (res.data) setSystemsPath(res.data.map(item => ({ id: item.sys_ID, name: item.sys_Name })))
+      })
+      .catch(e => ToastAlert.error('خطا در  ارتباط با سرور '))
   }
 
   const fetchServerConnection = useCallback(() => {
@@ -68,19 +77,20 @@ const CreateEditServerConnection = () => {
 
   useEffect(() => {
     fetchCompany()
-    fetchRouteStructure()
+    //fetchRouteStructure()
+    fetchSystemPath()
     fetchServerConnection()
   }, [fetchServerConnection])
 
-  const fetchSystemName = useCallback(() => {
-    setSystemName(routes.filter(({ id }) => id === serverConnectionById.serConn_SysID).map(({ sys }) => sys))
-  }, [routes, serverConnectionById.serConn_SysID])
+  // const fetchSystemName = useCallback(() => {
+  //   setSystemName(routes.filter(({ id }) => id === serverConnectionById.serConn_SysID).map(({ sys }) => sys))
+  // }, [routes, serverConnectionById.serConn_SysID])
 
   useEffect(() => {
     let path = location.pathname
     if (path.split('/')[2] === 'edit') {
       if (Object.keys(serverConnectionById).length > 0) {
-        fetchSystemName()
+        //fetchSystemName()
         setInitialValues({
           SerConn_IP: serverConnectionById.serConn_IP,
           SerConn_Port: serverConnectionById.serConn_Port,
@@ -92,7 +102,7 @@ const CreateEditServerConnection = () => {
         })
       }
     }
-  }, [location.pathname, serverConnectionById, fetchSystemName])
+  }, [location.pathname, serverConnectionById])
 
   const handleUpdateServerConnections = formData => {
     UpdateServerConnections(formData)
@@ -160,49 +170,70 @@ const CreateEditServerConnection = () => {
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createServerConnectionBreadcrumb} />
       <form className="p-5 mt-10 " onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-3 gap-4  gap-y-10 rtl">
-          <span className="p-float-label relative mb-5" >
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4  gap-y-10 rtl">
+          <span className="p-float-label relative mb-5">
             <InputText
               id="SerConn_IP"
               name="SerConn_IP"
               value={formik.values.SerConn_IP}
-              className={`p-inputtext p-component w-full h-9 ${formik.touched.SerConn_IP && formik.errors.SerConn_IP && 'border border-red-600'}`}
+              className={`p-inputtext p-component w-full h-9 ${
+                formik.touched.SerConn_IP && formik.errors.SerConn_IP && 'border border-red-600'
+              }`}
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <label htmlFor="SerConn_IP" className={`${formik.touched.SerConn_IP && formik.errors.SerConn_IP && styles.labelError} right-2 text-sm`}>ip</label>
+            <label
+              htmlFor="SerConn_IP"
+              className={`${formik.touched.SerConn_IP && formik.errors.SerConn_IP && styles.labelError} right-2 text-sm`}
+            >
+              ip
+            </label>
             {formik.touched.SerConn_IP && formik.errors.SerConn_IP ? (
-              <div className='absolute text-red-600 text-sm my-2'>{formik.errors.SerConn_IP}</div>
+              <div className="absolute text-red-600 text-sm my-2">{formik.errors.SerConn_IP}</div>
             ) : null}
           </span>
 
-          <span className="p-float-label relative mb-5" >
+          <span className="p-float-label relative mb-5">
             <InputText
               id="SerConn_Port"
               name="SerConn_Port"
               value={formik.values.SerConn_Port}
-              className={`p-inputtext p-component w-full h-9 ${formik.touched.SerConn_Port && formik.errors.SerConn_Port && 'border border-red-600'}`}
+              className={`p-inputtext p-component w-full h-9 ${
+                formik.touched.SerConn_Port && formik.errors.SerConn_Port && 'border border-red-600'
+              }`}
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <label htmlFor="SerConn_Port" className={`${formik.touched.SerConn_Port && formik.errors.SerConn_Port && styles.labelError} right-2 text-sm`}>port</label>
+            <label
+              htmlFor="SerConn_Port"
+              className={`${formik.touched.SerConn_Port && formik.errors.SerConn_Port && styles.labelError} right-2 text-sm`}
+            >
+              port
+            </label>
             {formik.touched.SerConn_Port && formik.errors.SerConn_Port ? (
-              <div className='absolute text-red-600 text-sm'>{formik.errors.SerConn_Port}</div>
+              <div className="absolute text-red-600 text-sm">{formik.errors.SerConn_Port}</div>
             ) : null}
           </span>
 
-          <span className="p-float-label relative mb-5" >
+          <span className="p-float-label relative mb-5">
             <InputText
               id="SerConn_DbName"
               name="SerConn_DbName"
               value={formik.values.SerConn_DbName}
-              className={`p-inputtext p-component w-full h-9 ${formik.touched.SerConn_DbName && formik.errors.SerConn_DbName && 'border border-red-600'}`}
+              className={`p-inputtext p-component w-full h-9 ${
+                formik.touched.SerConn_DbName && formik.errors.SerConn_DbName && 'border border-red-600'
+              }`}
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <label htmlFor="SerConn_DbName" className={`${formik.touched.SerConn_DbName && formik.errors.SerConn_DbName && styles.labelError} right-2 text-sm`}>نام پایگاه داده</label>
+            <label
+              htmlFor="SerConn_DbName"
+              className={`${formik.touched.SerConn_DbName && formik.errors.SerConn_DbName && styles.labelError} right-2 text-sm`}
+            >
+              نام پایگاه داده
+            </label>
             {formik.touched.SerConn_DbName && formik.errors.SerConn_DbName ? (
-              <div className='absolute text-red-600 text-sm'>{formik.errors.SerConn_DbName}</div>
+              <div className="absolute text-red-600 text-sm">{formik.errors.SerConn_DbName}</div>
             ) : null}
           </span>
 
@@ -211,13 +242,20 @@ const CreateEditServerConnection = () => {
               id="SerConn_UsrID"
               name="SerConn_UsrID"
               value={formik.values.SerConn_UsrID}
-              className={`p-inputtext p-component w-full h-9 ${formik.touched.SerConn_UsrID && formik.errors.SerConn_UsrID && 'border border-red-600'}`}
+              className={`p-inputtext p-component w-full h-9 ${
+                formik.touched.SerConn_UsrID && formik.errors.SerConn_UsrID && 'border border-red-600'
+              }`}
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <label htmlFor="SerConn_UsrID" className={`${formik.touched.SerConn_UsrID && formik.errors.SerConn_UsrID && styles.labelError} right-2 text-sm`}>User ID</label>
+            <label
+              htmlFor="SerConn_UsrID"
+              className={`${formik.touched.SerConn_UsrID && formik.errors.SerConn_UsrID && styles.labelError} right-2 text-sm`}
+            >
+              User ID
+            </label>
             {formik.touched.SerConn_UsrID && formik.errors.SerConn_UsrID ? (
-              <div className='absolute text-red-600 text-sm'>{formik.errors.SerConn_UsrID}</div>
+              <div className="absolute text-red-600 text-sm">{formik.errors.SerConn_UsrID}</div>
             ) : null}
           </span>
 
@@ -226,39 +264,46 @@ const CreateEditServerConnection = () => {
               id="SerConn_HPass"
               name="SerConn_HPass"
               value={formik.values.SerConn_HPass}
-              className={`p-component w-full h-9 ${formik.touched.SerConn_HPass && formik.errors.SerConn_HPass && 'border border-red-600 rounded-md'}`}
+              className={`p-component w-full h-9 ${
+                formik.touched.SerConn_HPass && formik.errors.SerConn_HPass && 'border border-red-600 rounded-md'
+              }`}
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <label htmlFor="SerConn_HPass" className={`${formik.touched.SerConn_HPass && formik.errors.SerConn_HPass && styles.labelError} right-2 text-sm`}>رمز عبور</label>
+            <label
+              htmlFor="SerConn_HPass"
+              className={`${formik.touched.SerConn_HPass && formik.errors.SerConn_HPass && styles.labelError} right-2 text-sm`}
+            >
+              رمز عبور
+            </label>
             {formik.touched.SerConn_HPass && formik.errors.SerConn_HPass ? (
-              <div className='absolute text-red-600 text-sm'>{formik.errors.SerConn_HPass}</div>
+              <div className="absolute text-red-600 text-sm">{formik.errors.SerConn_HPass}</div>
             ) : null}
           </span>
 
-        <span className="p-float-label" dir='ltr'>
-        <Dropdown 
-             options={routes} 
-             id="SerConn_SysID"
-             name="SerConn_SysID"  
-             optionLabel="name"
-             optionValue="id"
-             value={formik.values.SerConn_SysID} 
-             placeholder="انتخاب  سیستم" 
-             onBlur={formik.handleBlur}
-             onChange={(e)=> {formik.handleChange(e); setSystemName(routes.filter(({ id }) => id === e.target.value).map(({ sys }) => sys)) }}
+          <span className="p-float-label" dir="ltr">
+            <Dropdown
+              options={systemsPath}
+              id="SerConn_SysID"
+              name="SerConn_SysID"
+              optionLabel="name"
+              optionValue="id"
+              value={formik.values.SerConn_SysID}
+              placeholder="انتخاب  سیستم"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              dir="rtl"
+              style={{ width: '100%' }}
+            />
 
-             dir="rtl"
-             style={{ width: '100%'}}
-           />
-         
-          {formik.errors.SerConn_SysID ? (
-         <div className='text-right'><small className='p-error'>{formik.errors.SerConn_SysID}</small></div>
-       ) : null} 
-        </span>
+            {formik.errors.SerConn_SysID ? (
+              <div className="text-right">
+                <small className="p-error">{formik.errors.SerConn_SysID}</small>
+              </div>
+            ) : null}
+          </span>
 
-
-          <span className="p-float-label relative mb-5" >
+          {/* <span className="p-float-label relative mb-5" >
             <InputText
               id="SerConn_SysName"
               name="SerConn_SysName"
@@ -267,27 +312,28 @@ const CreateEditServerConnection = () => {
               className={`p-inputtext p-component w-full h-9 ${formik.touched.SerConn_SysName && formik.errors.SerConn_SysName && 'border border-red-600'}`}
             />
             <label htmlFor="SerConn_SysName" className={`${formik.touched.SerConn_SysName && formik.errors.SerConn_SysName && styles.labelError} right-2 text-sm`}>نام سیستم</label>
+          </span> */}
+
+          <span className="p-float-label" dir="ltr">
+            <Dropdown
+              options={companies}
+              id="SerConn_CoInID"
+              name="SerConn_CoInID"
+              optionLabel="name"
+              optionValue="id"
+              value={formik.values.SerConn_CoInID}
+              placeholder="انتخاب  شرکت"
+              onChange={formik.handleChange}
+              dir="rtl"
+              style={{ width: '100%' }}
+            />
+
+            {formik.errors.SerConn_CoInID ? (
+              <div className="text-right">
+                <small className="p-error">{formik.errors.SerConn_CoInID}</small>
+              </div>
+            ) : null}
           </span>
-
-        <span className="p-float-label" dir='ltr'>
-          <Dropdown 
-             options={companies} 
-             id="SerConn_CoInID"
-             name="SerConn_CoInID"  
-             optionLabel="name"
-             optionValue="id"
-             value={formik.values.SerConn_CoInID} 
-             placeholder="انتخاب  شرکت"
-             onChange={formik.handleChange}
-             dir="rtl"
-             style={{ width: '100%'}}
-           />
-           
-           {formik.errors.SerConn_CoInID ? (
-         <div className='text-right'><small className='p-error'>{formik.errors.SerConn_CoInID}</small></div>
-       ) : null}
-         </span>
-
         </section>
 
         <div className="mt-10 flex justify-end justify-items-end">
