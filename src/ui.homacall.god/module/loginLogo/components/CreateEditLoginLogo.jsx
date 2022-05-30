@@ -8,7 +8,7 @@ import { GetAllTags } from '../../../service/tagManagerService'
 import { BreadcrumbItem } from '../constant/BreadcampItem'
 import { ToastAlert } from '../../common/toastAlert'
 import { UpdateLoginLogo, InsertLoginLogo, GetLoginLogoById } from '../../../service/loginLogoService'
-import { loginLogo } from '../../../utils/constants/routes/publicRoute'
+import { useFetchPath } from '../../common/fetchPath'
 
 function CreateEditLoginLogo() {
   const [imageUrl, setImageUrl] = useState('')
@@ -23,6 +23,8 @@ function CreateEditLoginLogo() {
   const location = useLocation()
   const params = useParams()
 
+  const { pathInfo } = useFetchPath('Logo')
+
   const fetchTags = () => {
     GetAllTags().then(res => {
       if (res.data || res.status === 200) {
@@ -32,20 +34,23 @@ function CreateEditLoginLogo() {
   }
 
   const fetchLoginLogo = useCallback(() => {
-    const formData = new FormData()
-    formData.append('ID', params.loginLogoId)
-    GetLoginLogoById(formData)
-      .then(res => {
-        if (res.data) {
-          tagValue(res.data.filPth_Name)
-          setImageUrl(res.data.filPth_SysID)
-          setLoginLogoById(res.data)
-        }
-      })
-      .catch(err => {
-        ToastAlert.error('خطا در ارتباط با سرور ')
-      })
-  }, [params.loginLogoId])
+    if (params.loginLogoId && pathInfo) {
+      const formData = new FormData()
+      formData.append('ID', params.loginLogoId)
+      GetLoginLogoById(formData)
+        .then(res => {
+          if (res.data && res.status === 200) {
+            const imgUrl = process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name + '/' + res.data.logoCo_Name
+            setTagValue(res.data.logoCo_TgID)
+            setImageUrl(imgUrl)
+            setLoginLogoById(res.data)
+          }
+        })
+        .catch(err => {
+          ToastAlert.error('خطا در ارتباط با سرور ')
+        })
+    }
+  }, [params.loginLogoId, pathInfo])
 
   useEffect(() => {
     fetchTags()
@@ -53,8 +58,7 @@ function CreateEditLoginLogo() {
   }, [fetchLoginLogo])
 
   useEffect(() => {
-    if (location.pathname.includes(loginLogo.edit) && params.loginLogoId) {
-      // fetchDataById
+    if (params.loginLogoId) {
       setEditMode(true)
     } else {
       setEditMode(false)
@@ -65,11 +69,11 @@ function CreateEditLoginLogo() {
     InsertLoginLogo(formData)
       .then(res => {
         if (res.status === 200 || res.data === 'Succeed') {
-          ToastAlert.success('ساخت مسیر فایل با موفقیت انجام شد ')
+          ToastAlert.success('آپلود لوگو با موفقیت انجام شد ')
           navigate('/login-logo')
           setLoading(true)
         } else {
-          ToastAlert.error('خطا در ساخت مسیر فایل ')
+          ToastAlert.error('خطا در آپلود لوگو ')
           setLoading(false)
         }
       })
@@ -80,28 +84,31 @@ function CreateEditLoginLogo() {
     UpdateLoginLogo(formData)
       .then(res => {
         if (res.status === 200 || res.data === 'Succeed') {
-          ToastAlert.success('ساخت مسیر فایل با موفقیت انجام شد ')
+          ToastAlert.success('آپلود لوگو با موفقیت انجام شد ')
           navigate('/login-logo')
           setLoading(true)
         } else {
-          ToastAlert.error('خطا در ساخت مسیر فایل ')
+          ToastAlert.error('خطا در آپلود لوگو ')
           setLoading(false)
         }
       })
-      .catch(e => ToastAlert.error('خطا در ساخت مسیر فایل '))
+      .catch(e => ToastAlert.error('خطا در آپلود لوگو '))
   }
 
   const handleLoginLogo = () => {
     const formData = new FormData()
     formData.append('LogoCo_TgID', tagValue)
-    formData.append('FileLogo', imageUrl)
+    if (typeof imageUrl !== 'string') {
+      formData.append('FileLogo', imageUrl)
+    } else {
+      formData.append('FileLogo', {})
+    }
+
     if (editMode) {
       formData.append('LogoCo_ID', params.loginLogoId)
       handleUpdateLoginLogo(formData)
     } else {
       handleInsertLoginLogo(formData)
-      console.log(tagValue)
-      console.log(imageUrl)
     }
   }
 
@@ -120,7 +127,7 @@ function CreateEditLoginLogo() {
             value={tagValue}
             onChange={e => setTagValue(e.target.value)}
             placeholder="انتخاب تگ"
-            className="rtl w-[80vw] sm:w-[50%] md:w-[30vw] h-9 "
+            className="rtl w-[80vw] sm:w-[50vw] md:w-[30vw] h-9 "
           />
         </span>
       </section>

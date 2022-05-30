@@ -14,7 +14,7 @@ import { ToastAlert } from '../../common/toastAlert'
 const Language = ({ data, fetchAgain }) => {
   const [globalFilter, setGlobalFilter] = useState(null)
   const [dataTable, setDataTable] = useState([])
-  const [editProps, setEditProps] = useState({ lang_Name: '', lang_Rtl: false })
+  const [editProps, setEditProps] = useState({ lang_Name: '', lang_Rtl: false, lang_Icon: '' })
   const [showUpdateDialog, setShowUpdateDialog] = useState(false)
   const deleteRow = useCallback(
     async id => {

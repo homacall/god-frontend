@@ -8,3 +8,8 @@ export const userData = atom({
   key: 'userData',
   default: undefined,
 })
+
+export const pathState = atom({
+  key: 'pathState',
+  default: [],
+})

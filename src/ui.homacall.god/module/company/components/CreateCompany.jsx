@@ -15,6 +15,7 @@ import validate from '../constant/validate'
 import { GetAllLanguage } from '../../../service/languageService'
 import { GetCompanyById, InsertCompany, UpdateCompany } from '../../../service/companyService'
 import { dateTypes } from '../constant/dateTypes'
+import { useFetchPath } from '../../common/fetchPath'
 
 import '../style/company.css'
 
@@ -43,6 +44,8 @@ export const CreateCompany = () => {
   const location = useLocation()
   let { CompanyId } = useParams()
   const navigate = useNavigate()
+
+  const { pathInfo } = useFetchPath('Logo')
 
   const fetchLanguage = () => {
     GetAllLanguage().then(res => {
@@ -79,9 +82,9 @@ export const CreateCompany = () => {
       if (companyById.length > 0) {
         navigate('/company')
       }
-    } else {
+    } else if (path.split('/')[2] === 'edit' && pathInfo) {
       //initialize for formik
-      const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + logoPath.concat(`/${companyById.coIn_Logo}`)
+      const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name.concat(`/${companyById.coIn_Logo}`)
       setImageUrl(logoSrc)
 
       setInitialValues({
@@ -99,7 +102,7 @@ export const CreateCompany = () => {
         CoIn_TypeDateTime: companyById.coIn_TypeDateTime,
       })
     }
-  }, [location.pathname, navigate, companyById])
+  }, [location.pathname, navigate, companyById, pathInfo])
 
   const handleInsetCompany = formData => {
     InsertCompany(formData)
@@ -125,7 +128,6 @@ export const CreateCompany = () => {
     UpdateCompany(formData)
       .then(res => {
         if (res.status === 200 || res.data === 'Succeed') {
-          //formik.resetForm()
           ToastAlert.success('ویرایش شرکت با موفقیت انجام شد')
           navigate('/company')
         } else {
@@ -146,14 +148,11 @@ export const CreateCompany = () => {
     validate,
     onSubmit: values => {
       if (!imageUrl) {
-        //return setImageError(true)
         values.FileLogo = 'no-image'
       } else {
         values.FileLogo = imageUrl
-        //values.CoIn_Logo = imageUrl
         setImageError(false)
         const formData = new FormData()
-
         Object.keys(values).forEach(key => {
           const value = values[key]
           formData.append(key, value)

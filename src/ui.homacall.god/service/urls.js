@@ -76,4 +76,5 @@ export const apiUrls = {
   deleteLoginLogo: GodHOST.concat('/LogosCompanyGod/Delete'),
   getLoginLogoById: GodHOST.concat('/LogosCompanyGod/GetByID'),
   getAllLoginLogoBySP: GodHOST.concat('/LogosCompanyGod/GetAllSP'),
+  getFilePathBySystemNames: GodHOST.concat('/FilePathGod/GetFilePathBySystemNames'),
 }

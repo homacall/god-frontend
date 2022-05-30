@@ -20,11 +20,15 @@ const NewLanguage = () => {
   const formik = useFormik({
     initialValues: {
       lang_Name: '',
+      lang_Icon: '',
     },
     validate: data => {
       let errors = {}
       if (!data.lang_Name) {
-        errors.lang_Name = 'نام را وارد کنید.'
+        errors.lang_Name = 'نام اختصاری کشور را وارد کنید.'
+      }
+      if (!data.lang_Icon) {
+        errors.lang_Icon = 'نام اختصاری کشور را وارد کنید.'
       }
       return errors
     },
@@ -47,6 +51,7 @@ const NewLanguage = () => {
     const formData = new FormData()
     const isRTL = layout === 'RTL' ? true : false
     formData.append('Lang_Name', data.lang_Name)
+    formData.append('Lang_Icon', data.lang_Icon)
     formData.append('Lang_Rtl', isRTL)
     setLoading(true)
 
@@ -87,6 +92,34 @@ const NewLanguage = () => {
           </span>
         </div>
         {getFormErrorMessage('lang_Name')}
+
+        <div className=" flex justify-start mr-[8%] mt-10 ">
+          <span className="p-float-label">
+            <InputText
+              id="lang_Icon"
+              name="lang_Icon"
+              value={formik.values.lang_Icon}
+              onChange={formik.handleChange}
+              className={`${classNames({ 'p-invalid': isFormFieldValid('lang_Icon'), 'w-full': true })} h-9 w-96`}
+            />
+            <label
+              htmlFor="lang_Icon"
+              className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('lang_Icon') })} right-2 text-sm`}
+            >
+              کد اختصاری کشور
+            </label>
+          </span>
+
+          <a
+            href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes"
+            target="_blank"
+            className="text-xs mt-3 mr-3 text-blue-700 "
+          >
+            نمایش کد اختصاری (alfa-2 code) کشورها
+          </a>
+        </div>
+        {getFormErrorMessage('lang_Icon')}
+
         <div className=" flex justify-start mr-[8%] mt-10">
           <div className="field-radiobutton ml-8">
             <RadioButton

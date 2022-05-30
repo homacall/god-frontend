@@ -122,3 +122,25 @@ export const GetFilePathById = id => {
       }
     })
 }
+
+export const GetFilePathBySysNames = data => {
+  const token = localStorage.getItem('token')
+
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+
+  return http
+    .post(apiUrls.getFilePathBySystemNames, data, config)
+    .then(res => res)
+    .catch(err => {
+      if (err.status === 401) {
+        localStorage.removeItem('token')
+        window.location.replace('/login/')
+      } else {
+        return err
+      }
+    })
+}

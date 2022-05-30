@@ -11,45 +11,48 @@ import { ToastAlert } from '../common/toastAlert'
 import { loginLogoColumn } from './constant/tableColumn'
 import { loginLogo } from '../../utils/constants/routes/publicRoute'
 import { GetAllLoginLogoBySP, DeleteLoginLogo } from '../../service/loginLogoService'
+import { useFetchPath } from '../common/fetchPath'
 
 function LoginLogo() {
   const [fetchAgain, setFetchAgain] = useState(false)
   const [dataL, setDataL] = useState([])
   const [globalFilter, setGlobalFilter] = useState(null)
-  const [uploading, setUploading] = useState(true)
   const navigate = useNavigate()
+
+  const { pathInfo } = useFetchPath('Logo')
 
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
 
   useEffect(() => {
-    GetAllLoginLogoBySP()
-      .then(res => {
-        const newData = []
-        if (res.data) {
-          setDataL(res.data)
-          // res.data.forEach(comp =>
-          //   newData.push({
-          //     ...comp,
-          //     logoCo_Name: (
-          //       <Image
-          //         src={process.env.REACT_APP_GOD_FTP_SERVER + res.data.path.concat(`/${comp.logoCo_Name}`)}
-          //         template="نمایش"
-          //         alt={comp.coIn_Name}
-          //         width={50}
-          //         height={50}
-          //         preview={true}
-          //         className="w-[50px] h-[50px] rounded-full"
-          //       />
-          //     ),
-          //   }),
-          // )
-          // setDataL(res.data)
-        }
-      })
-      .catch(e => ToastAlert.error('خطا در  ارتباط با سرور '))
-  }, [fetchAgain])
+    if (pathInfo) {
+      GetAllLoginLogoBySP()
+        .then(res => {
+          const newData = []
+          if (res.data && res.status === 200) {
+            res.data.logosCompanys.forEach(comp =>
+              newData.push({
+                ...comp,
+                logoCo_Name: (
+                  <Image
+                    src={process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name + '/' + comp.logoCo_Name}
+                    template="نمایش"
+                    alt={comp.coIn_Name}
+                    width={50}
+                    height={50}
+                    preview={true}
+                    className="w-[50px] h-[50px] rounded-full"
+                  />
+                ),
+              }),
+            )
+            setDataL(newData)
+          }
+        })
+        .catch(e => console.log(e))
+    }
+  }, [fetchAgain, pathInfo])
 
   const rightToolbarTemplate = () => {
     return (

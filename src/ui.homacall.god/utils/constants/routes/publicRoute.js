@@ -80,5 +80,5 @@ export const filePath = {
 export const loginLogo = {
   main: '/login-logo',
   create: '/login-logo/create',
-  edit: '/login-log/edit/:loginLogoId',
+  edit: '/login-logo/edit/:loginLogoId',
 }
