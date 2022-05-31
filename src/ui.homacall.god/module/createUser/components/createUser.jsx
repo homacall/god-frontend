@@ -20,6 +20,7 @@ import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { ToastAlert } from '../../common/toastAlert'
 import { Regex } from '../../../constant'
+import { useFetchPath } from '../../common/fetchPath'
 
 const CreateAndEditUser = () => {
   const location = useLocation()
@@ -46,6 +47,7 @@ const CreateAndEditUser = () => {
     Usr_Mobile: '',
   })
   const [editMode, setEditMode] = useState(location.pathname.includes('/users/update/') && params.userId)
+  const { pathInfo } = useFetchPath('User')
 
   useEffect(() => {
     if (location.pathname.includes('/users/update/') && params.userId) {
@@ -60,21 +62,21 @@ const CreateAndEditUser = () => {
       formData.append('ID', params.userId)
       GetByUserId(formData).then(res => {
         if (res.data || res.status === 200) {
-          fetchCity(res.data.usr_Cty_ID).then(() => {
+          fetchCity(res.data.user.usr_Cty_ID).then(() => {
             setInitialValue({
-              Usr_FName: res.data.usr_FName,
-              Usr_LName: res.data.usr_LName,
-              Usr_Gender: res.data.usr_Gender,
-              Usr_mail: res.data.usr_mail,
-              Usr_UName: res.data.usr_UName,
+              Usr_FName: res.data.user.usr_FName,
+              Usr_LName: res.data.user.usr_LName,
+              Usr_Gender: res.data.user.usr_Gender,
+              Usr_mail: res.data.user.usr_mail,
+              Usr_UName: res.data.user.usr_UName,
               Usr_HPass: '',
-              Usr_IdentNum: res.data.usr_IdentNum,
-              Usr_Prov_ID: res.data.usr_Prov_ID,
-              Usr_Cty_ID: res.data.usr_Cty_ID,
-              Usr_Address: res.data.usr_Address,
-              Usr_Mobile: res.data.usr_Mobile,
+              Usr_IdentNum: res.data.user.usr_IdentNum,
+              Usr_Prov_ID: res.data.user.usr_Prov_ID,
+              Usr_Cty_ID: res.data.user.usr_Cty_ID,
+              Usr_Address: res.data.user.usr_Address,
+              Usr_Mobile: res.data.user.usr_Mobile,
             })
-            setImageUrl(res.data.usr_Img)
+            setImageUrl(process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo.filPth_Name + '/' + res.data.user.usr_Img))
           })
         }
       })
@@ -91,7 +93,7 @@ const CreateAndEditUser = () => {
       if (!data.Usr_LName) {
         errors.Usr_LName = 'نام خانوادگی را وارد کنید.'
       }
-      if (!data.Usr_Gender) {
+      if (!data.Usr_GeUsr_Gendernder) {
         errors.Usr_Gender = 'جنسیت را انتخاب کنید'
       }
       if (!data.Usr_IdentNum) {
@@ -285,9 +287,9 @@ const CreateAndEditUser = () => {
           <Dropdown
             options={createUserGender}
             id="Usr_Gender"
+            name="Usr_Gender"
             value={formik.values.Usr_Gender}
             onChange={formik.handleChange}
-            name="Usr_Gender"
             className={classNames({ 'p-invalid': isFormFieldValid('Usr_Gender'), 'w-full h-9': true })}
           />
           <label htmlFor="Usr_Gender" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_Gender') })}`}>
@@ -381,7 +383,7 @@ const CreateAndEditUser = () => {
           <label htmlFor="Usr_Prov_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_Prov_ID') })}`}>
             استان
           </label>
-          {getFormErrorMessage('Usr_Gender')}
+          {getFormErrorMessage('Usr_Prov_ID')}
         </span>
         <span className="p-float-label mb-5">
           <Dropdown

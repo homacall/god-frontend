@@ -100,6 +100,7 @@ const Language = ({ data, fetchAgain }) => {
           rowsPerPageOptions={[5, 10, 25]}
           paginatorTemplate="NextPageLink LastPageLink PageLinks FirstPageLink PrevPageLink "
           globalFilter={globalFilter}
+          emptyMessage="رکوردی یافت نشد"
           header={header}
           responsiveLayout="scroll"
           className="rtl"

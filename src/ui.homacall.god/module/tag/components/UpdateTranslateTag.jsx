@@ -7,12 +7,12 @@ import { ToastAlert } from '../../common/toastAlert'
 
 const UpdateTranslateTag = ({ visible, onHide, tagId, oldVal, langId, data, setData, translateId }) => {
   const [translateValue, setTranslateValue] = useState('')
-
   useEffect(() => {
     setTranslateValue(oldVal)
   }, [oldVal, setTranslateValue])
   const updateTranslate = () => {
     const formData = new FormData()
+
     formData.append('TranTg_Text', translateValue)
     formData.append('TranTg_TagID', tagId)
     formData.append('TranTg_LangID', langId)

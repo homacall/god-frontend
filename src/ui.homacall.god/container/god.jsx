@@ -31,7 +31,7 @@ function God() {
           sysNames += item.sys_Name.concat(',')
         })
         sysNames = sysNames.substring(0, sysNames.length - 1)
-        setSystemNames('Logo,User')
+        setSystemNames(sysNames)
       })
       .catch(e => console.log(e))
     //setSystemNames('Logo,User')

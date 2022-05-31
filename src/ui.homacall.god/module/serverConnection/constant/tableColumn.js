@@ -19,4 +19,14 @@ export const serverConnectionColumns = [
     field: 'serConn_UsrID',
     className: 'text-sm',
   },
+  {
+    header: 'نام سرویس',
+    field: 'serConn_ServTypID',
+    className: 'text-sm',
+  },
+  {
+    header: 'نام سیستم',
+    field: 'serConn_SysID',
+    className: 'text-sm',
+  },
 ]

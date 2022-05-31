@@ -106,7 +106,7 @@ const NewLanguage = () => {
               htmlFor="lang_Icon"
               className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('lang_Icon') })} right-2 text-sm`}
             >
-              کد اختصاری کشور
+              کد پرچم کشور
             </label>
           </span>
 
@@ -115,7 +115,7 @@ const NewLanguage = () => {
             target="_blank"
             className="text-xs mt-3 mr-3 text-blue-700 "
           >
-            نمایش کد اختصاری (alfa-2 code) کشورها
+            نمایش کد پرچم (alfa-2 code) کشورها
           </a>
         </div>
         {getFormErrorMessage('lang_Icon')}

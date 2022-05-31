@@ -8,7 +8,7 @@ import '../style/translatetag.css'
 import { insertTranslate } from '../../../service/translateService'
 import { ToastAlert } from '../../common/toastAlert'
 
-const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagName, fetchAgain }) => {
+const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagName, fetchAgain, setFetchTransAgain }) => {
   const [translateValue, setTranslateValue] = useState('')
   const [languageId, setLanguageId] = useState('')
   const [languageName, setLanguageName] = useState('')
@@ -19,10 +19,11 @@ const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagNam
     formData.append('TranTg_TagID', tagId)
     formData.append('TranTg_LangID', languageId)
     formData.append('TranTg_Text', translateValue)
+
     insertTranslate(formData).then(res => {
       if (res.data || res.status === 200) {
         ToastAlert.success('ترجمه با موفقیت ثبت شد.')
-
+        setFetchTransAgain(true)
         const newList = languageList.filter(lang => lang.value !== languageId)
         setLanguageList(newList)
         if (data) {
@@ -76,9 +77,10 @@ const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagNam
   useEffect(() => {
     setLanguageList(languages)
   }, [languages])
+
   return (
     <Dialog visible={visible} onHide={onHide} footer={footer} header={header} dir="rtl">
-      <div className='w-[400px]  flex flex-col'>
+      <div className="w-[400px]  flex flex-col">
         <div className=" pb-4 rounded-md container mt-7 bg-white rtl">
           <span className="p-float-label">
             <InputText id="inputtext" value={translateValue} onChange={e => setTranslateValue(e.target.value)} className="h-9 w-full" />
@@ -102,7 +104,6 @@ const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagNam
           />
         </div>
       </div>
-
     </Dialog>
   )
 }

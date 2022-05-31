@@ -13,6 +13,7 @@ import { ChangeUserStatus } from '../../../service/userService'
 import { UserPermissions } from '../../userPermissions'
 import { SetRoleUserDialog } from './setRoleUser'
 import moment from 'moment-jalaali'
+import { useFetchPath } from '../../common/fetchPath'
 
 export const UserTable = ({ data, fetchAgain }) => {
   const [dataTable, setDataTable] = useState([])
@@ -25,6 +26,7 @@ export const UserTable = ({ data, fetchAgain }) => {
   const [userIsActive, setUserIsActive] = useState(false)
 
   const navigate = useNavigate()
+  const { pathInfo } = useFetchPath('User')
 
   const permissionDialogHandler = () => {
     setShowPermissions(perv => !perv)
@@ -37,73 +39,76 @@ export const UserTable = ({ data, fetchAgain }) => {
   }
   useEffect(() => {
     const newData = []
-    data.forEach(item =>
-      newData.push({
-        ...item,
-        usr_Gender: item.usr_Gender === 1 ? 'مرد' : item.usr_Gender === 0 ? 'زن' : 'سایر',
-        usr_Img: (
-          <Image
-            src={item.usr_Img === 'no-image' ? '/assets/img/user.png' : item.usr_Img}
-            template="نمایش"
-            alt="user image"
-            width={50}
-            height={50}
-            preview={true}
-            className="w-[50px] h-[50px] rounded-full"
-          />
-        ),
-        usr_DateReg: moment(item.usr_DateReg).format('jYYYY/jMM/jDD'),
-        action: (
-          <TableActions
-            hasDelete={false}
-            hasUpdate={true}
-            updateAction={() => {
-              navigate(`/users/update/${item.usr_ID}`)
-            }}
-            deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-1'}
-            updateButtonClassName={' p-button-warning ml-1 text-xs rtl  p-1'}
-            updateLabel="ویرایش"
-            updateIcon={false}
-            updateHasView={false}
-          >
-            <Button
-              onClick={() => {
-                setUserIsActive({ status: item.usr_IsA, userId: item.usr_ID, username: item.usr_UName })
-                activeDialogHandler()
+    if (data.users) {
+      data.users.forEach(item =>
+        newData.push({
+          ...item,
+          usr_Gender: item.usr_Gender === 1 ? 'مرد' : item.usr_Gender === 0 ? 'زن' : 'سایر',
+          usr_Img: (
+            <Image
+              //src={item.usr_Img === 'no-image' ? '/assets/img/user.png' : item.usr_Img}
+              src={process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo?.filPth_Name + '/' + item.usr_Img)}
+              template="نمایش"
+              alt="user image"
+              width={50}
+              height={50}
+              preview={true}
+              className="w-[50px] h-[50px] rounded-full"
+            />
+          ),
+          usr_DateReg: moment(item.usr_DateReg).format('jYYYY/jMM/jDD'),
+          action: (
+            <TableActions
+              hasDelete={false}
+              hasUpdate={true}
+              updateAction={() => {
+                navigate(`/users/update/${item.usr_ID}`)
               }}
-              className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1 mt-1' : ' p-button-danger ml-2 text-xs rtl  p-1 mt-1'}
+              deleteButtonClassName={' p-button-danger ml-1 text-xs rtl  p-1'}
+              updateButtonClassName={' p-button-warning ml-1 text-xs rtl  p-1'}
+              updateLabel="ویرایش"
+              updateIcon={false}
+              updateHasView={false}
             >
-              {item.usr_IsA ? 'غیرفعال' : 'فعال'}
-            </Button>
-            {item.usr_IsA && (
               <Button
-                className="p-button-primary text-xs rtl ml-1 p-1 mt-1"
                 onClick={() => {
-                  setUserInfoForPermission(item)
-                  setShowPermissions(perv => !perv)
+                  setUserIsActive({ status: item.usr_IsA, userId: item.usr_ID, username: item.usr_UName })
+                  activeDialogHandler()
                 }}
+                className={!item.usr_IsA ? 'p-button-success text-xs ml-1 rtl  p-1 mt-1' : ' p-button-danger ml-2 text-xs rtl  p-1 mt-1'}
               >
-                سطح دسترسی
+                {item.usr_IsA ? 'غیرفعال' : 'فعال'}
               </Button>
-            )}
-            {item.usr_IsA && (
-              <Button
-                className="p-button-help text-xs rtl  p-1 mt-1"
-                onClick={() => {
-                  setUserIdForRole(item.usr_ID)
-                  roleDialogHandler()
-                }}
-              >
-                نقش
-              </Button>
-            )}
-          </TableActions>
-        ),
-        usr_IsA: item.usr_IsA ? 'فعال' : 'غیرفعال',
-      }),
-    )
+              {item.usr_IsA && (
+                <Button
+                  className="p-button-primary text-xs rtl ml-1 p-1 mt-1"
+                  onClick={() => {
+                    setUserInfoForPermission(item)
+                    setShowPermissions(perv => !perv)
+                  }}
+                >
+                  سطح دسترسی
+                </Button>
+              )}
+              {item.usr_IsA && (
+                <Button
+                  className="p-button-help text-xs rtl  p-1 mt-1"
+                  onClick={() => {
+                    setUserIdForRole(item.usr_ID)
+                    roleDialogHandler()
+                  }}
+                >
+                  نقش
+                </Button>
+              )}
+            </TableActions>
+          ),
+          usr_IsA: item.usr_IsA ? 'فعال' : 'غیرفعال',
+        }),
+      )
+    }
     setDataTable(newData)
-  }, [data, navigate])
+  }, [data, navigate, pathInfo])
   const rightToolbarTemplate = () => {
     return (
       <>

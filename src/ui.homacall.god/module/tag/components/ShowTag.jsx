@@ -26,6 +26,7 @@ const ShowTag = ({ visible, tagId, onHide, tagName, fetchAgain }) => {
   const [languages, setLanguages] = useState([])
   const [translates, setTranslates] = useState([])
   const [translateId, setTranslateId] = useState(0)
+  const [fetchTransAgain, setFetchTransAgain] = useState(false)
 
   const fetchLanguage = () => {
     GetAllLanguage().then(res => {
@@ -41,6 +42,7 @@ const ShowTag = ({ visible, tagId, onHide, tagName, fetchAgain }) => {
     getTranslateByTagId(formData).then(res => {
       if (res.data || res.status === 200) {
         setTranslates(res.data)
+        setFetchTransAgain(false)
       }
     })
   }
@@ -51,7 +53,7 @@ const ShowTag = ({ visible, tagId, onHide, tagName, fetchAgain }) => {
     if (tagId !== 0) {
       fetchTranslate(tagId)
     }
-  }, [tagId])
+  }, [tagId, fetchTransAgain])
   const languagesToTranslate = GetTranslateLanguage({ translates, languages })
   const openTranslateTag = () => {
     setOpenTranslate(true)
@@ -103,6 +105,7 @@ const ShowTag = ({ visible, tagId, onHide, tagName, fetchAgain }) => {
         data={translates}
         setData={setTranslates}
         languages={languagesToTranslate}
+        setFetchTransAgain={setFetchTransAgain}
         tagName={tagName}
         fetchAgain={fetchAgain}
       />

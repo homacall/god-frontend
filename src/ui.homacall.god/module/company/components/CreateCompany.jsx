@@ -25,7 +25,7 @@ export const CreateCompany = () => {
   const [companyById, setCompanyBYId] = useState([])
   const [languages, setLanguages] = useState([])
   const [loading, setLoading] = useState(false)
-  const [logoPath, setLogoPath] = useState('')
+  //const [logoPath, setLogoPath] = useState('')
   const [initialValues, setInitialValues] = useState({
     CoIn_Name: '',
     CoIn_Address: '',
@@ -60,7 +60,7 @@ export const CreateCompany = () => {
     GetCompanyById(formData)
       .then(res => {
         if (res.data) {
-          setLogoPath(res.data.path)
+          //setLogoPath(res.data.path)
           setCompanyBYId(res.data.company)
         }
       })
