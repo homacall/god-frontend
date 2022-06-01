@@ -15,7 +15,7 @@ import { InputImage } from '../../common/fileUploader'
 
 import { CityServiceGetByProvinceID } from '../../../service/cityService'
 import { ProvinceServiceGetAll } from '../../../service/province'
-import { GetByUserId, insertUser, UpdateUser, UserUploadFile } from '../../../service/userService'
+import { GetByUserId, insertUser, UpdateUser, UserUploadFile, UserUpdatedFile, UserUpdatedIFile } from '../../../service/userService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { ToastAlert } from '../../common/toastAlert'
@@ -31,7 +31,7 @@ const CreateAndEditUser = () => {
   const [cities, setCities] = useState([])
   const [imageUrl, setImageUrl] = useState(undefined)
   const [imageError, setImageError] = useState(false)
-  const [showMessage, setShowMessage] = useState(false)
+  //const [showMessage, setShowMessage] = useState(false)
   const [loading, setLoading] = useState(false)
   const [serialNumber, setSerialNumber] = useState('')
   const [initialValues, setInitialValue] = useState({
@@ -79,7 +79,10 @@ const CreateAndEditUser = () => {
               Usr_Address: res.data.user.usr_Address,
               Usr_Mobile: res.data.user.usr_Mobile,
             })
-            setImageUrl(process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo.filPth_Name + '/' + res.data.user.usr_Img))
+            {
+              res.data.user.usr_Img &&
+                setImageUrl(process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo.filPth_Name + '/' + res.data.user.usr_Img))
+            }
           })
         }
       })
@@ -156,34 +159,55 @@ const CreateAndEditUser = () => {
       })
       .catch(err => console(err))
   }
-  const sendUserFile = newFormData => {
-    UserUploadFile(newFormData)
-      .then(res => {
-        //console.log('res-file: ', res)
-        if (res.data || res.status === 200) {
-          ToastAlert.success('کاربر با موفقیت ثبت شد')
-          navigate('/users')
-        } else {
-          ToastAlert.error('خطا در ثبت تصویر کاربر جدید ')
-        }
-      })
-      .catch(err => {
-        ToastAlert.error('خطا در ارتباط با سرور ')
-        console.log(err)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }
+  // const sendUserFile = newFormData => {
+  //   UserUploadFile(newFormData)
+  //     .then(res => {
+  //       //console.log('res-file: ', res)
+  //       if (res.data || res.status === 200) {
+  //         ToastAlert.success('کاربر با موفقیت ثبت شد')
+  //         navigate('/users')
+  //       } else {
+  //         ToastAlert.error('خطا در ثبت تصویر کاربر جدید ')
+  //       }
+  //     })
+  //     .catch(err => {
+  //       ToastAlert.error('خطا در ارتباط با سرور ')
+  //       console.log(err)
+  //     })
+  //     .finally(() => {
+  //       setLoading(false)
+  //     })
+  // }
+
+  // const sendUpdateFile = newFormData => {
+  //   UserUpdatedFile(newFormData)
+  //     .then(res => {
+  //       if (res.data || res.status === 200) {
+  //         ToastAlert.success('ویرایش کاربر با موفقیت ثبت شد')
+  //         navigate('/users')
+  //       } else {
+  //         ToastAlert.error('خطا در ویرایش تصویر کاربر  ')
+  //       }
+  //     })
+  //     .catch(err => {
+  //       ToastAlert.error('خطا در ارتباط با سرور ')
+  //       console.log(err)
+  //     })
+  //     .finally(() => {
+  //       setLoading(false)
+  //     })
+  // }
   const submitHandler = data => {
-    // if (!imageUrl) {
-    //   data.FileUser = 'no-image'
-    // } else {
-    //   data.FileUser = imageUrl
-    //   setImageError(false)
-    // }
+    if (imageUrl && typeof imageUrl !== 'string') {
+      data.FileUser = imageUrl
+      setImageError(false)
+    } else {
+      data.FileUser = new File([], '123')
+    }
+
     setLoading(true)
     const formData = new FormData()
+
     if (!data.Usr_HPass) {
       data.Usr_HPass = null
     }
@@ -198,18 +222,22 @@ const CreateAndEditUser = () => {
         .then(res => {
           //console.log('res: ', res)
           if (res.data || res.status === 200) {
-            const newFormData = new FormData()
-            if (!imageUrl) {
-              newFormData.append('IFile', 'no-image')
-            } else {
-              newFormData.append('IFile', imageUrl)
-              setImageError(false)
-            }
-            setShowMessage(true)
-            newFormData.append('SerialNum', serialNumber)
-            sendUserFile(newFormData)
+            //   if (imageUrl && typeof imageUrl !== 'string') {
+            //     const newFormData = new FormData()
+            //     setImageError(false)
+            //     newFormData.append('IFileUser', imageUrl)
+            //     //setShowMessage(true)
+            //     newFormData.append('SerialNum ', serialNumber)
+            //     sendUpdateFile(newFormData)
+            //   } else {
+            //     ToastAlert.success('ویرایش کاربر با موفقیت انجام شد')
+            //   }
+            // } else {
+            //   ToastAlert.error('خطا در ویرایش کاربر')
+            ToastAlert.success('ویرایش کاربر با موفقیت ثبت شد')
+            navigate('/users')
           } else {
-            ToastAlert.error('خطا در ویرایش کاربر  ')
+            ToastAlert.error('خطا در ویرایش  کاربر  ')
           }
         })
         .catch(err => console.log(err))
@@ -219,17 +247,20 @@ const CreateAndEditUser = () => {
     } else {
       insertUser(formData)
         .then(res => {
-          //console.log('res-insert: ', res)
           if (res.data || res.status === 200) {
-            const newFormData = new FormData()
-            if (!imageUrl) {
-              newFormData.append('IFile', 'no-image')
-            } else {
-              newFormData.append('IFile', imageUrl)
-              setImageError(false)
-            }
-            newFormData.append('SerialNum', res.data.serialNum)
-            sendUserFile(newFormData)
+            //   const newFormData = new FormData()
+            //   if (imageUrl) {
+            //     setImageError(false)
+            //     newFormData.append('IFileUser', imageUrl)
+            //     newFormData.append('SerialNum ', res.data.serialNum)
+            //     sendUserFile(newFormData)
+            //   } else {
+            //     ToastAlert.success('کاربر با موفقیت ثبت شد')
+            //   }
+            // } else {
+            //   ToastAlert.error('خطا در ثبت کاربر جدید ')
+            ToastAlert.success('کاربر با موفقیت ثبت شد')
+            navigate('/users')
           } else {
             ToastAlert.error('خطا در ثبت کاربر جدید ')
           }
@@ -247,11 +278,11 @@ const CreateAndEditUser = () => {
   const getFormErrorMessage = name => {
     return isFormFieldValid(name) && <small className="p-error absolute right-0 top-12">{formik.errors[name]}</small>
   }
-  const dialogFooter = (
-    <div className="flex justify-content-center">
-      <Button label="باشه" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} />
-    </div>
-  )
+  // const dialogFooter = (
+  //   <div className="flex justify-content-center">
+  //     <Button label="باشه" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} />
+  //   </div>
+  // )
 
   useEffect(() => {
     fetchProvince()
@@ -260,7 +291,7 @@ const CreateAndEditUser = () => {
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createUserBreadcrumb} />
-      <Dialog
+      {/* <Dialog
         visible={showMessage}
         onHide={() => setShowMessage(false)}
         position="top"
@@ -273,7 +304,7 @@ const CreateAndEditUser = () => {
           <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
           <h5>{editMode ? 'کاربر با موفقیت ویرایش شد.' : `کاربر جدید با موفقیت ثبت شد!`}</h5>
         </div>
-      </Dialog>
+      </Dialog> */}
       <form className="grid grid-cols-3 gap-4 gap-y-10 p-5 mt-10" onSubmit={formik.handleSubmit}>
         <span className="p-float-label relative mb-5">
           <InputText

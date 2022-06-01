@@ -44,7 +44,7 @@ export const UserTable = ({ data, fetchAgain }) => {
         newData.push({
           ...item,
           usr_Gender: item.usr_Gender === 1 ? 'مرد' : item.usr_Gender === 0 ? 'زن' : 'سایر',
-          usr_Img: (
+          usr_Img: item.usr_Img && (
             <Image
               //src={item.usr_Img === 'no-image' ? '/assets/img/user.png' : item.usr_Img}
               src={process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo?.filPth_Name + '/' + item.usr_Img)}

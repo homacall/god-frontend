@@ -22,7 +22,6 @@ const CreateEditServerConnection = () => {
   const [companies, setCompanies] = useState([])
   const [serviceType, setServiceType] = useState([])
   const [systemsPath, setSystemsPath] = useState([])
-  const [systemName, setSystemName] = useState('')
   const [initialValues, setInitialValues] = useState({
     SerConn_IP: '',
     SerConn_Port: '',
@@ -145,7 +144,6 @@ const CreateEditServerConnection = () => {
     initialValues,
     validate,
     onSubmit: values => {
-      values.SerConn_SysName = systemName
       setLoading()
       const formData = new FormData()
       Object.keys(values).forEach(key => {
