@@ -77,4 +77,5 @@ export const apiUrls = {
   getLoginLogoById: GodHOST.concat('/LogosCompanyGod/GetByID'),
   getAllLoginLogoBySP: GodHOST.concat('/LogosCompanyGod/GetAllSP'),
   getFilePathBySystemNames: GodHOST.concat('/FilePathGod/GetFilePathBySystemNames'),
+  userUploadFile: GodHOST.concat('/UserGod/UploadFile'),
 }

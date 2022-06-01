@@ -60,6 +60,7 @@ const ShowTag = ({ visible, tagId, onHide, tagName, fetchAgain }) => {
   }
 
   const closeTranslateTag = () => {
+    setFetchTransAgain(true)
     setOpenTranslate(false)
   }
 
@@ -105,7 +106,6 @@ const ShowTag = ({ visible, tagId, onHide, tagName, fetchAgain }) => {
         data={translates}
         setData={setTranslates}
         languages={languagesToTranslate}
-        setFetchTransAgain={setFetchTransAgain}
         tagName={tagName}
         fetchAgain={fetchAgain}
       />

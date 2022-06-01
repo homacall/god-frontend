@@ -8,7 +8,7 @@ import '../style/translatetag.css'
 import { insertTranslate } from '../../../service/translateService'
 import { ToastAlert } from '../../common/toastAlert'
 
-const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagName, fetchAgain, setFetchTransAgain }) => {
+const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagName, fetchAgain }) => {
   const [translateValue, setTranslateValue] = useState('')
   const [languageId, setLanguageId] = useState('')
   const [languageName, setLanguageName] = useState('')
@@ -23,7 +23,6 @@ const TranslateTag = ({ visible, onHide, tagId, languages, data, setData, tagNam
     insertTranslate(formData).then(res => {
       if (res.data || res.status === 200) {
         ToastAlert.success('ترجمه با موفقیت ثبت شد.')
-        setFetchTransAgain(true)
         const newList = languageList.filter(lang => lang.value !== languageId)
         setLanguageList(newList)
         if (data) {
