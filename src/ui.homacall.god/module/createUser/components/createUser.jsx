@@ -63,6 +63,7 @@ const CreateAndEditUser = () => {
       const formData = new FormData()
       formData.append('ID', params.userId)
       GetByUserId(formData).then(res => {
+        console.log('res: ', res)
         if (res.data || res.status === 200) {
           setSerialNumber(res.data.user.usr_SrialNum)
           fetchCity(res.data.user.usr_Cty_ID).then(() => {
@@ -107,9 +108,10 @@ const CreateAndEditUser = () => {
       } else if (data.Usr_IdentNum.length !== 10) {
         errors.Usr_IdentNum = 'کد ملی اشتباه است'
       }
-      if (!data.Usr_mail) {
-        errors.Usr_mail = 'ایمیل را وارد کنید'
-      } else if (!Regex.email.test(data.Usr_mail)) {
+      // if (!data.Usr_mail) {
+      //   errors.Usr_mail = 'ایمیل را وارد کنید'
+      // } else
+      if (data.Usr_mail && !Regex.email.test(data.Usr_mail)) {
         errors.Usr_mail = 'فرمت ایمیل اشتباه می باشد'
       }
       if (!data.Usr_Mobile) {
@@ -159,52 +161,15 @@ const CreateAndEditUser = () => {
       })
       .catch(err => console(err))
   }
-  // const sendUserFile = newFormData => {
-  //   UserUploadFile(newFormData)
-  //     .then(res => {
-  //       //console.log('res-file: ', res)
-  //       if (res.data || res.status === 200) {
-  //         ToastAlert.success('کاربر با موفقیت ثبت شد')
-  //         navigate('/users')
-  //       } else {
-  //         ToastAlert.error('خطا در ثبت تصویر کاربر جدید ')
-  //       }
-  //     })
-  //     .catch(err => {
-  //       ToastAlert.error('خطا در ارتباط با سرور ')
-  //       console.log(err)
-  //     })
-  //     .finally(() => {
-  //       setLoading(false)
-  //     })
-  // }
 
-  // const sendUpdateFile = newFormData => {
-  //   UserUpdatedFile(newFormData)
-  //     .then(res => {
-  //       if (res.data || res.status === 200) {
-  //         ToastAlert.success('ویرایش کاربر با موفقیت ثبت شد')
-  //         navigate('/users')
-  //       } else {
-  //         ToastAlert.error('خطا در ویرایش تصویر کاربر  ')
-  //       }
-  //     })
-  //     .catch(err => {
-  //       ToastAlert.error('خطا در ارتباط با سرور ')
-  //       console.log(err)
-  //     })
-  //     .finally(() => {
-  //       setLoading(false)
-  //     })
-  // }
   const submitHandler = data => {
     if (imageUrl && typeof imageUrl !== 'string') {
-      data.FileUser = imageUrl
+      data.IFileUser = imageUrl
       setImageError(false)
     } else {
-      data.FileUser = new File([], '123')
+      data.IFileUser = new File([], '123')
     }
-
+    console.log('image: ', data.IFileUser)
     setLoading(true)
     const formData = new FormData()
 
@@ -220,21 +185,19 @@ const CreateAndEditUser = () => {
       formData.append('Usr_ID', params.userId)
       UpdateUser(formData)
         .then(res => {
-          //console.log('res: ', res)
           if (res.data || res.status === 200) {
-            //   if (imageUrl && typeof imageUrl !== 'string') {
-            //     const newFormData = new FormData()
-            //     setImageError(false)
-            //     newFormData.append('IFileUser', imageUrl)
-            //     //setShowMessage(true)
-            //     newFormData.append('SerialNum ', serialNumber)
-            //     sendUpdateFile(newFormData)
-            //   } else {
-            //     ToastAlert.success('ویرایش کاربر با موفقیت انجام شد')
-            //   }
-            // } else {
-            //   ToastAlert.error('خطا در ویرایش کاربر')
-            ToastAlert.success('ویرایش کاربر با موفقیت ثبت شد')
+            if (res.data.message === 'FoundUserName') {
+              ToastAlert.error('نام کاذبری تکراری است ')
+            } else if (res.data.message === 'SucceedUser') {
+              ToastAlert.error('خطا در ثبت تصویر کاربر')
+            } else if (res.data.message === 'JustUploadUser') {
+              ToastAlert.error('خطا در ویرایش مشخصات کاربر')
+            } else if (res.data.message === 'Succeed') {
+              ToastAlert.success('ویرایش کاربر با موفقیت ثبت شد')
+            } else {
+              ToastAlert.error('خطا در ویرایش کاربر')
+            }
+
             navigate('/users')
           } else {
             ToastAlert.error('خطا در ویرایش  کاربر  ')
@@ -247,19 +210,19 @@ const CreateAndEditUser = () => {
     } else {
       insertUser(formData)
         .then(res => {
+          //console.log('res: ', res)
           if (res.data || res.status === 200) {
-            //   const newFormData = new FormData()
-            //   if (imageUrl) {
-            //     setImageError(false)
-            //     newFormData.append('IFileUser', imageUrl)
-            //     newFormData.append('SerialNum ', res.data.serialNum)
-            //     sendUserFile(newFormData)
-            //   } else {
-            //     ToastAlert.success('کاربر با موفقیت ثبت شد')
-            //   }
-            // } else {
-            //   ToastAlert.error('خطا در ثبت کاربر جدید ')
-            ToastAlert.success('کاربر با موفقیت ثبت شد')
+            if (res.data.message === 'FoundUserName') {
+              ToastAlert.error('نام کاذبری تکراری است ')
+            } else if (res.data.message === 'SucceedUser') {
+              ToastAlert.error('خطا در ثبت تصویر کاربر')
+            } else if (res.data.message === 'JustUploadUser') {
+              ToastAlert.error('خطا در ثبت مشخصات کاربر')
+            } else if (res.data.message === 'Succeed') {
+              ToastAlert.success('کاربر با موفقیت ثبت شد')
+            } else {
+              ToastAlert.error('خطا در ثبت کاربر جدید')
+            }
             navigate('/users')
           } else {
             ToastAlert.error('خطا در ثبت کاربر جدید ')
