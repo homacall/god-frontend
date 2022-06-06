@@ -12,6 +12,7 @@ import { useFetchPath } from '../../common/fetchPath'
 
 function CreateEditLoginLogo() {
   const [imageUrl, setImageUrl] = useState('')
+  const [imagePervUrl, setImagePervUrl] = useState('')
   const [imageError, setImageError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [tags, setTags] = useState([])
@@ -43,6 +44,7 @@ function CreateEditLoginLogo() {
             const imgUrl = process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name + '/' + res.data.logoCo_Name
             setTagValue(res.data.logoCo_TgID)
             setImageUrl(imgUrl)
+            setImagePervUrl(res.data.logoCo_Name)
             setLoginLogoById(res.data)
           }
         })
@@ -83,7 +85,7 @@ function CreateEditLoginLogo() {
   const handleUpdateLoginLogo = formData => {
     UpdateLoginLogo(formData)
       .then(res => {
-        if (res.status === 200 || res.data === 'Succeed') {
+        if ((res.status === 200 || res.data === 'Succeed') && !res.data.message) {
           ToastAlert.success('آپلود لوگو با موفقیت انجام شد ')
           navigate('/login-logo')
           setLoading(true)
@@ -99,13 +101,15 @@ function CreateEditLoginLogo() {
     const formData = new FormData()
     formData.append('LogoCo_TgID', tagValue)
     if (typeof imageUrl !== 'string') {
-      formData.append('FileLogo', imageUrl)
+      formData.append('IFileLogo', imageUrl)
     } else {
-      formData.append('FileLogo', {})
+      const file = new File([], 'none-image')
+      formData.append('IFileLogo', file)
     }
 
     if (editMode) {
       formData.append('LogoCo_ID', params.loginLogoId)
+      formData.append('LogoCo_Name', imagePervUrl)
       handleUpdateLoginLogo(formData)
     } else {
       handleInsertLoginLogo(formData)

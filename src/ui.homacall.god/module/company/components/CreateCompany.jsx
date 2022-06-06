@@ -71,8 +71,10 @@ export const CreateCompany = () => {
 
   useEffect(() => {
     fetchLanguage()
-    fetchCompany()
-  }, [fetchCompany])
+    if (CompanyId) {
+      fetchCompany()
+    }
+  }, [fetchCompany, CompanyId])
 
   useEffect(() => {
     let path = location.pathname
@@ -148,9 +150,9 @@ export const CreateCompany = () => {
     validate,
     onSubmit: values => {
       if (!imageUrl) {
-        values.FileLogo = 'no-image'
+        values.IFileLogo = 'no-image'
       } else {
-        values.FileLogo = imageUrl
+        values.IFileLogo = imageUrl
         setImageError(false)
         const formData = new FormData()
         Object.keys(values).forEach(key => {

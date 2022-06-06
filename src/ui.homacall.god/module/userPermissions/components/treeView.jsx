@@ -7,6 +7,7 @@ import { SelectActions } from './selectActions'
 export const TreeView = ({ setSelectedRoute, closeButton, data, hasPermission = false, user, onHide, fetchAgain }) => {
   const [dataView, setDataView] = useState([])
   const [selected, setSelected] = useState([])
+  console.log({ setSelectedRoute, closeButton, data, hasPermission, user, onHide, fetchAgain })
   const filterData = useCallback(
     route => {
       const newData = data.filter(d => d.routStr_PID === route.routStr_ID)

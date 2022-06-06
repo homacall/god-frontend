@@ -23,7 +23,7 @@ function God() {
     }
   }, [navigate, token, setToken])
 
-  const fetchAllSystems = useCallback(() => {
+  const fetchAllSystems = () => {
     GetAllSystemPath()
       .then(res => {
         var sysNames = ''
@@ -35,7 +35,7 @@ function God() {
       })
       .catch(e => console.log(e))
     //setSystemNames('Logo,User')
-  })
+  }
 
   const fetchAllPath = useCallback(() => {
     const formData = new FormData()
@@ -54,7 +54,7 @@ function God() {
   useEffect(() => {
     fetchAllSystems()
     localStorage.setItem('token', '123')
-  }, [fetchAllSystems])
+  }, [])
 
   useEffect(() => {
     fetchAllPath()
