@@ -63,7 +63,6 @@ const CreateAndEditUser = () => {
       const formData = new FormData()
       formData.append('ID', params.userId)
       GetByUserId(formData).then(res => {
-        console.log('res: ', res)
         if (res.data || res.status === 200) {
           setSerialNumber(res.data.user.usr_SrialNum)
           fetchCity(res.data.user.usr_Cty_ID).then(() => {
@@ -168,8 +167,9 @@ const CreateAndEditUser = () => {
       setImageError(false)
     } else {
       data.IFileUser = new File([], '123')
+      setImageError(false)
     }
-    console.log('image: ', data.IFileUser)
+
     setLoading(true)
     const formData = new FormData()
 
