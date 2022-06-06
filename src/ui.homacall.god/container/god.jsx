@@ -53,6 +53,7 @@ function God() {
 
   useEffect(() => {
     fetchAllSystems()
+    localStorage.setItem('token', '123')
   }, [fetchAllSystems])
 
   useEffect(() => {

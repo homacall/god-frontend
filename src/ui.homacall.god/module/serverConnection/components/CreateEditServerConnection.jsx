@@ -192,6 +192,7 @@ const CreateEditServerConnection = () => {
             <InputText
               id="SerConn_Port"
               name="SerConn_Port"
+              maxLength={4}
               value={formik.values.SerConn_Port}
               className={`p-inputtext p-component w-full h-9 ${
                 formik.touched.SerConn_Port && formik.errors.SerConn_Port && 'border border-red-600'
