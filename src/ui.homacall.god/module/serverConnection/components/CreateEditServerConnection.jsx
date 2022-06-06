@@ -29,7 +29,6 @@ const CreateEditServerConnection = () => {
     SerConn_UsrID: '',
     SerConn_HPass: '',
     SerConn_SysID: '',
-    //SerConn_SysName: '',
     SerConn_CoInID: '',
     SerConn_ServTypID: '',
   })
@@ -49,7 +48,7 @@ const CreateEditServerConnection = () => {
   const fetchServiceType = () => {
     GetAllServiceType()
       .then(res => {
-        if (res.data) setServiceType(res.data) //setServiceType(res.data.map(item => ({ id: item.sys_ID, name: item.sys_Name })))
+        if (res.data) setServiceType(res.data)
       })
       .catch(e => ToastAlert.error('خطا در  ارتباط با سرور '))
   }
@@ -291,7 +290,7 @@ const CreateEditServerConnection = () => {
               style={{ width: '100%' }}
             />
 
-            {formik.errors.SerConn_ServTypID ? (
+            {formik.touched.SerConn_ServTypID && formik.errors.SerConn_ServTypID ? (
               <div className="text-right">
                 <small className="p-error">{formik.errors.SerConn_ServTypID}</small>
               </div>
@@ -313,7 +312,7 @@ const CreateEditServerConnection = () => {
               style={{ width: '100%' }}
             />
 
-            {formik.errors.SerConn_SysID ? (
+            {formik.touched.SerConn_SysID && formik.errors.SerConn_SysID ? (
               <div className="text-right">
                 <small className="p-error">{formik.errors.SerConn_SysID}</small>
               </div>
@@ -328,12 +327,13 @@ const CreateEditServerConnection = () => {
               optionValue="id"
               value={formik.values.SerConn_CoInID}
               placeholder="انتخاب  شرکت"
+              onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               dir="rtl"
               style={{ width: '100%' }}
             />
 
-            {formik.errors.SerConn_CoInID ? (
+            {formik.touched.SerConn_CoInID && formik.errors.SerConn_CoInID ? (
               <div className="text-right">
                 <small className="p-error">{formik.errors.SerConn_CoInID}</small>
               </div>
