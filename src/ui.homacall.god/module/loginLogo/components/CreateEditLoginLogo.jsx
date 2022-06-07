@@ -109,7 +109,7 @@ function CreateEditLoginLogo() {
 
     if (editMode) {
       formData.append('LogoCo_ID', params.loginLogoId)
-      formData.append('LogoCo_Name', imagePervUrl)
+      formData.append('LogoCo_Name', imagePervUrl || '')
       handleUpdateLoginLogo(formData)
     } else {
       handleInsertLoginLogo(formData)

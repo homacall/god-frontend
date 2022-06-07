@@ -25,6 +25,7 @@ export const CreateCompany = () => {
   const [companyById, setCompanyBYId] = useState([])
   const [languages, setLanguages] = useState([])
   const [loading, setLoading] = useState(false)
+  const [pervImageName, setPervImageName] = useState('')
   //const [logoPath, setLogoPath] = useState('')
   const [initialValues, setInitialValues] = useState({
     CoIn_Name: '',
@@ -88,6 +89,7 @@ export const CreateCompany = () => {
       //initialize for formik
       const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name.concat(`/${companyById.coIn_Logo}`)
       setImageUrl(logoSrc)
+      setPervImageName(companyById.coIn_Logo)
 
       setInitialValues({
         CoIn_Name: companyById.coIn_Name,
@@ -150,7 +152,7 @@ export const CreateCompany = () => {
     validate,
     onSubmit: values => {
       if (!imageUrl) {
-        values.IFileLogo = 'no-image'
+        values.IFileLogo = ''
       } else {
         values.IFileLogo = imageUrl
         setImageError(false)
@@ -162,6 +164,7 @@ export const CreateCompany = () => {
         setLoading(true)
         if (CompanyId) {
           formData.append('CoIn_ID', CompanyId)
+          formData.append('CoIn_Logo', pervImageName)
           handleUpdateCompany(formData)
         } else {
           handleInsetCompany(formData)

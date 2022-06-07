@@ -31,6 +31,7 @@ const CreateAndEditUser = () => {
   const [cities, setCities] = useState([])
   const [imageUrl, setImageUrl] = useState(undefined)
   const [imageError, setImageError] = useState(false)
+  const [pervImageName, setPervImageName] = useState('')
   //const [showMessage, setShowMessage] = useState(false)
   const [loading, setLoading] = useState(false)
   const [serialNumber, setSerialNumber] = useState('')
@@ -79,9 +80,10 @@ const CreateAndEditUser = () => {
               Usr_Address: res.data.user.usr_Address,
               Usr_Mobile: res.data.user.usr_Mobile,
             })
-            {
-              res.data.user.usr_Img &&
-                setImageUrl(process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo.filPth_Name + '/' + res.data.user.usr_Img))
+
+            if (res.data.user.usr_Img) {
+              setImageUrl(process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo.filPth_Name + '/' + res.data.user.usr_Img))
+              setPervImageName(res.data.user.usr_Img)
             }
           })
         }
@@ -183,6 +185,7 @@ const CreateAndEditUser = () => {
 
     if (editMode) {
       formData.append('Usr_ID', params.userId)
+      formData.append('Usr_Img', pervImageName || '')
       UpdateUser(formData)
         .then(res => {
           if (res.data || res.status === 200) {
