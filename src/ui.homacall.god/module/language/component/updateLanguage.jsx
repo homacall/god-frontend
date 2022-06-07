@@ -10,10 +10,12 @@ const UpdateDialog = props => {
   const [value, setValue] = useState(props.lang_Name)
   const [layout, setLayout] = useState(props.lang_Rtl === true ? 'RTL' : 'LTR')
   const [loading, setLoading] = useState()
+  const [codeValue, setCodeValue] = useState(props.lang_Icon)
 
   useEffect(() => {
     if (props) {
       setValue(props.lang_Name)
+      setCodeValue(props.lang_Icon)
       setLayout(props.lang_Rtl === true ? 'RTL' : 'LTR')
     }
   }, [props])
@@ -32,6 +34,7 @@ const UpdateDialog = props => {
     const isRTL = layout === 'RTL' ? true : false
     formData.append('Lang_Name', value)
     formData.append('Lang_Rtl', isRTL)
+    formData.append('Lang_Icon', codeValue)
     formData.append('Lang_ID', props.lang_ID)
     setLoading(true)
     try {
@@ -70,6 +73,27 @@ const UpdateDialog = props => {
               </label>
             </span>
           </div>
+          <div className=" flex justify-start mr-[8%] mt-10 ">
+            <span className="p-float-label">
+              <InputText
+                id="lang_Icon"
+                name="lang_Icon"
+                value={codeValue}
+                onChange={e => setCodeValue(e.target.value)}
+                className="h-9 w-44"
+              />
+              <label htmlFor="lang_Icon" className="right-2 text-sm">
+                نام اختصاری کشور
+              </label>
+            </span>
+          </div>
+          <a
+            href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes"
+            target="_blank"
+            className="text-xs mt-3 mr-8 text-blue-700"
+          >
+            نمایش کد اختصاری (alfa-2 code) کشورها
+          </a>
           <div className=" flex justify-start mr-[8%] mt-10">
             <div className="field-radiobutton ml-8">
               <RadioButton inputId="RTL" name="layout" value="RTL" onChange={e => setLayout(e.value)} checked={layout === 'RTL'} />

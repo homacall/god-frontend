@@ -15,11 +15,12 @@ import { InputImage } from '../../common/fileUploader'
 
 import { CityServiceGetByProvinceID } from '../../../service/cityService'
 import { ProvinceServiceGetAll } from '../../../service/province'
-import { GetByUserId, insertUser, UpdateUser } from '../../../service/userService'
+import { GetByUserId, insertUser, UpdateUser, UserUploadFile, UserUpdatedFile, UserUpdatedIFile } from '../../../service/userService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { ToastAlert } from '../../common/toastAlert'
 import { Regex } from '../../../constant'
+import { useFetchPath } from '../../common/fetchPath'
 
 const CreateAndEditUser = () => {
   const location = useLocation()
@@ -30,12 +31,14 @@ const CreateAndEditUser = () => {
   const [cities, setCities] = useState([])
   const [imageUrl, setImageUrl] = useState(undefined)
   const [imageError, setImageError] = useState(false)
-  const [showMessage, setShowMessage] = useState(false)
+  const [pervImageName, setPervImageName] = useState('')
+  //const [showMessage, setShowMessage] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [serialNumber, setSerialNumber] = useState('')
   const [initialValues, setInitialValue] = useState({
     Usr_FName: '',
     Usr_LName: '',
-    Usr_Gender: '',
+    Usr_Gender: 10,
     Usr_mail: '',
     Usr_UName: '',
     Usr_HPass: '',
@@ -46,6 +49,7 @@ const CreateAndEditUser = () => {
     Usr_Mobile: '',
   })
   const [editMode, setEditMode] = useState(location.pathname.includes('/users/update/') && params.userId)
+  const { pathInfo } = useFetchPath('User')
 
   useEffect(() => {
     if (location.pathname.includes('/users/update/') && params.userId) {
@@ -54,27 +58,33 @@ const CreateAndEditUser = () => {
       setEditMode(false)
     }
   }, [location.pathname, params?.userId])
+
   useEffect(() => {
     if (editMode) {
       const formData = new FormData()
       formData.append('ID', params.userId)
       GetByUserId(formData).then(res => {
         if (res.data || res.status === 200) {
-          fetchCity(res.data.usr_Cty_ID).then(() => {
+          setSerialNumber(res.data.user.usr_SrialNum)
+          fetchCity(res.data.user.usr_Cty_ID).then(() => {
             setInitialValue({
-              Usr_FName: res.data.usr_FName,
-              Usr_LName: res.data.usr_LName,
-              Usr_Gender: res.data.usr_Gender,
-              Usr_mail: res.data.usr_mail,
-              Usr_UName: res.data.usr_UName,
+              Usr_FName: res.data.user.usr_FName,
+              Usr_LName: res.data.user.usr_LName,
+              Usr_Gender: res.data.user.usr_Gender,
+              Usr_mail: res.data.user.usr_mail,
+              Usr_UName: res.data.user.usr_UName,
               Usr_HPass: '',
-              Usr_IdentNum: res.data.usr_IdentNum,
-              Usr_Prov_ID: res.data.usr_Prov_ID,
-              Usr_Cty_ID: res.data.usr_Cty_ID,
-              Usr_Address: res.data.usr_Address,
-              Usr_Mobile: res.data.usr_Mobile,
+              Usr_IdentNum: res.data.user.usr_IdentNum,
+              Usr_Prov_ID: res.data.user.usr_Prov_ID,
+              Usr_Cty_ID: res.data.user.usr_Cty_ID,
+              Usr_Address: res.data.user.usr_Address,
+              Usr_Mobile: res.data.user.usr_Mobile,
             })
-            setImageUrl(res.data.usr_Img)
+
+            if (res.data.user.usr_Img) {
+              setImageUrl(process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo.filPth_Name + '/' + res.data.user.usr_Img))
+              setPervImageName(res.data.user.usr_Img)
+            }
           })
         }
       })
@@ -91,7 +101,7 @@ const CreateAndEditUser = () => {
       if (!data.Usr_LName) {
         errors.Usr_LName = 'نام خانوادگی را وارد کنید.'
       }
-      if (!data.Usr_Gender) {
+      if (data.Usr_Gender > 2 || data.Usr_Gender < 0) {
         errors.Usr_Gender = 'جنسیت را انتخاب کنید'
       }
       if (!data.Usr_IdentNum) {
@@ -99,9 +109,10 @@ const CreateAndEditUser = () => {
       } else if (data.Usr_IdentNum.length !== 10) {
         errors.Usr_IdentNum = 'کد ملی اشتباه است'
       }
-      if (!data.Usr_mail) {
-        errors.Usr_mail = 'ایمیل را وارد کنید'
-      } else if (!Regex.email.test(data.Usr_mail)) {
+      // if (!data.Usr_mail) {
+      //   errors.Usr_mail = 'ایمیل را وارد کنید'
+      // } else
+      if (data.Usr_mail && !Regex.email.test(data.Usr_mail)) {
         errors.Usr_mail = 'فرمت ایمیل اشتباه می باشد'
       }
       if (!data.Usr_Mobile) {
@@ -151,35 +162,48 @@ const CreateAndEditUser = () => {
       })
       .catch(err => console(err))
   }
+
   const submitHandler = data => {
-    if (!imageUrl) {
-      data.FileUser = 'no-image'
+    if (imageUrl && typeof imageUrl !== 'string') {
+      data.IFileUser = imageUrl
+      setImageError(false)
     } else {
-      data.FileUser = imageUrl
+      data.IFileUser = new File([], '123')
       setImageError(false)
     }
+
     setLoading(true)
     const formData = new FormData()
 
+    if (!data.Usr_HPass) {
+      data.Usr_HPass = null
+    }
     Object.keys(data).forEach(key => {
-      if (key === 'Usr_Gender') {
-        const value = parseInt(data[key])
-        formData.append(key, value)
-      } else {
-        const value = data[key]
-        formData.append(key, value)
-      }
+      const value = data[key]
+      formData.append(key, value)
     })
 
     if (editMode) {
-      if (!data.Usr_HPass) {
-        formData.append('Usr_HPass', null)
-      }
       formData.append('Usr_ID', params.userId)
+      formData.append('Usr_Img', pervImageName || '')
       UpdateUser(formData)
         .then(res => {
           if (res.data || res.status === 200) {
-            setShowMessage(true)
+            if (res.data.message === 'FoundUserName') {
+              ToastAlert.error('نام کاذبری تکراری است ')
+            } else if (res.data.message === 'SucceedUser') {
+              ToastAlert.error('خطا در ثبت تصویر کاربر')
+            } else if (res.data.message === 'JustUploadUser') {
+              ToastAlert.error('خطا در ویرایش مشخصات کاربر')
+            } else if (res.data.message === 'Succeed') {
+              ToastAlert.success('ویرایش کاربر با موفقیت ثبت شد')
+            } else {
+              ToastAlert.error('خطا در ویرایش کاربر')
+            }
+
+            navigate('/users')
+          } else {
+            ToastAlert.error('خطا در ویرایش  کاربر  ')
           }
         })
         .catch(err => console.log(err))
@@ -189,8 +213,19 @@ const CreateAndEditUser = () => {
     } else {
       insertUser(formData)
         .then(res => {
+          //console.log('res: ', res)
           if (res.data || res.status === 200) {
-            ToastAlert.success('کاربر جدید با موفقیت ثبت شد')
+            if (res.data.message === 'FoundUserName') {
+              ToastAlert.error('نام کاذبری تکراری است ')
+            } else if (res.data.message === 'SucceedUser') {
+              ToastAlert.error('خطا در ثبت تصویر کاربر')
+            } else if (res.data.message === 'JustUploadUser') {
+              ToastAlert.error('خطا در ثبت مشخصات کاربر')
+            } else if (res.data.message === 'Succeed') {
+              ToastAlert.success('کاربر با موفقیت ثبت شد')
+            } else {
+              ToastAlert.error('خطا در ثبت کاربر جدید')
+            }
             navigate('/users')
           } else {
             ToastAlert.error('خطا در ثبت کاربر جدید ')
@@ -209,19 +244,20 @@ const CreateAndEditUser = () => {
   const getFormErrorMessage = name => {
     return isFormFieldValid(name) && <small className="p-error absolute right-0 top-12">{formik.errors[name]}</small>
   }
-  const dialogFooter = (
-    <div className="flex justify-content-center">
-      <Button label="باشه" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} />
-    </div>
-  )
+  // const dialogFooter = (
+  //   <div className="flex justify-content-center">
+  //     <Button label="باشه" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} />
+  //   </div>
+  // )
 
   useEffect(() => {
     fetchProvince()
   }, [])
+
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createUserBreadcrumb} />
-      <Dialog
+      {/* <Dialog
         visible={showMessage}
         onHide={() => setShowMessage(false)}
         position="top"
@@ -234,7 +270,7 @@ const CreateAndEditUser = () => {
           <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
           <h5>{editMode ? 'کاربر با موفقیت ویرایش شد.' : `کاربر جدید با موفقیت ثبت شد!`}</h5>
         </div>
-      </Dialog>
+      </Dialog> */}
       <form className="grid grid-cols-3 gap-4 gap-y-10 p-5 mt-10" onSubmit={formik.handleSubmit}>
         <span className="p-float-label relative mb-5">
           <InputText
@@ -285,9 +321,9 @@ const CreateAndEditUser = () => {
           <Dropdown
             options={createUserGender}
             id="Usr_Gender"
+            name="Usr_Gender"
             value={formik.values.Usr_Gender}
             onChange={formik.handleChange}
-            name="Usr_Gender"
             className={classNames({ 'p-invalid': isFormFieldValid('Usr_Gender'), 'w-full h-9': true })}
           />
           <label htmlFor="Usr_Gender" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_Gender') })}`}>
@@ -381,7 +417,7 @@ const CreateAndEditUser = () => {
           <label htmlFor="Usr_Prov_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('Usr_Prov_ID') })}`}>
             استان
           </label>
-          {getFormErrorMessage('Usr_Gender')}
+          {getFormErrorMessage('Usr_Prov_ID')}
         </span>
         <span className="p-float-label mb-5">
           <Dropdown

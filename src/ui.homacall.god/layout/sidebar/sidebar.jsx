@@ -15,7 +15,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="w-60  h-[100vh] bg-slate-50 fixed right-0 top-20 z-10 shadow-md">
+      <div className="w-60 h-[calc(100vh-80px)] bg-slate-50 fixed right-0 top-20 z-10 shadow-md overflow-y-auto">
         <ul className="text-center  text-sm text-slate-800 sidebarFont">
           {items.map((items, index) => (
             <Link to={items.url} key={index}>

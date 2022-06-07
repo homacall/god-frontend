@@ -15,6 +15,7 @@ export const sidebar = {
   serviceType: '/service-types',
   systemPath: '/systems-path',
   filePath: '/files-path',
+  loginLogo: '/login-logo',
 }
 export const language = {
   languageTable: '/language',
@@ -68,9 +69,16 @@ export const systemPath = {
   edit: '/systems-path/edit/:SystemId',
   editPath: '/systems-path/edit/',
 }
+
 export const filePath = {
   main: '/files-path',
   create: '/files-path/create',
   edit: '/files-path/edit/:FilePathId',
   editPath: '/files-path/edit/',
+}
+
+export const loginLogo = {
+  main: '/login-logo',
+  create: '/login-logo/create',
+  edit: '/login-logo/edit/:loginLogoId',
 }

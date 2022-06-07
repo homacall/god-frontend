@@ -14,7 +14,7 @@ import { ToastAlert } from '../../common/toastAlert'
 const Language = ({ data, fetchAgain }) => {
   const [globalFilter, setGlobalFilter] = useState(null)
   const [dataTable, setDataTable] = useState([])
-  const [editProps, setEditProps] = useState({ lang_Name: '', lang_Rtl: false })
+  const [editProps, setEditProps] = useState({ lang_Name: '', lang_Rtl: false, lang_Icon: '' })
   const [showUpdateDialog, setShowUpdateDialog] = useState(false)
   const deleteRow = useCallback(
     async id => {
@@ -100,6 +100,7 @@ const Language = ({ data, fetchAgain }) => {
           rowsPerPageOptions={[5, 10, 25]}
           paginatorTemplate="NextPageLink LastPageLink PageLinks FirstPageLink PrevPageLink "
           globalFilter={globalFilter}
+          emptyMessage="رکوردی یافت نشد"
           header={header}
           responsiveLayout="scroll"
           className="rtl"

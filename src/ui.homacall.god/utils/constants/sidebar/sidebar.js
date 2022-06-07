@@ -13,7 +13,7 @@ const items = [
   },
   {
     id: 3,
-    label: 'راهبری مدیریت نقش',
+    label: 'مدیریت نقش',
     url: `${sidebar.roll}`,
   },
   {
@@ -28,17 +28,17 @@ const items = [
   },
   {
     id: 6,
-    label: 'تعریف انواع سرویس',
+    label: 'تعریف سرویس ها',
     url: `${sidebar.serviceType}`,
   },
   {
     id: 7,
-    label: 'مسیر سیستم ها',
+    label: 'تعریف سیستم ها',
     url: `${sidebar.systemPath}`,
   },
   {
     id: 8,
-    label: 'مسیر فایل ها',
+    label: 'تعریف مسیر فایل ها',
     url: `${sidebar.filePath}`,
   },
   {
@@ -48,6 +48,11 @@ const items = [
   },
   {
     id: 10,
+    label: 'آپلود لوگو ورود',
+    url: `${sidebar.loginLogo}`,
+  },
+  {
+    id: 11,
     label: 'انتساب مسیر',
     url: `${sidebar.routeStretcher}`,
   },

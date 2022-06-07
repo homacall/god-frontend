@@ -15,6 +15,7 @@ import validate from '../constant/validate'
 import { GetAllLanguage } from '../../../service/languageService'
 import { GetCompanyById, InsertCompany, UpdateCompany } from '../../../service/companyService'
 import { dateTypes } from '../constant/dateTypes'
+import { useFetchPath } from '../../common/fetchPath'
 
 import '../style/company.css'
 
@@ -24,6 +25,8 @@ export const CreateCompany = () => {
   const [companyById, setCompanyBYId] = useState([])
   const [languages, setLanguages] = useState([])
   const [loading, setLoading] = useState(false)
+  const [pervImageName, setPervImageName] = useState('')
+  //const [logoPath, setLogoPath] = useState('')
   const [initialValues, setInitialValues] = useState({
     CoIn_Name: '',
     CoIn_Address: '',
@@ -43,6 +46,8 @@ export const CreateCompany = () => {
   let { CompanyId } = useParams()
   const navigate = useNavigate()
 
+  const { pathInfo } = useFetchPath('Logo')
+
   const fetchLanguage = () => {
     GetAllLanguage().then(res => {
       if (res.data || res.status === 200) {
@@ -56,7 +61,8 @@ export const CreateCompany = () => {
     GetCompanyById(formData)
       .then(res => {
         if (res.data) {
-          setCompanyBYId(res.data)
+          //setLogoPath(res.data.path)
+          setCompanyBYId(res.data.company)
         }
       })
       .catch(err => {
@@ -66,8 +72,10 @@ export const CreateCompany = () => {
 
   useEffect(() => {
     fetchLanguage()
-    fetchCompany()
-  }, [fetchCompany])
+    if (CompanyId) {
+      fetchCompany()
+    }
+  }, [fetchCompany, CompanyId])
 
   useEffect(() => {
     let path = location.pathname
@@ -77,9 +85,11 @@ export const CreateCompany = () => {
       if (companyById.length > 0) {
         navigate('/company')
       }
-    } else {
+    } else if (path.split('/')[2] === 'edit' && pathInfo) {
       //initialize for formik
-      setImageUrl(companyById.coIn_Logo)
+      const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name.concat(`/${companyById.coIn_Logo}`)
+      setImageUrl(logoSrc)
+      setPervImageName(companyById.coIn_Logo)
 
       setInitialValues({
         CoIn_Name: companyById.coIn_Name,
@@ -96,7 +106,7 @@ export const CreateCompany = () => {
         CoIn_TypeDateTime: companyById.coIn_TypeDateTime,
       })
     }
-  }, [location.pathname, navigate, companyById])
+  }, [location.pathname, navigate, companyById, pathInfo])
 
   const handleInsetCompany = formData => {
     InsertCompany(formData)
@@ -122,7 +132,6 @@ export const CreateCompany = () => {
     UpdateCompany(formData)
       .then(res => {
         if (res.status === 200 || res.data === 'Succeed') {
-          //formik.resetForm()
           ToastAlert.success('ویرایش شرکت با موفقیت انجام شد')
           navigate('/company')
         } else {
@@ -143,13 +152,11 @@ export const CreateCompany = () => {
     validate,
     onSubmit: values => {
       if (!imageUrl) {
-        //return setImageError(true)
-        values.FileLogo = 'no-image'
+        values.IFileLogo = ''
       } else {
-        values.FileLogo = imageUrl
+        values.IFileLogo = imageUrl
         setImageError(false)
         const formData = new FormData()
-
         Object.keys(values).forEach(key => {
           const value = values[key]
           formData.append(key, value)
@@ -157,6 +164,7 @@ export const CreateCompany = () => {
         setLoading(true)
         if (CompanyId) {
           formData.append('CoIn_ID', CompanyId)
+          formData.append('CoIn_Logo', pervImageName)
           handleUpdateCompany(formData)
         } else {
           handleInsetCompany(formData)

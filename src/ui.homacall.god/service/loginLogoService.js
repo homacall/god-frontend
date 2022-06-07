@@ -1,7 +1,7 @@
 import http from './httpService'
 import { apiUrls } from './urls'
 
-export const GetAllFilePath = () => {
+export const GetAllLoginLogo = () => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -9,7 +9,7 @@ export const GetAllFilePath = () => {
     },
   }
   return http
-    .get(apiUrls.getAllfilePath, config)
+    .get(apiUrls.getAllLoginLogo, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -21,7 +21,7 @@ export const GetAllFilePath = () => {
     })
 }
 
-export const GetAllFilePathSP = () => {
+export const GetAllLoginLogoBySP = () => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -29,7 +29,7 @@ export const GetAllFilePathSP = () => {
     },
   }
   return http
-    .get(apiUrls.getAllfilePathSP, config)
+    .get(apiUrls.getAllLoginLogoBySP, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -41,7 +41,7 @@ export const GetAllFilePathSP = () => {
     })
 }
 
-export const InsertFilePath = data => {
+export const InsertLoginLogo = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -49,7 +49,7 @@ export const InsertFilePath = data => {
     },
   }
   return http
-    .post(apiUrls.insertfilePath, data, config)
+    .post(apiUrls.insertLoginLogo, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -61,7 +61,7 @@ export const InsertFilePath = data => {
     })
 }
 
-export const UpdateFilePath = data => {
+export const UpdateLoginLogo = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -69,7 +69,7 @@ export const UpdateFilePath = data => {
     },
   }
   return http
-    .post(apiUrls.updatefilePath, data, config)
+    .post(apiUrls.updateLoginLogo, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -81,7 +81,7 @@ export const UpdateFilePath = data => {
     })
 }
 
-export const DeleteFilePath = data => {
+export const DeleteLoginLogo = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -89,7 +89,7 @@ export const DeleteFilePath = data => {
     },
   }
   return http
-    .post(apiUrls.deletefilePath, data, config)
+    .post(apiUrls.deleteLoginLogo, data, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
@@ -101,7 +101,7 @@ export const DeleteFilePath = data => {
     })
 }
 
-export const GetFilePathById = id => {
+export const GetLoginLogoById = id => {
   const token = localStorage.getItem('token')
 
   let config = {
@@ -111,29 +111,7 @@ export const GetFilePathById = id => {
   }
 
   return http
-    .post(apiUrls.getfilePathById, id, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
-      } else {
-        return err
-      }
-    })
-}
-
-export const GetFilePathBySysNames = data => {
-  const token = localStorage.getItem('token')
-
-  let config = {
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  }
-
-  return http
-    .post(apiUrls.getFilePathBySystemNames, data, config)
+    .post(apiUrls.getLoginLogoById, id, config)
     .then(res => res)
     .catch(err => {
       if (err.status === 401) {
