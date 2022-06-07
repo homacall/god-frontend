@@ -10,6 +10,7 @@ export const apiUrls = {
   cityGetByProvinceId: GodHOST.concat('/CityGod/GetByProvinceID'),
   insertUser: GodHOST.concat('/UserGod/Insert'),
   getAllUser: GodHOST.concat('/UserGod/GetAll'),
+  getAllUserSP: GodHOST.concat('/UserGod/GetAllUserSP'),
   deleteUser: GodHOST.concat('/UserGod/Delete'),
   createTag: GodHOST.concat('/TagsknowledgeGod/Insert'),
   getAllTags: GodHOST.concat('/TagsknowledgeGod/GetAll'),
@@ -80,4 +81,5 @@ export const apiUrls = {
   userUploadFile: GodHOST.concat('/UserGod/UploadFileUser'),
   userUpdateFile: GodHOST.concat('/UserGod/UploadFileUserUpdate'),
   userUpdateIFile: GodHOST.concat('/UserGod/UploadFile'),
+  logOut: GodHOST.concat('/AuthenticationGod/LogOut'),
 }

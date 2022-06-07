@@ -34,17 +34,21 @@ const NewLanguage = () => {
     try {
       const { data, status } = await loginUser(formData)
 
-      if (status === 200 || data) {
+      if (status === 200 && data.message !== 'NotFoundUser') {
         ToastAlert.success('خوش آمدید :)')
         localStorage.setItem('token', data.token)
         setToken(data.token)
         navigate('/')
         reset()
+      } else {
+        localStorage.clear()
+        ToastAlert.error('نام کاربری یا رمز عبور اشتباه است.')
       }
     } catch (error) {
       ToastAlert.error('خطا در ورود لطفا دوباره امتحان کنید.')
-      setLoading(false)
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
 
