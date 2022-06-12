@@ -13,11 +13,9 @@ import { useFetchPath } from '../../common/fetchPath'
 function CreateEditLoginLogo() {
   const [imageUrl, setImageUrl] = useState('')
   const [imagePervUrl, setImagePervUrl] = useState('')
-  const [imageError, setImageError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [tags, setTags] = useState([])
   const [tagValue, setTagValue] = useState('')
-  const [loginLogoById, setLoginLogoById] = useState([])
   const [editMode, setEditMode] = useState(false)
 
   const navigate = useNavigate()
@@ -45,7 +43,6 @@ function CreateEditLoginLogo() {
             setTagValue(res.data.logoCo_TgID)
             setImageUrl(imgUrl)
             setImagePervUrl(res.data.logoCo_Name)
-            setLoginLogoById(res.data)
           }
         })
         .catch(err => {
@@ -137,7 +134,7 @@ function CreateEditLoginLogo() {
       </section>
 
       <section className="flex justify-center justify-items-center mt-8">
-        <InputImage setImageUrl={setImageUrl} imageError={imageError} imageUrl={imageUrl} />
+        <InputImage setImageUrl={setImageUrl} imageUrl={imageUrl} />
       </section>
 
       <section className="mt-8 flex justify-center justify-items-center">

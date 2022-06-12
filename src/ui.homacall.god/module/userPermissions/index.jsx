@@ -60,7 +60,7 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
         }
       })
     },
-    [fetchAgainHandler, user],
+    [fetchAgainHandler, user, role],
   )
 
   const fetchUserPermission = useCallback(() => {
@@ -100,7 +100,7 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
         }
       })
       .catch(err => console.log(err))
-  }, [user, deleteUserPermission])
+  }, [user, deleteUserPermission, role])
 
   useEffect(() => {
     GetAllRoutesGodByTypeRouteTree()

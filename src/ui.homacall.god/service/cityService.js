@@ -1,4 +1,5 @@
 import http from './httpService'
+import { LogoutUser } from './loginService'
 import { apiUrls } from './urls'
 export const CityServiceGetByProvinceID = PrviceID => {
   const token = localStorage.getItem('token')
@@ -9,13 +10,23 @@ export const CityServiceGetByProvinceID = PrviceID => {
   }
   return http
     .post(apiUrls.cityGetByProvinceId, PrviceID, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser()
+          .then(() => {
+            localStorage.removeItem('token')
+            window.location.replace('/login/')
+          })
+          .catch(err => {
+            localStorage.removeItem('token')
+            window.location.replace('/login/')
+            console.log(err)
+          })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }

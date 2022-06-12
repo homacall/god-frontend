@@ -39,7 +39,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
           setLoadingActions(false)
         })
     }
-  }, [parentId, selectedRoute, user?.usr_ID])
+  }, [parentId, selectedRoute, user?.usr_ID, role, user?.rol_ID])
 
   const submitHandler = () => {
     setLoading(true)

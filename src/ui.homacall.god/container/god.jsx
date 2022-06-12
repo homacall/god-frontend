@@ -26,15 +26,16 @@ function God() {
   const fetchAllSystems = () => {
     GetAllSystemPath()
       .then(res => {
-        var sysNames = ''
-        res.data.map(function (item) {
-          sysNames += item.sys_Name.concat(',')
-        })
-        sysNames = sysNames.substring(0, sysNames.length - 1)
-        setSystemNames(sysNames)
+        if ((res.data && !res.data.message) || res.data.message !== 'Unauthorized') {
+          var sysNames = ''
+          res.data?.forEach(function (item) {
+            sysNames += item.sys_Name.concat(',')
+          })
+          sysNames = sysNames.substring(0, sysNames.length - 1)
+          setSystemNames(sysNames)
+        }
       })
       .catch(e => console.log(e))
-    //setSystemNames('Logo,User')
   }
 
   const fetchAllPath = useCallback(() => {
@@ -49,7 +50,7 @@ function God() {
         })
         .catch(e => console.log(e))
     }
-  }, [systemNames])
+  }, [systemNames, setPath])
 
   useEffect(() => {
     fetchAllSystems()

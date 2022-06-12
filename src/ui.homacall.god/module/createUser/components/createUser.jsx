@@ -5,7 +5,6 @@ import { classNames } from 'primereact/utils'
 import { Password } from 'primereact/password'
 import { Dropdown } from 'primereact/dropdown'
 import { InputTextarea } from 'primereact/inputtextarea'
-import { Dialog } from 'primereact/dialog'
 import { useFormik } from 'formik'
 
 import { createUserGender } from '../constant/createusergender'
@@ -15,7 +14,7 @@ import { InputImage } from '../../common/fileUploader'
 
 import { CityServiceGetByProvinceID } from '../../../service/cityService'
 import { ProvinceServiceGetAll } from '../../../service/province'
-import { GetByUserId, insertUser, UpdateUser, UserUploadFile, UserUpdatedFile, UserUpdatedIFile } from '../../../service/userService'
+import { GetByUserId, insertUser, UpdateUser } from '../../../service/userService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { ToastAlert } from '../../common/toastAlert'
@@ -89,7 +88,7 @@ const CreateAndEditUser = () => {
         }
       })
     }
-  }, [editMode, params.userId])
+  }, [editMode, params.userId, pathInfo.filPth_Name])
 
   const formik = useFormik({
     initialValues,
@@ -186,6 +185,7 @@ const CreateAndEditUser = () => {
     if (editMode) {
       formData.append('Usr_ID', params.userId)
       formData.append('Usr_Img', pervImageName || '')
+      formData.append('Usr_SrialNum', serialNumber)
       UpdateUser(formData)
         .then(res => {
           if (res.data || res.status === 200) {
