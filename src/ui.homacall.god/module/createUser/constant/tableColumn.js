@@ -21,7 +21,7 @@ export const userColumns = [
   },
   {
     header: 'ایمیل',
-    field: 'usr_mail',
+    field: 'usr_Mail',
     className: 'text-xs',
   },
   {

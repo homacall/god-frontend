@@ -1,12 +1,20 @@
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { useNavigate } from 'react-router'
+import { ToastAlert } from '../../module/common/toastAlert'
+import { LogoutUser } from '../../service/loginService'
 
 export const LogoutDialog = ({ visible, onHide }) => {
   const navigate = useNavigate()
   const logOut = () => {
-    localStorage.removeItem('token')
-    navigate('/login/')
+    LogoutUser().then(res => {
+      if (res) {
+        localStorage.removeItem('token')
+        navigate('/login/')
+      } else {
+        ToastAlert.error('خروج با خطا مواجه شد')
+      }
+    })
   }
   const footer = () => {
     return (

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { GetAllUser } from '../../service/userService'
+import { GetAllUserSP } from '../../service/userService'
 import { UserTable } from './components/userTable'
 
 export const UsersPage = () => {
@@ -10,7 +10,7 @@ export const UsersPage = () => {
     setFetchAgain(perv => !perv)
   }
   useEffect(() => {
-    GetAllUser()
+    GetAllUserSP()
       .then(res => {
         if (res.data) setData(res.data)
       })

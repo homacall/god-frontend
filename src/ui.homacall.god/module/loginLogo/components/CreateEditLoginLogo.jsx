@@ -85,7 +85,7 @@ function CreateEditLoginLogo() {
   const handleUpdateLoginLogo = formData => {
     UpdateLoginLogo(formData)
       .then(res => {
-        if ((res.status === 200 || res.data === 'Succeed') && !res.data.message) {
+        if (res.status === 200 && res.data.message === 'Succeed') {
           ToastAlert.success('آپلود لوگو با موفقیت انجام شد ')
           navigate('/login-logo')
           setLoading(true)

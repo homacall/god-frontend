@@ -40,6 +40,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
         })
     }
   }, [parentId, selectedRoute, user?.usr_ID])
+
   const submitHandler = () => {
     setLoading(true)
     const formData = new FormData()
@@ -58,6 +59,12 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
               }
             })
             .catch(err => console.log('error: ', err))
+        } else {
+          if (onHide) {
+            onHide()
+            fetchAgain()
+            ToastAlert.success(`${editMode ? 'ویرایش' : 'ثبت'} با موفقیت انجام شد`)
+          }
         }
       })
       .catch(err => console.log(err))

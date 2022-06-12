@@ -14,10 +14,10 @@ import { UserPermissions } from '../../userPermissions'
 import { SetRoleUserDialog } from './setRoleUser'
 import moment from 'moment-jalaali'
 import { useFetchPath } from '../../common/fetchPath'
+import { ToastAlert } from '../../common/toastAlert'
 
 export const UserTable = ({ data, fetchAgain }) => {
   const [dataTable, setDataTable] = useState([])
-  const [showMessage, setShowMessage] = useState(false)
   const [showPermissions, setShowPermissions] = useState(false)
   const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
   const [userIdForRole, setUserIdForRole] = useState(0)
@@ -39,8 +39,8 @@ export const UserTable = ({ data, fetchAgain }) => {
   }
   useEffect(() => {
     const newData = []
-    if (data.users) {
-      data.users.forEach(item =>
+    if (data) {
+      data.forEach(item =>
         newData.push({
           ...item,
           usr_Gender: item.usr_Gender === 1 ? 'مرد' : item.usr_Gender === 0 ? 'زن' : 'سایر',
@@ -120,15 +120,15 @@ export const UserTable = ({ data, fetchAgain }) => {
   }
   const changeUserStatus = () => {
     const formData = new FormData()
-    formData.append('ID', userIsActive.userId)
+    formData.append('UserID', userIsActive.userId)
     formData.append('IsActive', !userIsActive.status)
     ChangeUserStatus(formData).then(res => {
-      if (res.data || res.status === 200) {
+      if ((res.data || res.status === 200) && res.data.message === 'Succeed') {
         fetchAgain()
         setUserIsActive({ status: false, username: '', userId: 0 })
         activeDialogHandler()
-        setShowMessage(true)
-      }
+        ToastAlert.success('تغییر وضعیت کاربر با موفقیت انجام شد.')
+      } else ToastAlert.error('خطا در تغییر وضعیت کاربر.')
     })
   }
   const dialogFooterActive = (
@@ -143,36 +143,12 @@ export const UserTable = ({ data, fetchAgain }) => {
       />
     </div>
   )
-  const dialogFooter = (
-    <div className="flex justify-content-center">
-      <Button
-        label="باشه"
-        className="p-button-text"
-        autoFocus
-        onClick={() => {
-          setShowMessage(false)
-        }}
-      />
-    </div>
-  )
+
   return (
     <div className="w-[95%] mt-4 m-auto container">
       <div className={`card `}>
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
-        <Dialog
-          visible={showMessage}
-          onHide={() => setShowMessage(false)}
-          position="top"
-          footer={dialogFooter}
-          showHeader={false}
-          breakpoints={{ '960px': '80vw' }}
-          style={{ width: '30vw' }}
-        >
-          <div className="flex align-items-center flex-column pt-6 px-3">
-            <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
-            <h5>{`تغییر وضعیت کاربر با موفقیت انجام شد.`}</h5>
-          </div>
-        </Dialog>
+
         <Dialog
           visible={activeDialog}
           onHide={activeDialogHandler}

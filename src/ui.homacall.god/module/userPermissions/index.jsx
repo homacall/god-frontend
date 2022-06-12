@@ -30,7 +30,6 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
   const fetchAgainHandler = useCallback(() => {
     setFetchAgain(perv => !perv)
   }, [])
-  console.log(user)
   const dialogFooter = (
     <div className="flex justify-content-center">
       <Button label="بستن" className="p-button-text" autoFocus onClick={onHide} />
@@ -49,8 +48,9 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
   const deleteUserPermission = useCallback(
     parentId => {
       const formData = new FormData()
-      formData.append('UserID', user.usr_ID)
+      formData.append('UserID', role ? user.rol_ID : user.usr_ID)
       formData.append('ParentID', parentId)
+      console.log(user, parentId)
       DeleteAllRoleUserPermission(formData).then(res => {
         if (res.data || res.status === 200) {
           fetchAgainHandler()
@@ -60,7 +60,7 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
         }
       })
     },
-    [fetchAgainHandler, user?.usr_ID],
+    [fetchAgainHandler, user],
   )
 
   const fetchUserPermission = useCallback(() => {
@@ -154,6 +154,7 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
           parentId={editParentId}
           buttonClass="bottom-[25px] left-[45px]"
           onHide={updateDialogHandler}
+          fetchAgain={fetchAgainHandler}
         />
       </Dialog>
       <Toolbar className="mb-4 mt-3" right={rightToolbarTemplate}></Toolbar>
@@ -174,6 +175,7 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
           onHide={handelNewPermissionDialog}
           fetchAgain={fetchAgainHandler}
           selectedRoute={selectedRoute}
+          role={role}
         />
       </Dialog>
       <DataTable

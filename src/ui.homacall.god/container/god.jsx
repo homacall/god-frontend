@@ -49,11 +49,10 @@ function God() {
         })
         .catch(e => console.log(e))
     }
-  })
+  }, [systemNames])
 
   useEffect(() => {
     fetchAllSystems()
-    localStorage.setItem('token', '123')
   }, [])
 
   useEffect(() => {

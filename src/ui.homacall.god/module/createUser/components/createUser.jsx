@@ -176,7 +176,7 @@ const CreateAndEditUser = () => {
     const formData = new FormData()
 
     if (!data.Usr_HPass) {
-      data.Usr_HPass = null
+      data.Usr_HPass = ''
     }
     Object.keys(data).forEach(key => {
       const value = data[key]
