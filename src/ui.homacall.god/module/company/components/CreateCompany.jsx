@@ -151,27 +151,27 @@ export const CreateCompany = () => {
     initialValues,
     validate,
     onSubmit: values => {
-      if (!imageUrl) {
-        values.IFileLogo = ''
+      if (!imageUrl || typeof imageUrl === 'string') {
+        values.IFileLogo = new File([], 'none-image')
       } else {
         values.IFileLogo = imageUrl
         setImageError(false)
-        const formData = new FormData()
-        Object.keys(values).forEach(key => {
-          const value = values[key]
-          formData.append(key, value)
-        })
-        setLoading(true)
-        if (CompanyId) {
-          formData.append('CoIn_ID', CompanyId)
-          formData.append('CoIn_Logo', pervImageName)
-          handleUpdateCompany(formData)
-        } else {
-          handleInsetCompany(formData)
-        }
-
-        setImageError(false)
       }
+      const formData = new FormData()
+      Object.keys(values).forEach(key => {
+        const value = values[key]
+        formData.append(key, value)
+      })
+      setLoading(true)
+      if (CompanyId) {
+        formData.append('CoIn_ID', CompanyId)
+        formData.append('CoIn_Logo', pervImageName)
+        handleUpdateCompany(formData)
+      } else {
+        handleInsetCompany(formData)
+      }
+
+      setImageError(false)
     },
     enableReinitialize: true,
   })

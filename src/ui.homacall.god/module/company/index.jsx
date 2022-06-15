@@ -22,7 +22,6 @@ export const Company = () => {
   const [showAllData, setShowAllData] = useState(false)
   const [compId, setCompId] = useState(0)
   const [companyInfoObject, setCompanyInfoObject] = useState({})
-  const [data, setData] = useState([])
   const navigate = useNavigate()
 
   const { pathInfo } = useFetchPath('Logo')

@@ -41,8 +41,9 @@ function CreateEditServiceType() {
   }, [ServiceId])
 
   useEffect(() => {
+    if (!ServiceId) return
     fetchServiceType()
-  }, [fetchServiceType])
+  }, [fetchServiceType, ServiceId])
 
   useEffect(() => {
     let path = location.pathname
