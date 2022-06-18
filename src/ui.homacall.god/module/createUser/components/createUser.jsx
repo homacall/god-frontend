@@ -88,7 +88,7 @@ const CreateAndEditUser = () => {
         }
       })
     }
-  }, [editMode, params.userId, pathInfo.filPth_Name])
+  }, [editMode, params?.userId, pathInfo?.filPth_Name])
 
   const formik = useFormik({
     initialValues,
