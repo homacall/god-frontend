@@ -1,4 +1,5 @@
 import http from './httpService'
+import { LogoutUser } from './loginService'
 import { apiUrls } from './urls'
 
 export const GetAllLoginLogo = () => {
@@ -10,14 +11,18 @@ export const GetAllLoginLogo = () => {
   }
   return http
     .get(apiUrls.getAllLoginLogo, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -30,14 +35,18 @@ export const GetAllLoginLogoBySP = () => {
   }
   return http
     .get(apiUrls.getAllLoginLogoBySP, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -50,14 +59,18 @@ export const InsertLoginLogo = data => {
   }
   return http
     .post(apiUrls.insertLoginLogo, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -70,14 +83,18 @@ export const UpdateLoginLogo = data => {
   }
   return http
     .post(apiUrls.updateLoginLogo, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -90,14 +107,18 @@ export const DeleteLoginLogo = data => {
   }
   return http
     .post(apiUrls.deleteLoginLogo, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -112,13 +133,17 @@ export const GetLoginLogoById = id => {
 
   return http
     .post(apiUrls.getLoginLogoById, id, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }

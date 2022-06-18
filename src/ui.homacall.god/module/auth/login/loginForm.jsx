@@ -32,9 +32,12 @@ const NewLanguage = () => {
     formData.append('PassWord', PassWord)
     setLoading(true)
     try {
-      const { data, status } = await loginUser(formData)
+      const { data } = await loginUser(formData)
 
-      if (status === 200 && data.message !== 'NotFoundUser') {
+      if (data && data.message === 'Full') {
+        return ToastAlert.error('ظرفیت تعداد ورود برای شما پر شده است ')
+      }
+      if (data && data.message !== 'NotFoundUser' && data.token) {
         ToastAlert.success('خوش آمدید :)')
         localStorage.setItem('token', data.token)
         setToken(data.token)

@@ -1,4 +1,5 @@
 import http from './httpService'
+import { LogoutUser } from './loginService'
 import { apiUrls } from './urls'
 
 export const GetAllServerConnections = () => {
@@ -10,14 +11,18 @@ export const GetAllServerConnections = () => {
   }
   return http
     .get(apiUrls.getAllServerConnections, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -30,14 +35,18 @@ export const InsertServerConnections = data => {
   }
   return http
     .post(apiUrls.insertServerConnections, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -50,14 +59,18 @@ export const UpdateServerConnections = data => {
   }
   return http
     .post(apiUrls.updateServerConnections, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -70,14 +83,18 @@ export const DeleteServerConnections = data => {
   }
   return http
     .post(apiUrls.deleteServerConnections, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -92,14 +109,17 @@ export const GetServerConnectionsById = id => {
 
   return http
     .post(apiUrls.getServerConnectionsById, id, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
     })
- 
+    .catch(err => {
+      console.log(err)
+    })
 }

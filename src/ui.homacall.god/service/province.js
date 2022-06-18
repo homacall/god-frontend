@@ -1,4 +1,5 @@
 import http from './httpService'
+import { LogoutUser } from './loginService'
 import { apiUrls } from './urls'
 export const ProvinceServiceGetAll = () => {
   const token = localStorage.getItem('token')
@@ -10,13 +11,17 @@ export const ProvinceServiceGetAll = () => {
   }
   return http
     .get(apiUrls.provinceGetAll, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }

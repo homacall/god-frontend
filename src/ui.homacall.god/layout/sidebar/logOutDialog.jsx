@@ -7,14 +7,19 @@ import { LogoutUser } from '../../service/loginService'
 export const LogoutDialog = ({ visible, onHide }) => {
   const navigate = useNavigate()
   const logOut = () => {
-    LogoutUser().then(res => {
-      if (res) {
-        localStorage.removeItem('token')
-        navigate('/login/')
-      } else {
+    LogoutUser()
+      .then(res => {
+        if (res) {
+          localStorage.removeItem('token')
+          navigate('/login/')
+        } else {
+          ToastAlert.error('خروج با خطا مواجه شد')
+        }
+      })
+      .catch(err => {
         ToastAlert.error('خروج با خطا مواجه شد')
-      }
-    })
+        console.log(err)
+      })
   }
   const footer = () => {
     return (

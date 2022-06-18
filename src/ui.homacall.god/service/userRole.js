@@ -1,4 +1,5 @@
 import http from './httpService'
+import { LogoutUser } from './loginService'
 import { apiUrls } from './urls'
 export const InsertUserRole = data => {
   const token = localStorage.getItem('token')
@@ -9,14 +10,18 @@ export const InsertUserRole = data => {
   }
   return http
     .post(apiUrls.userRoleInsert, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 export const UpdateUserRole = data => {
@@ -28,14 +33,18 @@ export const UpdateUserRole = data => {
   }
   return http
     .post(apiUrls.updateUserRole, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 export const DeleteAllUserRole = data => {
@@ -47,13 +56,17 @@ export const DeleteAllUserRole = data => {
   }
   return http
     .post(apiUrls.deleteAllUserRole, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }

@@ -1,4 +1,5 @@
 import http from './httpService'
+import { LogoutUser } from './loginService'
 import { apiUrls } from './urls'
 
 export const GetAllFilePath = () => {
@@ -10,14 +11,18 @@ export const GetAllFilePath = () => {
   }
   return http
     .get(apiUrls.getAllfilePath, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -30,14 +35,18 @@ export const GetAllFilePathSP = () => {
   }
   return http
     .get(apiUrls.getAllfilePathSP, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -50,14 +59,18 @@ export const InsertFilePath = data => {
   }
   return http
     .post(apiUrls.insertfilePath, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -70,14 +83,18 @@ export const UpdateFilePath = data => {
   }
   return http
     .post(apiUrls.updatefilePath, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -90,14 +107,18 @@ export const DeleteFilePath = data => {
   }
   return http
     .post(apiUrls.deletefilePath, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -112,14 +133,18 @@ export const GetFilePathById = id => {
 
   return http
     .post(apiUrls.getfilePathById, id, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 
@@ -134,13 +159,17 @@ export const GetFilePathBySysNames = data => {
 
   return http
     .post(apiUrls.getFilePathBySystemNames, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }

@@ -1,4 +1,5 @@
 import http from './httpService'
+import { LogoutUser } from './loginService'
 import { apiUrls } from './urls'
 export const GetAllRoutesGodByType = () => {
   const token = localStorage.getItem('token')
@@ -9,14 +10,18 @@ export const GetAllRoutesGodByType = () => {
   }
   return http
     .get(apiUrls.getAllRoutesByType, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 export const GetAllRoutesGodByTypeRouteTree = () => {
@@ -28,14 +33,18 @@ export const GetAllRoutesGodByTypeRouteTree = () => {
   }
   return http
     .get(apiUrls.getAllRoutesByTypeForTree, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 export const CreateRouteStructure = data => {
@@ -47,14 +56,18 @@ export const CreateRouteStructure = data => {
   }
   return http
     .post(apiUrls.createRoteStructure, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 export const DeleteRouteStructure = id => {
@@ -66,14 +79,18 @@ export const DeleteRouteStructure = id => {
   }
   return http
     .post(apiUrls.deleteRoteStructure, id, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 export const UpdateRouteStructure = data => {
@@ -85,14 +102,18 @@ export const UpdateRouteStructure = data => {
   }
   return http
     .post(apiUrls.updateRouteStructure, data, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 export const GetByIdRouteStructure = id => {
@@ -104,36 +125,43 @@ export const GetByIdRouteStructure = id => {
   }
   return http
     .post(apiUrls.getByIdRouteStructure, id, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }
 export const GetAllByParentTypeRouteStructure = id => {
-  
-   const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token')
   let config = {
     headers: {
       Authorization: 'Bearer ' + token,
     },
   }
-  return http.post(apiUrls.getAllRoutesStrByParentType, id, config)
-  .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+  return http
+    .post(apiUrls.getAllRoutesStrByParentType, id, config)
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
     })
+    .catch(err => {
+      console.log(err)
+    })
 }
-  
 
 export const GetAllRoutesByParent = id => {
   const token = localStorage.getItem('token')
@@ -142,14 +170,19 @@ export const GetAllRoutesByParent = id => {
       Authorization: 'Bearer ' + token,
     },
   }
-  return http.post(apiUrls.getAllRoutesByParent, id, config)
-    .then(res => res)
-    .catch(err => {
-      if (err.status === 401) {
-        localStorage.removeItem('token')
-        window.location.replace('/login/')
+  return http
+    .post(apiUrls.getAllRoutesByParent, id, config)
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
       } else {
-        return err
+        return res
       }
+    })
+    .catch(err => {
+      console.log(err)
     })
 }

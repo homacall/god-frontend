@@ -81,5 +81,5 @@ export const apiUrls = {
   userUploadFile: GodHOST.concat('/UserGod/UploadFileUser'),
   userUpdateFile: GodHOST.concat('/UserGod/UploadFileUserUpdate'),
   userUpdateIFile: GodHOST.concat('/UserGod/UploadFile'),
-  logOut: GodHOST.concat('/AuthenticationGod/LogOut'),
+  logOut: GodHOST.concat('/UserGod/LogOut'),
 }
