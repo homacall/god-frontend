@@ -1,7 +1,6 @@
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { useNavigate } from 'react-router'
-import { ToastAlert } from '../../module/common/toastAlert'
 import { LogoutUser } from '../../service/loginService'
 
 export const LogoutDialog = ({ visible, onHide }) => {
