@@ -13,6 +13,7 @@ import { DeleteRole, GetAllRole, UpdateRole } from '../../service/rolService'
 import { rolls } from '../../utils/constants/routes/publicRoute'
 import { ToastAlert } from '../common/toastAlert'
 import { UserPermissions } from '../userPermissions'
+import { RoleMember } from './module'
 
 export const Roll = () => {
   const [rollName, setRollName] = useState(0)
@@ -21,9 +22,13 @@ export const Roll = () => {
   const [fetchAgain, setFetchAgain] = useState(false)
   const [showPermissions, setShowPermissions] = useState(false)
   const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
-
+  const [showRoleMember, setShowRoleMember] = useState(false)
+  const [currentRole, setCurrentRole] = useState()
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
+  }
+  const roleMemberHandler = () => {
+    setShowRoleMember(perv => !perv)
   }
   useEffect(() => {
     GetAllRole().then(res => {
@@ -86,7 +91,9 @@ export const Roll = () => {
   return (
     <div className="w-[95%] mt-4 m-auto container">
       <div className="card">
-        <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+        <RoleMember onHide={roleMemberHandler} visible={showRoleMember} currentRole={currentRole} roles={dataL} />
+        <Toolbar className="mb-4" right={rightToolbarTemplate} />
+
         <DataTable
           value={dataL}
           paginator
@@ -130,6 +137,15 @@ export const Roll = () => {
                   }}
                 >
                   سطح دسترسی
+                </Button>
+                <Button
+                  className="p-button-help text-xs rtl ml-1 p-1 mt-1 mr-2 h-10"
+                  onClick={() => {
+                    roleMemberHandler()
+                    setCurrentRole(data)
+                  }}
+                >
+                  زیرمجموعه
                 </Button>
               </TableActions>
             )}

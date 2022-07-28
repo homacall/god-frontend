@@ -5,3 +5,10 @@ export const roleColumn = [
     className: 'text-sm',
   },
 ]
+export const roleMemberColumn = [
+  {
+    header: 'نام',
+    field: 'transTagText',
+    className: 'text-sm',
+  },
+]
