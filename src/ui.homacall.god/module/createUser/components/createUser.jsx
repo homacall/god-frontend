@@ -48,7 +48,6 @@ const CreateAndEditUser = () => {
     Usr_Mobile: '',
   })
   const [editMode, setEditMode] = useState(location.pathname.includes('/users/update/') && params.userId)
-  const { pathInfo } = useFetchPath('User')
 
   useEffect(() => {
     if (location.pathname.includes('/users/update/') && params.userId) {
@@ -81,14 +80,14 @@ const CreateAndEditUser = () => {
             })
 
             if (res.data.user.usr_Img) {
-              setImageUrl(process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo.filPth_Name + '/' + res.data.user.usr_Img))
+              setImageUrl(process.env.REACT_APP_GOD_FTP_SERVER.concat(res.data.user.usr_Img))
               setPervImageName(res.data.user.usr_Img)
             }
           })
         }
       })
     }
-  }, [editMode, params?.userId, pathInfo?.filPth_Name])
+  }, [editMode, params?.userId])
 
   const formik = useFormik({
     initialValues,

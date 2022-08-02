@@ -13,9 +13,11 @@ import ShowTag from './components/ShowTag'
 import { DeleteTag, UpdateTags } from '../../service/tagManagerService'
 import { GetAllTagsTranslate } from '../../service/translateService'
 import { ToastAlert } from '../common/toastAlert'
+import { createTagType } from './constant/createTagType'
 
 export const Tag = () => {
   const [tagName, setTagName] = useState('')
+  const [tagType, setTagType] = useState('')
   const [globalFilter, setGlobalFilter] = useState(null)
   const [openShow, setOpenShow] = useState(false)
   const [id, setId] = useState(0)
@@ -23,9 +25,19 @@ export const Tag = () => {
   const [fetchAgain, setFetchAgain] = useState(false)
   //Get Tags List from server with api
   useEffect(() => {
-    GetAllTagsTranslate().then(res => {
+    const formData = new FormData()
+    formData.append('TagType', '-1')
+    GetAllTagsTranslate(formData).then(res => {
       if (res.data) {
-        setData(res.data.map(item => ({ id: item.tag_ID, title: item.tag_Name, transTitle: item.tagTranslate_Name || '--' })))
+        setData(
+          res.data.tagsknowledges.map(item => ({
+            id: item.tag_ID,
+            title: item.tag_Name,
+            type: createTagType.find(element => element.value === item.tag_Type).label,
+            typeId: item.tag_Type,
+            transTitle: item.tagTranslate_Name || '--',
+          })),
+        )
       }
     })
   }, [fetchAgain])
@@ -51,9 +63,10 @@ export const Tag = () => {
     </div>
   )
 
-  const openShowTag = (valId, valName) => {
+  const openShowTag = (valId, valName, valType) => {
     setId(valId)
     setTagName(valName)
+    setTagType(valType)
     setOpenShow(true)
   }
 
@@ -76,10 +89,11 @@ export const Tag = () => {
       .catch(err => console.log(err))
   }
 
-  const updateTags = (id, newTagName) => {
+  const updateTags = (id, newTagName, newTagType) => {
     const formData = new FormData()
     formData.append('Tag_ID', id)
     formData.append('Tag_Name', newTagName)
+    formData.append('Tag_Type', newTagType.toString())
     UpdateTags(formData)
       .then(res => {
         if (res.data || res.status === 200) {
@@ -94,7 +108,7 @@ export const Tag = () => {
 
   return (
     <>
-      <ShowTag visible={openShow} tagId={id} onHide={closeShowTag} tagName={tagName} fetchAgain={fetchAgainHandler} />
+      <ShowTag visible={openShow} tagId={id} onHide={closeShowTag} tagName={tagName} tagType={tagType} fetchAgain={fetchAgainHandler} />
       <div className="w-[95%] mt-4 m-auto container">
         <div className="card">
           <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
@@ -127,16 +141,24 @@ export const Tag = () => {
                     hasDelete={true}
                     hasUpdate={true}
                     updateAction={() => {
-                      updateTags(data.id, tagName)
+                      updateTags(data.id, tagName, tagType)
                     }}
                     deleteLabel="حذف"
                     updateLabel="ویرایش"
-                    updateView={<UpdateTag tagName={tagName} setTagName={setTagName} oldVal={data.title} />}
+                    updateView={
+                      <UpdateTag
+                        tagName={tagName}
+                        setTagName={setTagName}
+                        oldVal={data.title}
+                        tagType={data.typeId}
+                        setTagType={setTagType}
+                      />
+                    }
                     deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
                     updateButtonClassName={'p-button-warning ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
                   />
                   <Button
-                    onClick={() => openShowTag(data.id, data.title)}
+                    onClick={() => openShowTag(data.id, data.title, data.type)}
                     className=" p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2"
                   >
                     ترجمه

@@ -46,8 +46,6 @@ export const CreateCompany = () => {
   let { CompanyId } = useParams()
   const navigate = useNavigate()
 
-  const { pathInfo } = useFetchPath('Logo')
-
   const fetchLanguage = () => {
     GetAllLanguage().then(res => {
       if (res.data || res.status === 200) {
@@ -85,9 +83,9 @@ export const CreateCompany = () => {
       if (companyById.length > 0) {
         navigate('/company')
       }
-    } else if (path.split('/')[2] === 'edit' && pathInfo) {
+    } else if (path.split('/')[2] === 'edit') {
       //initialize for formik
-      const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name.concat(`/${companyById.coIn_Logo}`)
+      const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER.concat(companyById.coIn_Logo)
       setImageUrl(logoSrc)
       setPervImageName(companyById.coIn_Logo)
 
@@ -106,7 +104,7 @@ export const CreateCompany = () => {
         CoIn_TypeDateTime: companyById.coIn_TypeDateTime,
       })
     }
-  }, [location.pathname, navigate, companyById, pathInfo])
+  }, [location.pathname, navigate, companyById])
 
   const handleInsetCompany = formData => {
     InsertCompany(formData)

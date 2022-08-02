@@ -5,6 +5,11 @@ export const tagColumns = [
     className: 'text-sm',
   },
   {
+    header: 'نوع',
+    field: 'type',
+    className: 'text-sm',
+  },
+  {
     header: 'ترجمه عنوان',
     field: 'transTitle',
     className: 'text-sm',
