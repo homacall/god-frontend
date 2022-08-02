@@ -24,6 +24,8 @@ export const Roll = () => {
   const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
   const [showRoleMember, setShowRoleMember] = useState(false)
   const [currentRole, setCurrentRole] = useState()
+  const [isUserSysRole, setIsUserSysRole] = useState()
+
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
@@ -65,6 +67,7 @@ export const Roll = () => {
     const formData = new FormData()
     formData.append('Rol_ID', rolId)
     formData.append('Rol_TgID', rol_TagID)
+    formData.append('Rol_IsSysRol ', isUserSysRole)
     UpdateRole(formData)
       .then(res => {
         if (res.data || res.status === 200) {
@@ -125,7 +128,7 @@ export const Roll = () => {
                 }}
                 deleteLabel="حذف"
                 updateLabel="ویرایش"
-                updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data.rol_TagID} />}
+                updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data} setIsUserSysRole={setIsUserSysRole} />}
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
               >
