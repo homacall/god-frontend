@@ -31,7 +31,7 @@ const ShowTag = ({ visible, tagId, onHide, tagName, fetchAgain }) => {
   const fetchLanguage = () => {
     GetAllLanguage().then(res => {
       if (res.data || res.status === 200) {
-        setLanguages(res.data.map(item => ({ id: item.lang_ID, name: item.lang_Name })))
+        setLanguages(res.data.languages.map(item => ({ id: item.lang_ID, name: item.lang_Name })))
       }
     })
   }
@@ -41,7 +41,7 @@ const ShowTag = ({ visible, tagId, onHide, tagName, fetchAgain }) => {
     formData.append('Tag_ID', id)
     getTranslateByTagId(formData).then(res => {
       if (res.data || res.status === 200) {
-        setTranslates(res.data)
+        setTranslates(res.data.translateTag)
         setFetchTransAgain(false)
       }
     })

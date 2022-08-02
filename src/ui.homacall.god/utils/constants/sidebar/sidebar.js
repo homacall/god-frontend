@@ -26,26 +26,26 @@ const items = [
     label: 'تعریف کاربر و سطح دسترسی',
     url: `${sidebar.users}`,
   },
-  {
-    id: 6,
-    label: 'تعریف سرویس ها',
-    url: `${sidebar.serviceType}`,
-  },
-  {
-    id: 7,
-    label: 'تعریف سیستم ها',
-    url: `${sidebar.systemPath}`,
-  },
-  {
-    id: 8,
-    label: 'تعریف مسیر فایل ها',
-    url: `${sidebar.filePath}`,
-  },
-  {
-    id: 9,
-    label: 'مدیریت پایگاه داده',
-    url: `${sidebar.serverConnection}`,
-  },
+  // {
+  //   id: 6,
+  //   label: 'تعریف سرویس ها',
+  //   url: `${sidebar.serviceType}`,
+  // },
+  // {
+  //   id: 7,
+  //   label: 'تعریف سیستم ها',
+  //   url: `${sidebar.systemPath}`,
+  // },
+  // {
+  //   id: 8,
+  //   label: 'تعریف مسیر فایل ها',
+  //   url: `${sidebar.filePath}`,
+  // },
+  // {
+  //   id: 9,
+  //   label: 'مدیریت پایگاه داده',
+  //   url: `${sidebar.serverConnection}`,
+  // },
   {
     id: 10,
     label: 'آپلود لوگو ورود',

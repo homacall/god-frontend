@@ -33,7 +33,7 @@ export const Roll = () => {
   useEffect(() => {
     GetAllRole().then(res => {
       if (res.data || res.status === 200) {
-        setDataL(res.data)
+        setDataL(res.data.roles)
       }
     })
   }, [fetchAgain])

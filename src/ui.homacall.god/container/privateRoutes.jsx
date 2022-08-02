@@ -231,7 +231,7 @@ export const PrivateRoutes = () => {
             </>
           }
         />
-        <Route
+        {/* <Route
           path={`${serverConnection.create}`}
           element={
             <>
@@ -252,8 +252,8 @@ export const PrivateRoutes = () => {
               <CreateEditServerConnection />
             </>
           }
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${serviceType.main}`}
           element={
             <>
@@ -274,8 +274,8 @@ export const PrivateRoutes = () => {
               <CreateEditServiceType />
             </>
           }
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${serviceType.edit}`}
           element={
             <>
@@ -296,8 +296,8 @@ export const PrivateRoutes = () => {
               <SystemPath />
             </>
           }
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${systemPath.create}`}
           element={
             <>
@@ -318,8 +318,8 @@ export const PrivateRoutes = () => {
               <CreateEditSystemPath />
             </>
           }
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${filePath.main}`}
           element={
             <>
@@ -351,7 +351,7 @@ export const PrivateRoutes = () => {
               <CreateEditFilePath />
             </>
           }
-        />
+        /> */}
         <Route
           path={`${loginLogo.main}`}
           element={

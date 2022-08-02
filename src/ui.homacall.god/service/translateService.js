@@ -70,7 +70,7 @@ export const UpdateTranslate = data => {
       console.log(err)
     })
 }
-export const GetAllTagsTranslate = () => {
+export const GetAllTagsTranslate = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -78,7 +78,7 @@ export const GetAllTagsTranslate = () => {
     },
   }
   return http
-    .get(apiUrls.getAllTagsTranslate, config)
+    .post(apiUrls.getAllTagsTranslate, data, config)
     .then(res => {
       if (res.data.message === 'Unauthorized') {
         LogoutUser().finally(() => {

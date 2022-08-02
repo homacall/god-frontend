@@ -11,7 +11,7 @@ export const LanguagePage = () => {
   useEffect(() => {
     GetAllLanguage()
       .then(res => {
-        if (res.data) setData(res.data)
+        if (res.data) setData(res.data.languages)
       })
       .catch(e => console.log(e))
   }, [fetchAgain])

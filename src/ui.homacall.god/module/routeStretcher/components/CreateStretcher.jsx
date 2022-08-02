@@ -37,7 +37,7 @@ export const CreateAndEditStretcher = () => {
     GetAllTagsTranslate()
       .then(res => {
         if (res.data || res.status === 200) {
-          setTags(res.data)
+          setTags(res.data.tagsknowledges)
         }
       })
       .catch(error => console.log(error))
@@ -46,7 +46,7 @@ export const CreateAndEditStretcher = () => {
     GetAllRoutesGodByTypeRouteTree()
       .then(res => {
         if (res.data || res.status === 200) {
-          setRoutes(res.data)
+          setRoutes(res.data.routeStructures)
         }
       })
       .catch(err => console.log(err))

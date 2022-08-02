@@ -1,6 +1,7 @@
 import http from './httpService'
 import { LogoutUser } from './loginService'
 import { apiUrls } from './urls'
+
 export const CreateTagService = data => {
   const token = localStorage.getItem('token')
   let config = {
