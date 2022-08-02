@@ -32,33 +32,34 @@ export const Company = () => {
     GetAllCompanyInfo()
       .then(res => {
         if (res.data || res.status === 200) {
-          if (res.data.companys.length) {
+          console.log(res.data)
+          if (res.data.companyInfos.length) {
             var dateType = ''
-            if (res.data.companys[0].coIn_TypeDateTime === 1) {
+            if (res.data.companyInfos[0].coIn_TypeDateTime === 1) {
               dateType = 'شمسی'
-            } else if (res.data.companys[0].coIn_TypeDateTime === 2) {
+            } else if (res.data.companyInfos[0].coIn_TypeDateTime === 2) {
               dateType = 'میلادی'
-            } else if (res.data.companys[0].coIn_TypeDateTime === 3) {
+            } else if (res.data.companyInfos[0].coIn_TypeDateTime === 3) {
               dateType = 'قمری'
             }
-            const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + res.data.companys[0].coIn_Logo
+            const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + res.data.companyInfos[0].coIn_Logo
             setCompanyInfoObject({
-              'نام': res.data.companys[0].coIn_Name,
+              'نام': res.data.companyInfos[0].coIn_Name,
               'لوگو': renderImage(logoSrc),
-              'تلفن': res.data.companys[0].coIn_Phone,
-              'موبایل': res.data.companys[0].coIn_Mobile,
-              'فکس': res.data.companys[0].coIn_Fax,
-              'پنل پیامک': res.data.companys[0].coIn_SmsNumber,
-              'ایمیل': res.data.companys[0].coIn_Email,
-              'اینستاگرام': res.data.companys[0].coIn_Instagram,
-              'سایت': res.data.companys[0].coIn_Site,
-              'آدرس شرکت': res.data.companys[0].coIn_Address,
-              'درباره شرکت': res.data.companys[0].coIn_About,
-              'زبان پیشفرض': res.data.companys[0].coIn_LangName,
+              'تلفن': res.data.companyInfos[0].coIn_Phone,
+              'موبایل': res.data.companyInfos[0].coIn_Mobile,
+              'فکس': res.data.companyInfos[0].coIn_Fax,
+              'پنل پیامک': res.data.companyInfos[0].coIn_SmsNumber,
+              'ایمیل': res.data.companyInfos[0].coIn_Email,
+              'اینستاگرام': res.data.companyInfos[0].coIn_Instagram,
+              'سایت': res.data.companyInfos[0].coIn_Site,
+              'آدرس شرکت': res.data.companyInfos[0].coIn_Address,
+              'درباره شرکت': res.data.companyInfos[0].coIn_About,
+              'زبان پیشفرض': res.data.companyInfos[0].coIn_LangName,
               'نوع تاریخ': dateType,
             })
 
-            res.data.companys.forEach(comp =>
+            res.data.companyInfos.forEach(comp =>
               newData.push({
                 ...comp,
                 coIn_Logo: (
