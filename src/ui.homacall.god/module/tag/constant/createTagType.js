@@ -7,4 +7,5 @@ export const createTagType = [
   { label: 'Route', value: 5 },
   { label: 'Archive', value: 6 },
   { label: 'Logo', value: 7 },
+  { label: 'System', value: 8 },
 ]
