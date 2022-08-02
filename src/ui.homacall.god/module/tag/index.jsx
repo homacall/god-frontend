@@ -63,7 +63,7 @@ export const Tag = () => {
     if (id >= 0) {
       const formData = new FormData()
       formData.append('TagType', id.toString())
-      GetAllTags(formData).then(res => {
+      GetAllTagsTranslate(formData).then(res => {
         if (res.data) {
           setData(
             res.data.tagsknowledges.map(item => ({

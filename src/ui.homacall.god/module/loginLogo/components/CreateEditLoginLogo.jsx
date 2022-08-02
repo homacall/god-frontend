@@ -33,7 +33,7 @@ function CreateEditLoginLogo() {
       }
     })
   }
-  console.log({ systems })
+
   const fetchLoginLogo = useCallback(() => {
     if (params.loginLogoId) {
       const formData = new FormData()
@@ -43,6 +43,7 @@ function CreateEditLoginLogo() {
           if (res.data && res.status === 200) {
             const imgUrl = process.env.REACT_APP_GOD_FTP_SERVER + res.data.logoCo_Name
             setTagValue(res.data.logoCo_TgID)
+            setTypeValue(res.data)
             setImageUrl(imgUrl)
             setImagePervUrl(res.data.logoCo_Name)
           }
