@@ -28,7 +28,7 @@ export const CreateTag = () => {
     } else {
       setError(false)
     }
-    if (valueType >= 0 && valueType <= 7) {
+    if (valueType >= 0) {
       setErrorType(false)
     } else {
       return setErrorType(true)
