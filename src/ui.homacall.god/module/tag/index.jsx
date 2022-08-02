@@ -13,7 +13,6 @@ import { tagColumns } from './constant/tableColumn'
 import ShowTag from './components/ShowTag'
 import { DeleteTag, UpdateTags } from '../../service/tagManagerService'
 import { GetAllTagsTranslate } from '../../service/translateService'
-import { GetAllTags } from '../../service/tagManagerService'
 import { ToastAlert } from '../common/toastAlert'
 import { createTagType } from './constant/createTagType'
 
@@ -46,9 +45,11 @@ export const Tag = () => {
       }
     })
   }, [fetchAgain])
+
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
+
   const rightToolbarTemplate = () => {
     return (
       <>

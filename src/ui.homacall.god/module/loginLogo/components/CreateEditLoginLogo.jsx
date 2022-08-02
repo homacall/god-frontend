@@ -16,7 +16,7 @@ function CreateEditLoginLogo() {
   const [tags, setTags] = useState([])
   const [tagValue, setTagValue] = useState('')
   const [editMode, setEditMode] = useState(false)
-  const [typeValue, setTypeValue] = useState('')
+  const [systemValue, setSystemValue] = useState('')
   const [systems, setSystems] = useState([])
 
   const navigate = useNavigate()
@@ -43,7 +43,7 @@ function CreateEditLoginLogo() {
           if (res.data && res.status === 200) {
             const imgUrl = process.env.REACT_APP_GOD_FTP_SERVER + res.data.logoCo_Name
             setTagValue(res.data.logoCo_TgID)
-            setTypeValue(res.data)
+            setSystemValue(res.data)
             setImageUrl(imgUrl)
             setImagePervUrl(res.data.logoCo_Name)
           }
@@ -99,7 +99,8 @@ function CreateEditLoginLogo() {
 
   const handleLoginLogo = () => {
     const formData = new FormData()
-    formData.append('LogoCo_TgID', tagValue)
+    formData.append('TagName', tagValue)
+    formData.append('SysName', systemValue)
     if (typeof imageUrl !== 'string') {
       formData.append('IFileLogo', imageUrl)
     } else {
@@ -117,7 +118,7 @@ function CreateEditLoginLogo() {
   }
 
   return (
-    <section className="w-[80%] h-[80vh] mt-5 py-4 rounded-md  m-auto container bg-white rtl ">
+    <section className="w-[80%]  mt-5 py-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={BreadcrumbItem} />
 
       <section className="flex mt-8 justify-center">
@@ -146,8 +147,8 @@ function CreateEditLoginLogo() {
             name="tag_Name"
             optionLabel="tagTranslate_Name"
             optionValue="tag_ID"
-            value={typeValue}
-            onChange={e => setTypeValue(e.target.value)}
+            value={systemValue}
+            onChange={e => setSystemValue(e.target.value)}
             placeholder="انتخاب سیستم"
             className="rtl w-[80vw] sm:w-[50vw] md:w-[30vw] h-9 "
           />
@@ -161,7 +162,7 @@ function CreateEditLoginLogo() {
       <section className="mt-8 flex justify-center justify-items-center">
         <Button
           type="submit"
-          disabled={imageUrl && tagValue ? false : true}
+          disabled={imageUrl && tagValue && systemValue ? false : true}
           className="bg-indigo-600 text-sm h-10 text-center min-w-[120px] max-w-[120px]"
           loading={loading}
           onClick={handleLoginLogo}

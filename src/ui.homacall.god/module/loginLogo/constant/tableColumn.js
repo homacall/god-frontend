@@ -5,6 +5,11 @@ export const loginLogoColumn = [
     className: 'text-sm',
   },
   {
+    header: 'نام سیستم',
+    field: 'sys_Name',
+    className: 'text-sm',
+  },
+  {
     header: 'لوگو',
     field: 'logoCo_Name',
     className: 'text-sm',
