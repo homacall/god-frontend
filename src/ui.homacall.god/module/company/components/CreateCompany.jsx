@@ -15,7 +15,6 @@ import validate from '../constant/validate'
 import { GetAllLanguage } from '../../../service/languageService'
 import { GetCompanyById, InsertCompany, UpdateCompany } from '../../../service/companyService'
 import { dateTypes } from '../constant/dateTypes'
-import { useFetchPath } from '../../common/fetchPath'
 
 import '../style/company.css'
 

@@ -19,7 +19,6 @@ import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { ToastAlert } from '../../common/toastAlert'
 import { Regex } from '../../../constant'
-import { useFetchPath } from '../../common/fetchPath'
 
 const CreateAndEditUser = () => {
   const location = useLocation()

@@ -8,7 +8,6 @@ import { GetAllTags } from '../../../service/tagManagerService'
 import { BreadcrumbItem } from '../constant/BreadcampItem'
 import { ToastAlert } from '../../common/toastAlert'
 import { UpdateLoginLogo, InsertLoginLogo, GetLoginLogoById } from '../../../service/loginLogoService'
-import { useFetchPath } from '../../common/fetchPath'
 
 function CreateEditLoginLogo() {
   const [imageUrl, setImageUrl] = useState('')

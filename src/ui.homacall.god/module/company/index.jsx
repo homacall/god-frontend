@@ -10,10 +10,9 @@ import TableActions from '../common/actionBody'
 import { companyColumns } from './constant/tableColumn'
 import PageToolbar from './constant/PageToolbar'
 import { ToastAlert } from '../common/toastAlert'
-import { GetAllCompanyInfoSP, DeleteCompany } from '../../service/companyService'
+import { DeleteCompany, GetAllCompanyInfo } from '../../service/companyService'
 import ShowAllTableData from '../common/ShowAllTableData'
 import { showAllDataBreadcrumb } from './constant/createCompanyBreadcrumb'
-import { useFetchPath } from '../common/fetchPath'
 
 export const Company = () => {
   const [globalFilter, setGlobalFilter] = useState(null)
@@ -30,7 +29,7 @@ export const Company = () => {
 
   useEffect(() => {
     const newData = []
-    GetAllCompanyInfoSP()
+    GetAllCompanyInfo()
       .then(res => {
         if (res.data || res.status === 200) {
           if (res.data.companys.length) {
