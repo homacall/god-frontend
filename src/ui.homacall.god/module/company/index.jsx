@@ -24,71 +24,67 @@ export const Company = () => {
   const [companyInfoObject, setCompanyInfoObject] = useState({})
   const navigate = useNavigate()
 
-  const { pathInfo } = useFetchPath('Logo')
-
   const renderImage = img => (
     <Image src={img} template="نمایش" alt="تصویر" width={50} height={50} preview={true} className="w-[50px] h-[50px] rounded-full" />
   )
 
   useEffect(() => {
     const newData = []
-    if (pathInfo) {
-      GetAllCompanyInfoSP()
-        .then(res => {
-          if (res.data || res.status === 200) {
-            if (res.data.companys.length) {
-              var dateType = ''
-              if (res.data.companys[0].coIn_TypeDateTime === 1) {
-                dateType = 'شمسی'
-              } else if (res.data.companys[0].coIn_TypeDateTime === 2) {
-                dateType = 'میلادی'
-              } else if (res.data.companys[0].coIn_TypeDateTime === 3) {
-                dateType = 'قمری'
-              }
-              const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name + '/' + res.data.companys[0].coIn_Logo
-              setCompanyInfoObject({
-                'نام': res.data.companys[0].coIn_Name,
-                'لوگو': renderImage(logoSrc),
-                'تلفن': res.data.companys[0].coIn_Phone,
-                'موبایل': res.data.companys[0].coIn_Mobile,
-                'فکس': res.data.companys[0].coIn_Fax,
-                'پنل پیامک': res.data.companys[0].coIn_SmsNumber,
-                'ایمیل': res.data.companys[0].coIn_Email,
-                'اینستاگرام': res.data.companys[0].coIn_Instagram,
-                'سایت': res.data.companys[0].coIn_Site,
-                'آدرس شرکت': res.data.companys[0].coIn_Address,
-                'درباره شرکت': res.data.companys[0].coIn_About,
-                'زبان پیشفرض': res.data.companys[0].coIn_LangName,
-                'نوع تاریخ': dateType,
-              })
-
-              res.data.companys.forEach(comp =>
-                newData.push({
-                  ...comp,
-                  coIn_Logo: (
-                    <Image
-                      src={process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name.concat(`/${comp.coIn_Logo}`)}
-                      template="نمایش"
-                      alt={comp.coIn_Name}
-                      width={50}
-                      height={50}
-                      preview={true}
-                      className="w-[50px] h-[50px] rounded-full"
-                    />
-                  ),
-                  coIn_TypeDateTime: dateType,
-                }),
-              )
+    GetAllCompanyInfoSP()
+      .then(res => {
+        if (res.data || res.status === 200) {
+          if (res.data.companys.length) {
+            var dateType = ''
+            if (res.data.companys[0].coIn_TypeDateTime === 1) {
+              dateType = 'شمسی'
+            } else if (res.data.companys[0].coIn_TypeDateTime === 2) {
+              dateType = 'میلادی'
+            } else if (res.data.companys[0].coIn_TypeDateTime === 3) {
+              dateType = 'قمری'
             }
+            const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + res.data.companys[0].coIn_Logo
+            setCompanyInfoObject({
+              'نام': res.data.companys[0].coIn_Name,
+              'لوگو': renderImage(logoSrc),
+              'تلفن': res.data.companys[0].coIn_Phone,
+              'موبایل': res.data.companys[0].coIn_Mobile,
+              'فکس': res.data.companys[0].coIn_Fax,
+              'پنل پیامک': res.data.companys[0].coIn_SmsNumber,
+              'ایمیل': res.data.companys[0].coIn_Email,
+              'اینستاگرام': res.data.companys[0].coIn_Instagram,
+              'سایت': res.data.companys[0].coIn_Site,
+              'آدرس شرکت': res.data.companys[0].coIn_Address,
+              'درباره شرکت': res.data.companys[0].coIn_About,
+              'زبان پیشفرض': res.data.companys[0].coIn_LangName,
+              'نوع تاریخ': dateType,
+            })
 
-            setCompanyInfo(newData)
+            res.data.companys.forEach(comp =>
+              newData.push({
+                ...comp,
+                coIn_Logo: (
+                  <Image
+                    src={process.env.REACT_APP_GOD_FTP_SERVER.concat(comp.coIn_Logo)}
+                    template="نمایش"
+                    alt={comp.coIn_Name}
+                    width={50}
+                    height={50}
+                    preview={true}
+                    className="w-[50px] h-[50px] rounded-full"
+                  />
+                ),
+                coIn_TypeDateTime: dateType,
+              }),
+            )
           }
-        })
-        .catch(err => {
-          console.log('error: ', err)
-        })
-    }
-  }, [fetchAgain, pathInfo])
+
+          setCompanyInfo(newData)
+        }
+      })
+      .catch(err => {
+        console.log('error: ', err)
+      })
+  }, [fetchAgain])
 
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)

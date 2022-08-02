@@ -22,8 +22,6 @@ function CreateEditLoginLogo() {
   const location = useLocation()
   const params = useParams()
 
-  const { pathInfo } = useFetchPath('Logo')
-
   const fetchTags = () => {
     GetAllTags().then(res => {
       if (res.data || res.status === 200) {
@@ -33,13 +31,13 @@ function CreateEditLoginLogo() {
   }
 
   const fetchLoginLogo = useCallback(() => {
-    if (params.loginLogoId && pathInfo) {
+    if (params.loginLogoId) {
       const formData = new FormData()
       formData.append('ID', params.loginLogoId)
       GetLoginLogoById(formData)
         .then(res => {
           if (res.data && res.status === 200) {
-            const imgUrl = process.env.REACT_APP_GOD_FTP_SERVER + pathInfo.filPth_Name + '/' + res.data.logoCo_Name
+            const imgUrl = process.env.REACT_APP_GOD_FTP_SERVER + res.data.logoCo_Name
             setTagValue(res.data.logoCo_TgID)
             setImageUrl(imgUrl)
             setImagePervUrl(res.data.logoCo_Name)
@@ -49,7 +47,7 @@ function CreateEditLoginLogo() {
           ToastAlert.error('خطا در ارتباط با سرور ')
         })
     }
-  }, [params.loginLogoId, pathInfo])
+  }, [params.loginLogoId])
 
   useEffect(() => {
     fetchTags()

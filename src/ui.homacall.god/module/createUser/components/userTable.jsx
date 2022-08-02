@@ -13,7 +13,6 @@ import { ChangeUserStatus } from '../../../service/userService'
 import { UserPermissions } from '../../userPermissions'
 import { SetRoleUserDialog } from './setRoleUser'
 import moment from 'moment-jalaali'
-import { useFetchPath } from '../../common/fetchPath'
 import { ToastAlert } from '../../common/toastAlert'
 
 export const UserTable = ({ data, fetchAgain }) => {
@@ -26,7 +25,6 @@ export const UserTable = ({ data, fetchAgain }) => {
   const [userIsActive, setUserIsActive] = useState(false)
 
   const navigate = useNavigate()
-  const { pathInfo } = useFetchPath('User')
 
   const permissionDialogHandler = () => {
     setShowPermissions(perv => !perv)
@@ -47,7 +45,7 @@ export const UserTable = ({ data, fetchAgain }) => {
           usr_Img: item.usr_Img && (
             <Image
               //src={item.usr_Img === 'no-image' ? '/assets/img/user.png' : item.usr_Img}
-              src={process.env.REACT_APP_GOD_FTP_SERVER.concat(pathInfo?.filPth_Name + '/' + item.usr_Img)}
+              src={process.env.REACT_APP_GOD_FTP_SERVER.concat(item.usr_Img)}
               template="نمایش"
               alt="user image"
               width={50}
@@ -108,7 +106,7 @@ export const UserTable = ({ data, fetchAgain }) => {
       )
     }
     setDataTable(newData)
-  }, [data, navigate, pathInfo])
+  }, [data, navigate])
   const rightToolbarTemplate = () => {
     return (
       <>

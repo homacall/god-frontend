@@ -34,7 +34,7 @@ const NewLanguage = () => {
     try {
       const { data } = await loginUser(formData)
 
-      if (data && data.message === 'Full') {
+      if (data && data.message === 'UserCapacity') {
         return ToastAlert.error('ظرفیت تعداد ورود برای شما پر شده است ')
       }
       if (data && data.message !== 'NotFoundUser' && data.token) {
