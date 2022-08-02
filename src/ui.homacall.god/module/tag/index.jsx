@@ -100,6 +100,7 @@ export const Tag = () => {
             dir="rtl"
             showClear={filterTagType !== '' ? true : false}
             options={createTagType}
+            placeholder="انتخاب نوع"
             id="tagType"
             name="tagType"
             value={filterTagType}

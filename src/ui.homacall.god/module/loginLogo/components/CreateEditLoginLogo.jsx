@@ -4,7 +4,7 @@ import { InputImage } from '../../common/fileUploader'
 import { Button } from 'primereact/button'
 import { Dropdown } from 'primereact/dropdown'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { GetAllTags } from '../../../service/tagManagerService'
+import { GetAllTags, getAllTagsTranslate } from '../../../service/tagManagerService'
 import { BreadcrumbItem } from '../constant/BreadcampItem'
 import { ToastAlert } from '../../common/toastAlert'
 import { UpdateLoginLogo, InsertLoginLogo, GetLoginLogoById } from '../../../service/loginLogoService'
@@ -16,19 +16,24 @@ function CreateEditLoginLogo() {
   const [tags, setTags] = useState([])
   const [tagValue, setTagValue] = useState('')
   const [editMode, setEditMode] = useState(false)
+  const [typeValue, setTypeValue] = useState('')
+  const [systems, setSystems] = useState([])
 
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
 
   const fetchTags = () => {
-    GetAllTags().then(res => {
+    const formData = new FormData()
+    formData.append('TagType', '-1')
+    getAllTagsTranslate(formData).then(res => {
       if (res.data || res.status === 200) {
-        setTags(res.data.map(item => ({ id: item.tag_ID, name: item.tag_Name })))
+        setTags(res.data.tagsknowledges.map(item => ({ id: item.tag_ID, name: item.tag_Name })))
+        setSystems(res.data.tagsknowledges.filter(item => item.tag_Type === 8))
       }
     })
   }
-
+  console.log({ systems })
   const fetchLoginLogo = useCallback(() => {
     if (params.loginLogoId) {
       const formData = new FormData()
@@ -117,6 +122,8 @@ function CreateEditLoginLogo() {
       <section className="flex mt-8 justify-center">
         <span className="p-float-label rtl relative mt-10" dir="ltr">
           <Dropdown
+            filter
+            filterBy="name"
             options={tags}
             id="Tag_ID"
             name="Tag_Name"
@@ -125,6 +132,22 @@ function CreateEditLoginLogo() {
             value={tagValue}
             onChange={e => setTagValue(e.target.value)}
             placeholder="انتخاب تگ"
+            className="rtl w-[80vw] sm:w-[50vw] md:w-[30vw] h-9 "
+          />
+        </span>
+      </section>
+
+      <section className="flex mt-8 justify-center">
+        <span className="p-float-label rtl relative mt-10" dir="ltr">
+          <Dropdown
+            options={systems}
+            id="tag_ID"
+            name="tag_Name"
+            optionLabel="tagTranslate_Name"
+            optionValue="tag_ID"
+            value={typeValue}
+            onChange={e => setTypeValue(e.target.value)}
+            placeholder="انتخاب سیستم"
             className="rtl w-[80vw] sm:w-[50vw] md:w-[30vw] h-9 "
           />
         </span>

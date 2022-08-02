@@ -21,7 +21,7 @@ export const CreateRoll = () => {
   const fetchTags = () => {
     GetAllTags().then(res => {
       if (res.data || res.status === 200) {
-        setTags(res.data)
+        setTags(res.data.tagsknowledges)
       }
     })
   }

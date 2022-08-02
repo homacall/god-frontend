@@ -15,7 +15,7 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
     GetAllRole()
       .then(res => {
         if (res.data || res.status === 200) {
-          setRoles(res.data)
+          setRoles(res.data.roles)
         } else {
           console.log('error')
         }
