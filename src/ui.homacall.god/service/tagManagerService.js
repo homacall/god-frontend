@@ -25,7 +25,7 @@ export const CreateTagService = data => {
       console.log(err)
     })
 }
-export const GetAllTags = () => {
+export const GetAllTags = data => {
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -33,7 +33,7 @@ export const GetAllTags = () => {
     },
   }
   return http
-    .get(apiUrls.getAllTags, config)
+    .post(apiUrls.getAllTags, data, config)
     .then(res => {
       if (res.data.message === 'Unauthorized') {
         LogoutUser().finally(() => {

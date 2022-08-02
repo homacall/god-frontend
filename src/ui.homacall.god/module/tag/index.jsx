@@ -5,6 +5,7 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Toolbar } from 'primereact/toolbar'
+import { Dropdown } from 'primereact/dropdown'
 import { UpdateTag } from './components/UpdateTag'
 
 import TableActions from '../common/actionBody'
@@ -12,8 +13,11 @@ import { tagColumns } from './constant/tableColumn'
 import ShowTag from './components/ShowTag'
 import { DeleteTag, UpdateTags } from '../../service/tagManagerService'
 import { GetAllTagsTranslate } from '../../service/translateService'
+import { GetAllTags } from '../../service/tagManagerService'
 import { ToastAlert } from '../common/toastAlert'
 import { createTagType } from './constant/createTagType'
+
+import './style/translatetag.css'
 
 export const Tag = () => {
   const [tagName, setTagName] = useState('')
@@ -23,6 +27,7 @@ export const Tag = () => {
   const [id, setId] = useState(0)
   const [data, setData] = useState([])
   const [fetchAgain, setFetchAgain] = useState(false)
+  const [filterTagType, setFilterTagType] = useState('')
   //Get Tags List from server with api
   useEffect(() => {
     const formData = new FormData()
@@ -54,13 +59,59 @@ export const Tag = () => {
     )
   }
 
+  const fetchTagByTypeId = id => {
+    if (id >= 0) {
+      const formData = new FormData()
+      formData.append('TagType', id.toString())
+      GetAllTags(formData).then(res => {
+        if (res.data) {
+          setData(
+            res.data.tagsknowledges.map(item => ({
+              id: item.tag_ID,
+              title: item.tag_Name,
+              type: createTagType.find(element => element.value === item.tag_Type).label,
+              typeId: item.tag_Type,
+              transTitle: item.tagTranslate_Name || '--',
+            })),
+          )
+        }
+      })
+    } else {
+      fetchAgainHandler()
+    }
+  }
+
+  const handleFilterType = type => {
+    setFilterTagType(type.value)
+    fetchTagByTypeId(type.value)
+  }
+
   const header = (
-    <div className="table-header">
-      <span className="p-input-icon-left">
-        <i className="pi pi-search text-sm" />
-        <InputText type="search" onInput={e => setGlobalFilter(e.target.value)} placeholder="جستجو ..." className="h-10 text-sm" />
-      </span>
-    </div>
+    <>
+      <div className="table-header flex items-center  flex-wrap">
+        <span className="p-input-icon-left">
+          <i className="pi pi-search text-sm" />
+          <InputText type="search" onInput={e => setGlobalFilter(e.target.value)} placeholder="جستجو ..." className="h-10 text-sm" />
+        </span>
+
+        <span className="p-input-icon-left mr-5">
+          <span>فیلتر بر اساس نوع: </span>
+          <Dropdown
+            dir="rtl"
+            showClear={filterTagType !== '' ? true : false}
+            options={createTagType}
+            id="tagType"
+            name="tagType"
+            value={filterTagType}
+            onChange={handleFilterType}
+            className="h-9 w-44 tag-filter-by-ty"
+          />
+          {/* <label htmlFor="tagType" className="right-2 text-sm">
+            نوع
+          </label> */}
+        </span>
+      </div>
+    </>
   )
 
   const openShowTag = (valId, valName, valType) => {
