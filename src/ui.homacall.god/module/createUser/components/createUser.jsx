@@ -8,7 +8,7 @@ import { InputTextarea } from 'primereact/inputtextarea'
 import { useFormik } from 'formik'
 
 import { createUserGender } from '../constant/createusergender'
-import { createUserBreadcrumb } from '../constant/createUserBreadcrumb'
+import { createUserBreadcrumb, updateUserBreadcrumb } from '../constant/createUserBreadcrumb'
 
 import { InputImage } from '../../common/fileUploader'
 
@@ -259,7 +259,7 @@ const CreateAndEditUser = () => {
 
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
-      <Breadcrumb item={createUserBreadcrumb} />
+      <Breadcrumb item={editMode ? updateUserBreadcrumb:createUserBreadcrumb} />
       {/* <Dialog
         visible={showMessage}
         onHide={() => setShowMessage(false)}

@@ -35,7 +35,7 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
         } else {
           setHasRole(false)
         }
-        setSelectedRole(res.data.map(item => ({ rol_ID: item.rol_ID, rol_Name: item.transTagText })))
+        setSelectedRole(res.data.roles.map(item => ({ rol_ID: item.rol_ID, rol_Name: item.transTagText })))
       }
     })
   }, [userId])
@@ -77,7 +77,8 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
     if (userId !== 0) {
       fetchRoleByUserId()
     }
-  }, [userId, fetchRoleByUserId])
+  }, [userId, fetchRoleByUserId, visible])
+
   useEffect(() => {
     fetchRole()
   }, [userId])
