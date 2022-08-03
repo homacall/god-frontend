@@ -48,7 +48,7 @@ export const CreateCompany = () => {
   const fetchLanguage = () => {
     GetAllLanguage().then(res => {
       if (res.data || res.status === 200) {
-        setLanguages(res.data.map(item => ({ id: item.lang_ID, name: item.lang_Name })))
+        setLanguages(res.data.languages.map(item => ({ id: item.lang_ID, name: item.lang_Name })))
       }
     })
   }
@@ -59,7 +59,7 @@ export const CreateCompany = () => {
       .then(res => {
         if (res.data) {
           //setLogoPath(res.data.path)
-          setCompanyBYId(res.data.company)
+          setCompanyBYId(res.data.companyInfo)
         }
       })
       .catch(err => {

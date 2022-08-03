@@ -48,7 +48,7 @@ const items = [
   // },
   {
     id: 10,
-    label: 'آپلود لوگو ورود',
+    label: 'آپلود لوگو سیستم ها',
     url: `${sidebar.loginLogo}`,
   },
   {

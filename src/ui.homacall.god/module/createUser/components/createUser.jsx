@@ -146,7 +146,7 @@ const CreateAndEditUser = () => {
   const fetchProvince = () => {
     ProvinceServiceGetAll()
       .then(res => {
-        setProvinces(res.data)
+        setProvinces(res.data.provinces)
       })
       .catch(err => console.log(err))
   }
@@ -155,7 +155,7 @@ const CreateAndEditUser = () => {
     formData.append('PrviceID', id)
     CityServiceGetByProvinceID(formData)
       .then(res => {
-        setCities(res.data)
+        setCities(res.data.cities)
       })
       .catch(err => console(err))
   }

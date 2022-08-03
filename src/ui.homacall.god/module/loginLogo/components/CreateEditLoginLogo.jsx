@@ -4,7 +4,7 @@ import { InputImage } from '../../common/fileUploader'
 import { Button } from 'primereact/button'
 import { Dropdown } from 'primereact/dropdown'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { GetAllTags } from '../../../service/tagManagerService'
+import { GetAllTags, getAllTagsTranslate } from '../../../service/tagManagerService'
 import { BreadcrumbItem } from '../constant/BreadcampItem'
 import { ToastAlert } from '../../common/toastAlert'
 import { UpdateLoginLogo, InsertLoginLogo, GetLoginLogoById } from '../../../service/loginLogoService'
@@ -16,15 +16,20 @@ function CreateEditLoginLogo() {
   const [tags, setTags] = useState([])
   const [tagValue, setTagValue] = useState('')
   const [editMode, setEditMode] = useState(false)
+  const [systemValue, setSystemValue] = useState('')
+  const [systems, setSystems] = useState([])
 
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
 
   const fetchTags = () => {
-    GetAllTags().then(res => {
+    const formData = new FormData()
+    formData.append('TagType', '-1')
+    getAllTagsTranslate(formData).then(res => {
       if (res.data || res.status === 200) {
-        setTags(res.data.map(item => ({ id: item.tag_ID, name: item.tag_Name })))
+        setTags(res.data.tagsknowledges.map(item => ({ id: item.tag_ID, name: item.tag_Name })))
+        setSystems(res.data.tagsknowledges.filter(item => item.tag_Type === 8))
       }
     })
   }
@@ -38,6 +43,7 @@ function CreateEditLoginLogo() {
           if (res.data && res.status === 200) {
             const imgUrl = process.env.REACT_APP_GOD_FTP_SERVER + res.data.logoCo_Name
             setTagValue(res.data.logoCo_TgID)
+            setSystemValue(res.data)
             setImageUrl(imgUrl)
             setImagePervUrl(res.data.logoCo_Name)
           }
@@ -93,7 +99,8 @@ function CreateEditLoginLogo() {
 
   const handleLoginLogo = () => {
     const formData = new FormData()
-    formData.append('LogoCo_TgID', tagValue)
+    formData.append('TagName', tagValue)
+    formData.append('SysName', systemValue)
     if (typeof imageUrl !== 'string') {
       formData.append('IFileLogo', imageUrl)
     } else {
@@ -111,12 +118,14 @@ function CreateEditLoginLogo() {
   }
 
   return (
-    <section className="w-[80%] h-[80vh] mt-5 py-4 rounded-md  m-auto container bg-white rtl ">
+    <section className="w-[80%]  mt-5 py-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={BreadcrumbItem} />
 
       <section className="flex mt-8 justify-center">
         <span className="p-float-label rtl relative mt-10" dir="ltr">
           <Dropdown
+            filter
+            filterBy="name"
             options={tags}
             id="Tag_ID"
             name="Tag_Name"
@@ -130,6 +139,22 @@ function CreateEditLoginLogo() {
         </span>
       </section>
 
+      <section className="flex mt-8 justify-center">
+        <span className="p-float-label rtl relative mt-10" dir="ltr">
+          <Dropdown
+            options={systems}
+            id="tag_ID"
+            name="tag_Name"
+            optionLabel="tagTranslate_Name"
+            optionValue="tag_ID"
+            value={systemValue}
+            onChange={e => setSystemValue(e.target.value)}
+            placeholder="انتخاب سیستم"
+            className="rtl w-[80vw] sm:w-[50vw] md:w-[30vw] h-9 "
+          />
+        </span>
+      </section>
+
       <section className="flex justify-center justify-items-center mt-8">
         <InputImage setImageUrl={setImageUrl} imageUrl={imageUrl} />
       </section>
@@ -137,7 +162,7 @@ function CreateEditLoginLogo() {
       <section className="mt-8 flex justify-center justify-items-center">
         <Button
           type="submit"
-          disabled={imageUrl && tagValue ? false : true}
+          disabled={imageUrl && tagValue && systemValue ? false : true}
           className="bg-indigo-600 text-sm h-10 text-center min-w-[120px] max-w-[120px]"
           loading={loading}
           onClick={handleLoginLogo}

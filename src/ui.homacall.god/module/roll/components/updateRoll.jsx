@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { GetAllTags } from '../../../service/tagManagerService'
 import { Dropdown } from 'primereact/dropdown'
+import { Checkbox } from 'primereact/checkbox'
 
-export const UpdateRoll = ({ oldVal, rollName, setRollName }) => {
+export const UpdateRoll = ({ oldVal, rollName, setRollName, setIsUserSysRole }) => {
   const [tags, setTags] = useState([])
+  const [checked, setChecked] = useState(oldVal ? oldVal.role_IsSystemRole : false)
+
   useEffect(() => {
     fetchTags()
     if (oldVal) {
-      setRollName(oldVal)
+      setRollName(oldVal.rol_TagID)
+      setIsUserSysRole(oldVal.role_IsSystemRole)
     }
-  }, [oldVal, setRollName])
+  }, [oldVal, setIsUserSysRole, setRollName])
+
   const fetchTags = () => {
-    GetAllTags().then(res => {
+    const formData = new FormData()
+    formData.append('TagType', '4')
+    GetAllTags(formData).then(res => {
       if (res.data || res.status === 200) {
-        setTags(res.data)
+        setTags(res.data.tagsknowledges)
       }
     })
   }
@@ -36,10 +43,22 @@ export const UpdateRoll = ({ oldVal, rollName, setRollName }) => {
               نقش
             </label>
           </span>
-          {/* <InputText id="inputtext" value={rollName} onChange={e => setRollName(e.target.value)} className="h-9 w-44" />
-          <label htmlFor="inputtext" className="right-2 text-sm">
-            نقش
-          </label> */}
+        </span>
+      </div>
+      <div className=" flex justify-start mr-[8%] mt-10 ">
+        <span className="p-float-label">
+          <Checkbox
+            onChange={e => {
+              setChecked(e.checked)
+              setIsUserSysRole(e.checked)
+            }}
+            checked={checked}
+            id="isSystemRole"
+          />
+
+          <span htmlFor="isSystemRole" className={`mr-2 text-sm w-full`}>
+            کاربر سازمانی
+          </span>
         </span>
       </div>
     </div>

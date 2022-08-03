@@ -1,4 +1,8 @@
 .p-dropdown .p-dropdown-clear-icon{
-    right: unset;
+    right: unset !important;
     left: 3rem;
+}
+
+@media only screen and (max-width: 599px) {
+  
 }

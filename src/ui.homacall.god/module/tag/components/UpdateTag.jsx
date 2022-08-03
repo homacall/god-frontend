@@ -13,10 +13,12 @@ export const UpdateTag = ({ oldVal, tagName, setTagName, tagType, setTagType }) 
   }, [oldVal, setTagName])
 
   useEffect(() => {
+    console.log(tagType)
     if (tagType) {
       setType(tagType)
+      setTagType(tagType)
     }
-  }, [tagType, setType])
+  }, [tagType, setType, setTagType])
 
   const handleChangeType = type => {
     setTagType(type.value)

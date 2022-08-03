@@ -7,11 +7,13 @@ import { Dropdown } from 'primereact/dropdown'
 import { useNavigate } from 'react-router'
 import { rolls } from '../../../utils/constants/routes/publicRoute'
 import { ToastAlert } from '../../common/toastAlert'
+import { Checkbox } from 'primereact/checkbox'
 
 export const CreateRoll = () => {
   const [value, setValue] = useState()
   const [loading, setLoading] = useState(false)
   const [tags, setTags] = useState([])
+  const [checked, setChecked] = useState(false)
   const navigate = useNavigate()
   const item = [
     { id: 1, label: 'مدیریت نقش', url: rolls.roll },
@@ -19,9 +21,11 @@ export const CreateRoll = () => {
   ]
 
   const fetchTags = () => {
-    GetAllTags().then(res => {
+    const formData = new FormData()
+    formData.append('TagType', '4')
+    GetAllTags(formData).then(res => {
       if (res.data || res.status === 200) {
-        setTags(res.data)
+        setTags(res.data.tagsknowledges)
       }
     })
   }
@@ -29,6 +33,7 @@ export const CreateRoll = () => {
     setLoading(true)
     const formData = new FormData()
     formData.append('Rol_TgID', value)
+    formData.append('Rol_IsSysRol', checked)
     InsertRole(formData)
       .then(res => {
         if (res.data || res.status === 200) {
@@ -68,6 +73,15 @@ export const CreateRoll = () => {
           <label htmlFor="Rol_TgID" className={`right-2 text-sm w-full`}>
             نقش
           </label>
+        </span>
+      </div>
+      <div className=" flex justify-start mr-[8%] mt-10 ">
+        <span className="p-float-label">
+          <Checkbox onChange={e => setChecked(e.checked)} checked={checked} id="isSystemRole" />
+
+          <span htmlFor="isSystemRole" className={`mr-2 text-sm w-full`}>
+            کاربر سازمانی
+          </span>
         </span>
       </div>
       <Button
