@@ -114,6 +114,7 @@ const NewLanguage = () => {
             href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes"
             target="_blank"
             className="text-xs mt-3 mr-3 text-blue-700 "
+            rel="noreferrer"
           >
             نمایش کد پرچم (alfa-2 code) کشورها
           </a>

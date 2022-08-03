@@ -22,21 +22,12 @@ import {
   tags,
   manage,
   serverConnection,
-  serviceType,
-  systemPath,
-  filePath,
   loginLogo,
 } from '../utils/constants/routes/publicRoute'
 import { RouteStretcher } from '../module/routeStretcher'
 import { CreateAndEditStretcher } from '../module/routeStretcher/components/CreateStretcher'
 import { ServerConnection } from '../module/serverConnection'
-import CreateEditServerConnection from '../module/serverConnection/components/CreateEditServerConnection'
-import ServiceType from '../module/serviceType'
-import CreateEditServiceType from '../module/serviceType/components/CreateEditServiceType'
-import SystemPath from '../module/systemPath'
-import CreateEditSystemPath from '../module/systemPath/components/CreateEditSystemPath'
-import FilePath from '../module/filePath'
-import CreateEditFilePath from '../module/filePath/components/CreateEditFilePath'
+
 import LoginLogo from '../module/loginLogo'
 import CreateEditLoginLogo from '../module/loginLogo/components/CreateEditLoginLogo'
 

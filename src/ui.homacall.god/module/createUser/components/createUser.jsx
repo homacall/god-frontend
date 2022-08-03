@@ -33,6 +33,7 @@ const CreateAndEditUser = () => {
   //const [showMessage, setShowMessage] = useState(false)
   const [loading, setLoading] = useState(false)
   const [serialNumber, setSerialNumber] = useState('')
+  const [oldUserName, setOldUserName] = useState()
   const [initialValues, setInitialValue] = useState({
     Usr_FName: '',
     Usr_LName: '',
@@ -77,7 +78,7 @@ const CreateAndEditUser = () => {
               Usr_Address: res.data.user.usr_Address,
               Usr_Mobile: res.data.user.usr_Mobile,
             })
-
+            setOldUserName(res.data.user.usr_UName)
             if (res.data.user.usr_Img) {
               setImageUrl(process.env.REACT_APP_GOD_FTP_SERVER.concat(res.data.user.usr_Img))
               setPervImageName(res.data.user.usr_Img)
@@ -184,6 +185,10 @@ const CreateAndEditUser = () => {
       formData.append('Usr_ID', params.userId)
       formData.append('Usr_Img', pervImageName || '')
       formData.append('Usr_SrialNum', serialNumber)
+      if (data.Usr_UName === oldUserName) {
+        formData.delete('Usr_UName')
+        formData.append('Usr_UName', '')
+      }
       UpdateUser(formData)
         .then(res => {
           if (res.data || res.status === 200) {

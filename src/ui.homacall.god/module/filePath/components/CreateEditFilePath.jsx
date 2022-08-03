@@ -60,7 +60,6 @@ const CreateEditFilePath = () => {
     } else {
       setEditMode(false)
     }
-    console.log('systems: ', systems)
   }, [location, params])
 
   const handleInsertFilePath = formData => {
