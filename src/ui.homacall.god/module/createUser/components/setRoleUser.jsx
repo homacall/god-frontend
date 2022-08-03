@@ -107,7 +107,7 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
           {roles.map((role, index) => (
             <div className="mt-2" key={index}>
               <Checkbox
-                inputId="cb1"
+                inputId={`cb${index}`}
                 value={role.rol_ID}
                 onChange={e => {
                   if (e.checked) {
@@ -119,7 +119,7 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
                 }}
                 checked={!!selectedRole.find(selected => selected.rol_ID === role.rol_ID)}
               ></Checkbox>
-              <label htmlFor="cb1" className="p-checkbox-label mr-5">
+              <label htmlFor={`cb${index}`} className="p-checkbox-label mr-5">
                 {role.transTagText}
               </label>
             </div>
