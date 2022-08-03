@@ -219,7 +219,7 @@ const CreateAndEditUser = () => {
               ToastAlert.error('خطا در ثبت تصویر کاربر')
             } else if (res.data.message === 'JustUploadUser') {
               ToastAlert.error('خطا در ثبت مشخصات کاربر')
-            } else if (res.data.message === 'Succeed') {
+            } else if (res.data.message === 'Sucess') {
               ToastAlert.success('کاربر با موفقیت ثبت شد')
             } else {
               ToastAlert.error('خطا در ثبت کاربر جدید')
