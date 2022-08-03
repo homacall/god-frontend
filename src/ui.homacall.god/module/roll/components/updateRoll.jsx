@@ -43,10 +43,6 @@ export const UpdateRoll = ({ oldVal, rollName, setRollName, setIsUserSysRole }) 
               نقش
             </label>
           </span>
-          {/* <InputText id="inputtext" value={rollName} onChange={e => setRollName(e.target.value)} className="h-9 w-44" />
-          <label htmlFor="inputtext" className="right-2 text-sm">
-            نقش
-          </label> */}
         </span>
       </div>
       <div className=" flex justify-start mr-[8%] mt-10 ">

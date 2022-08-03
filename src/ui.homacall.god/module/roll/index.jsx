@@ -6,6 +6,7 @@ import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Toolbar } from 'primereact/toolbar'
 import { UpdateRoll } from './components/updateRoll'
+import { InputSwitch } from 'primereact/inputswitch'
 
 import TableActions from '../common/actionBody'
 import { roleColumn } from './constant/tableColumn'
@@ -16,7 +17,6 @@ import { UserPermissions } from '../userPermissions'
 import { RoleMember } from './module'
 
 export const Roll = () => {
-  const [rollName, setRollName] = useState(0)
   const [globalFilter, setGlobalFilter] = useState(null)
   const [dataL, setDataL] = useState([])
   const [fetchAgain, setFetchAgain] = useState(false)
@@ -24,7 +24,6 @@ export const Roll = () => {
   const [userInfoForPermission, setUserInfoForPermission] = useState(undefined)
   const [showRoleMember, setShowRoleMember] = useState(false)
   const [currentRole, setCurrentRole] = useState()
-  const [isUserSysRole, setIsUserSysRole] = useState()
 
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
@@ -63,7 +62,7 @@ export const Roll = () => {
       .catch(err => console.log(err))
   }
 
-  const updateRole = (rolId, rol_TagID) => {
+  const updateRole = (rolId, rol_TagID, isUserSysRole) => {
     const formData = new FormData()
     formData.append('Rol_ID', rolId)
     formData.append('Rol_TgID', rol_TagID)
@@ -109,9 +108,40 @@ export const Roll = () => {
           responsiveLayout="scroll"
           className="rtl"
         >
-          {roleColumn.map((col, index) => (
-            <Column field={col.field} header={col.header} sortable key={index} filterBy="#{data.name}" className={col.className}></Column>
-          ))}
+          {roleColumn.map((col, index) => {
+            if (col.field === 'role_IsSystemRole') {
+              return (
+                <Column
+                  field={col.field}
+                  header={col.header}
+                  sortable
+                  key={index}
+                  body={data => (
+                    <InputSwitch
+                      checked={data.role_IsSystemRole}
+                      onChange={e => {
+                        updateRole(data.rol_ID, data.rol_TagID, e.value ? 1 : 0)
+                      }}
+                    />
+                  )}
+                  style={{ width: '10%' }}
+                  filterBy="#{data.name}"
+                  className={col.className}
+                ></Column>
+              )
+            } else
+              return (
+                <Column
+                  field={col.field}
+                  header={col.header}
+                  sortable
+                  key={index}
+                  filterBy="#{data.name}"
+                  className={col.className}
+                  style={{ width: '70%' }}
+                ></Column>
+              )
+          })}
 
           <Column
             field="action"
@@ -122,13 +152,13 @@ export const Roll = () => {
                   deleteRole(data.rol_ID)
                 }}
                 hasDelete={true}
-                hasUpdate={true}
-                updateAction={() => {
-                  updateRole(data.rol_ID, rollName)
-                }}
+                hasUpdate={false}
+                // updateAction={() => {
+                //   updateRole(data.rol_ID, rollName)
+                // }}
                 deleteLabel="حذف"
-                updateLabel="ویرایش"
-                updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data} setIsUserSysRole={setIsUserSysRole} />}
+                // updateLabel="ویرایش"
+                // updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data} />}
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
               >
@@ -152,6 +182,7 @@ export const Roll = () => {
                 </Button>
               </TableActions>
             )}
+            style={{ width: '20%' }}
           ></Column>
         </DataTable>
         <UserPermissions visible={showPermissions} onHide={permissionDialogHandler} user={userInfoForPermission} role={true} />
