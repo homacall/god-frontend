@@ -34,7 +34,7 @@ export const CreateAndEditStretcher = () => {
   const [tags, setTags] = useState([])
   const [editMode, setEditMode] = useState(location.pathname.includes('/route-stretcher/update/'))
   const [selectedType, setSelectedType] = useState()
-  const fetchTags = type => {
+  const fetchTags = async type => {
     const formData = new FormData()
     formData.append('TagType', type)
     GetAllTagsTranslate(formData)
@@ -42,13 +42,17 @@ export const CreateAndEditStretcher = () => {
         if (res.data || res.status === 200) {
           setTags(res.data.tagsknowledges)
         }
+        return res
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        console.log(error)
+        return error
+      })
   }
   const fetchRoutes = () => {
     GetAllRoutesGodByTypeRouteTree()
       .then(res => {
-        if (res.data || res.status === 200) {
+        if (res.data.routeStructures || res.status === 200) {
           setRoutes(res.data.routeStructures)
         }
       })
@@ -60,10 +64,14 @@ export const CreateAndEditStretcher = () => {
     GetByIdRouteStructure(formData)
       .then(res => {
         if (res.data || res.status === 200) {
-          setSelectedRoute(res.data)
-          setInitialValue({
-            RoutStr_Tag_ID: res.data.routStr_Tag_ID,
-            RoutStr_TypeRout: res.data.routStr_TypeRout.toString(),
+          const data = res.data.routeStructures
+
+          fetchTags(data.routStr_TypeRout).then(() => {
+            setSelectedRoute(data)
+            setInitialValue({
+              RoutStr_Tag_ID: data.routStr_Tag_ID,
+              RoutStr_TypeRout: data.routStr_TypeRout,
+            })
           })
         }
       })
@@ -93,9 +101,9 @@ export const CreateAndEditStretcher = () => {
   }, [])
   const insertRoute = data => {
     const formData = new FormData()
-    formData.append('RoutStr_TypeRout', parseInt(data.RoutStr_TypeRout))
+    formData.append('RoutStr_TypeRout', data.RoutStr_TypeRout === 8 ? 0 : data.RoutStr_TypeRout)
     formData.append('RoutStr_Tag_ID', data.RoutStr_Tag_ID)
-    if (isParent || !selectedRoute) {
+    if (isParent && !selectedRoute) {
       formData.append('RoutStr_PID', 0)
     } else {
       formData.append('RoutStr_PID', selectedRoute.routStr_ID)
@@ -115,7 +123,7 @@ export const CreateAndEditStretcher = () => {
   }
   const editRoute = data => {
     const formData = new FormData()
-    formData.append('RoutStr_TypeRout', parseInt(data.RoutStr_TypeRout))
+    formData.append('RoutStr_TypeRout', data.RoutStr_TypeRout === 8 ? 0 : data.RoutStr_TypeRout)
     formData.append('RoutStr_Tag_ID', data.RoutStr_Tag_ID)
     formData.append('RoutStr_ID', params.stretcherId)
     if (isParent || !selectedRoute) {
@@ -177,6 +185,11 @@ export const CreateAndEditStretcher = () => {
       setShowTreeView(false)
     }
   }, [selectedRoute, routes.length])
+  useEffect(() => {
+    if (isParent) {
+      setShowTreeView(false)
+    }
+  }, [isParent])
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={routeBreadcrumb} />

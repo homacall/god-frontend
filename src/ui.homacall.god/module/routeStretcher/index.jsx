@@ -33,7 +33,7 @@ export const RouteStretcher = () => {
     GetAllRoutesGodByType()
       .then(res => {
         if (res.data || res.status === 200) {
-          const routes = res.data.map(item => {
+          const routes = res.data.routeStructures.map(item => {
             const type = routeTypes.find(type => type.value === item.routStr_TypeRout.toString())
             return { ...item, routStr_TypeRout: type.label }
           })
