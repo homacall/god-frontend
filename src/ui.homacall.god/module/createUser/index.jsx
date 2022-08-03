@@ -12,7 +12,7 @@ export const UsersPage = () => {
   useEffect(() => {
     GetAllUserSP()
       .then(res => {
-        if (res.data) setData(res.data.users)
+        if (res.data) setData(res.data.user)
       })
       .catch(e => console.log(e))
   }, [fetchAgain])
