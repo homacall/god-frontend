@@ -229,6 +229,7 @@ export const CreateAndEditStretcher = () => {
             className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_Tag_ID'), 'w-[60%]': true, 'rtl': true })}
             filterBy="tagTranslate_Name"
             filter
+            disabled={!selectedType?.toString()}
           />
           <label htmlFor="RoutStr_Tag_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_Tag_ID') })}`}>
             عنوان ساختار
