@@ -121,7 +121,7 @@ export const UserTable = ({ data, fetchAgain }) => {
     formData.append('UserID', userIsActive.userId)
     formData.append('IsActive', !userIsActive.status)
     ChangeUserStatus(formData).then(res => {
-      if ((res.data || res.status === 200) && res.data.message === 'Succeed') {
+      if ((res.data || res.status === 200) && res.data.message === 'Sucess') {
         fetchAgain()
         setUserIsActive({ status: false, username: '', userId: 0 })
         activeDialogHandler()
