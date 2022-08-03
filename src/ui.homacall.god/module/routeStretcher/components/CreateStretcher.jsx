@@ -7,7 +7,6 @@ import { Dropdown } from 'primereact/dropdown'
 import { Checkbox } from 'primereact/checkbox'
 import { routeBreadcrumb } from '../constant/breadcrumb'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { routeTypes } from '../constant/routeTypes'
 import { useLocation, useParams } from 'react-router'
 import { TreeView } from '../../userPermissions/components/treeView'
 import {
@@ -18,6 +17,7 @@ import {
 } from '../../../service/routeStretcherService'
 import { GetAllTagsTranslate } from '../../../service/translateService'
 import { ToastAlert } from '../../common/toastAlert'
+import { createTagType } from '../../tag/constant/createTagType'
 
 export const CreateAndEditStretcher = () => {
   const location = useLocation()
@@ -33,8 +33,11 @@ export const CreateAndEditStretcher = () => {
   const [routes, setRoutes] = useState([])
   const [tags, setTags] = useState([])
   const [editMode, setEditMode] = useState(location.pathname.includes('/route-stretcher/update/'))
-  const fetchTags = () => {
-    GetAllTagsTranslate()
+  const [selectedType, setSelectedType] = useState()
+  const fetchTags = type => {
+    const formData = new FormData()
+    formData.append('TagType', type)
+    GetAllTagsTranslate(formData)
       .then(res => {
         if (res.data || res.status === 200) {
           setTags(res.data.tagsknowledges)
@@ -81,8 +84,12 @@ export const CreateAndEditStretcher = () => {
     }
   }, [params.stretcherId, editMode])
   useEffect(() => {
+    if (selectedType?.toString()) {
+      fetchTags(selectedType)
+    }
+  }, [selectedType])
+  useEffect(() => {
     fetchRoutes()
-    fetchTags()
   }, [])
   const insertRoute = data => {
     const formData = new FormData()
@@ -192,9 +199,12 @@ export const CreateAndEditStretcher = () => {
           <Dropdown
             id="RoutStr_TypeRout"
             value={formik.values.RoutStr_TypeRout}
-            onChange={formik.handleChange}
+            onChange={e => {
+              formik.handleChange(e)
+              setSelectedType(e.value)
+            }}
             name="RoutStr_TypeRout"
-            options={routeTypes}
+            options={createTagType}
             className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_TypeRout'), 'w-[60%]': true })}
             filterBy="label"
             filter
