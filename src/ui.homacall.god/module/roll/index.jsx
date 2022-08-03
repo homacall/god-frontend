@@ -5,7 +5,6 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Toolbar } from 'primereact/toolbar'
-import { UpdateRoll } from './components/updateRoll'
 import { InputSwitch } from 'primereact/inputswitch'
 
 import TableActions from '../common/actionBody'
@@ -63,10 +62,11 @@ export const Roll = () => {
   }
 
   const updateRole = (rolId, rol_TagID, isUserSysRole) => {
-    const formData = new FormData()
-    formData.append('Rol_ID', rolId)
-    formData.append('Rol_TgID', rol_TagID)
-    formData.append('Rol_IsSysRol ', isUserSysRole)
+    const formData = {
+      rol_ID: rolId,
+      rol_TgID: rol_TagID,
+      rol_IsSysRol: isUserSysRole,
+    }
     UpdateRole(formData)
       .then(res => {
         if (res.data || res.status === 200) {
@@ -120,7 +120,7 @@ export const Roll = () => {
                     <InputSwitch
                       checked={data.role_IsSystemRole}
                       onChange={e => {
-                        updateRole(data.rol_ID, data.rol_TagID, e.value ? 1 : 0)
+                        updateRole(data.rol_ID, data.rol_TagID, e.value)
                       }}
                     />
                   )}
@@ -138,7 +138,7 @@ export const Roll = () => {
                   key={index}
                   filterBy="#{data.name}"
                   className={col.className}
-                  style={{ width: '70%' }}
+                  style={{ width: '65%' }}
                 ></Column>
               )
           })}
@@ -153,12 +153,7 @@ export const Roll = () => {
                 }}
                 hasDelete={true}
                 hasUpdate={false}
-                // updateAction={() => {
-                //   updateRole(data.rol_ID, rollName)
-                // }}
                 deleteLabel="حذف"
-                // updateLabel="ویرایش"
-                // updateView={<UpdateRoll rollName={rollName} setRollName={setRollName} oldVal={data} />}
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
                 updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
               >
@@ -182,7 +177,7 @@ export const Roll = () => {
                 </Button>
               </TableActions>
             )}
-            style={{ width: '20%' }}
+            style={{ width: '25%' }}
           ></Column>
         </DataTable>
         <UserPermissions visible={showPermissions} onHide={permissionDialogHandler} user={userInfoForPermission} role={true} />
