@@ -1,32 +1,32 @@
-export const serverConnectionColumns = [
+export const menuListColumns = [
   {
-    header: 'ip',
-    field: 'serConn_IP',
+    header: 'تگ لینک',
+    field: 'link_TagName',
     className: 'text-sm',
   },
   {
-    header: 'پورت',
-    field: 'serConn_Port',
+    header: 'فرم',
+    field: 'form_TagName',
     className: 'text-sm',
   },
   {
-    header: 'نام پایگاه داده',
-    field: 'serConn_DbName',
+    header: 'اکشن',
+    field: 'action_TagName',
     className: 'text-sm',
   },
   {
-    header: 'User ID',
-    field: 'serConn_UsrID',
+    header: 'سیستم',
+    field: 'system_TagName',
     className: 'text-sm',
   },
   {
-    header: 'نام سرویس',
-    field: 'serConn_ServTypID',
+    header: 'نوع مسیر',
+    field: 'menuLink_TypeRouteID',
     className: 'text-sm',
   },
   {
-    header: 'نام سیستم',
-    field: 'serConn_SysID',
+    header: 'منو والد ',
+    field: 'parent_TagName',
     className: 'text-sm',
   },
 ]

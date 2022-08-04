@@ -6,9 +6,7 @@ import { Dropdown } from 'primereact/dropdown'
 import { useParams, useNavigate } from 'react-router'
 
 import { createMenuLinksBreadcrumb } from '../constant/menuLinkBreadcrump'
-import validate from '../constant/validate'
 import { ToastAlert } from '../../common/toastAlert'
-import { InsertServerConnections, UpdateServerConnections } from '../../../service/serverConnectionService'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import '../styles/menuLink.module.css'
 import { GetAllTagsTranslate } from '../../../service/translateService'
@@ -28,6 +26,7 @@ const CreateEditMenuLink = () => {
   const [isParent, setIsParent] = useState(false)
   const [systemId, setSystemId] = useState(-1)
   const [menuLinks, setMenuLinks] = useState([])
+  const [errors, setErrors] = useState({})
   // const location = useLocation()
   let { ServerId } = useParams()
   const navigate = useNavigate()
@@ -97,7 +96,11 @@ const CreateEditMenuLink = () => {
   // }, [location.pathname, serverConnectionById])
 
   const submitHandler = values => {
+    if (!isValid(values)) {
+      return
+    }
     setLoading(true)
+
     const formData = new FormData()
     Object.keys(values).forEach(key => {
       const value = values[key]
@@ -110,7 +113,6 @@ const CreateEditMenuLink = () => {
       }
       formData.append('MenuLnk_ParntID', 0)
     }
-
     MenuLinkService.insert(formData)
       .then(res => {
         if (res.status === 200 || res.data) {
@@ -147,33 +149,35 @@ const CreateEditMenuLink = () => {
   }, [systemId, fetchParentId])
   const formik = useFormik({
     initialValues,
-    validate: values => {
-      const errors = {}
-      if (!values.MenuLnk_SysTagID) {
-        errors.MenuLnk_SysTagID = 'انتخاب سیستم الزامی است'
-      }
-
-      if (!values.MenuLnk_TagID) {
-        errors.MenuLnk_TagID = 'انتخاب تگ الزامی است'
-      }
-
-      if (!values.MenuLnk_FrmTagID) {
-        errors.MenuLnk_FrmTagID = 'انتخاب فرم الزامی است'
-      }
-
-      if (!values.MenuLnk_ActnTagID) {
-        errors.MenuLnk_ActnTagID = 'انتخاب اکشن الزامی است'
-      }
-
-      if (!values.MenuLnk_TypRoutID) {
-        errors.MenuLnk_TypRoutID = `انتخاب نوع مسیر الزامی است`
-      }
-
-      return errors
-    },
     onSubmit: submitHandler,
     enableReinitialize: true,
   })
+  const isValid = values => {
+    const error = {}
+
+    if (!values?.MenuLnk_SysTagID) {
+      error.MenuLnk_SysTagID = 'انتخاب سیستم الزامی است'
+    }
+    if (!values?.MenuLnk_TagID) {
+      error.MenuLnk_TagID = 'انتخاب تگ الزامی است'
+    }
+    if (!values?.MenuLnk_FrmTagID) {
+      error.MenuLnk_FrmTagID = 'انتخاب فرم الزامی است'
+    }
+    if (!values?.MenuLnk_ActnTagID) {
+      error.MenuLnk_ActnTagID = 'انتخاب اکشن الزامی است'
+    }
+    if (!values?.MenuLnk_TypRoutID?.toString()) {
+      error.MenuLnk_TypRoutID = `انتخاب نوع مسیر الزامی است`
+    }
+    if (!values?.MenuLnk_ParntID && !isParent) {
+      error.MenuLnk_ParntID = `انتخاب زیرمنو یا منوی اصلی الزامی است`
+    }
+    setErrors(error)
+    if (Object.keys(error).length) {
+      return false
+    } else return true
+  }
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createMenuLinksBreadcrumb} />
@@ -197,9 +201,9 @@ const CreateEditMenuLink = () => {
               style={{ width: '100%' }}
             />
 
-            {formik.errors.MenuLnk_SysTagID ? (
+            {errors.MenuLnk_SysTagID ? (
               <div className="text-right">
-                <small className="p-error">{formik.errors.MenuLnk_SysTagID}</small>
+                <small className="p-error">{errors.MenuLnk_SysTagID}</small>
               </div>
             ) : null}
           </span>
@@ -218,9 +222,9 @@ const CreateEditMenuLink = () => {
               style={{ width: '100%' }}
             />
 
-            {formik.errors.MenuLnk_TagID ? (
+            {errors.MenuLnk_TagID ? (
               <div className="text-right">
-                <small className="p-error">{formik.errors.MenuLnk_TagID}</small>
+                <small className="p-error">{errors.MenuLnk_TagID}</small>
               </div>
             ) : null}
           </span>
@@ -239,9 +243,9 @@ const CreateEditMenuLink = () => {
               style={{ width: '100%' }}
             />
 
-            {formik.errors.MenuLnk_FrmTagID ? (
+            {errors.MenuLnk_FrmTagID ? (
               <div className="text-right">
-                <small className="p-error">{formik.errors.MenuLnk_FrmTagID}</small>
+                <small className="p-error">{errors.MenuLnk_FrmTagID}</small>
               </div>
             ) : null}
           </span>
@@ -260,9 +264,9 @@ const CreateEditMenuLink = () => {
               style={{ width: '100%' }}
             />
 
-            {formik.errors.MenuLnk_ActnTagID ? (
+            {errors.MenuLnk_ActnTagID ? (
               <div className="text-right">
-                <small className="p-error">{formik.errors.MenuLnk_ActnTagID}</small>
+                <small className="p-error">{errors.MenuLnk_ActnTagID}</small>
               </div>
             ) : null}
           </span>
@@ -283,9 +287,9 @@ const CreateEditMenuLink = () => {
               style={{ width: '100%' }}
             />
 
-            {formik.errors.MenuLnk_TypRoutID ? (
+            {errors.MenuLnk_TypRoutID ? (
               <div className="text-right">
-                <small className="p-error">{formik.errors.MenuLnk_TypRoutID}</small>
+                <small className="p-error">{errors.MenuLnk_TypRoutID}</small>
               </div>
             ) : null}
           </span>
@@ -307,15 +311,14 @@ const CreateEditMenuLink = () => {
               <Checkbox
                 checked={isParent}
                 onChange={e => {
-                  console.log(e)
                   setIsParent(e.checked)
                 }}
               ></Checkbox>
               <div style={{ fontSize: 12 }}>منو اصلی</div>
             </div>
-            {formik.errors.MenuLnk_ParntID ? (
+            {errors.MenuLnk_ParntID ? (
               <div className="text-right">
-                <small className="p-error">{formik.errors.MenuLnk_ParntID}</small>
+                <small className="p-error">{errors.MenuLnk_ParntID}</small>
               </div>
             ) : null}
           </span>
