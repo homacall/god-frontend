@@ -9,7 +9,7 @@ export const TreeView = ({ setSelectedRoute, closeButton, data, hasPermission = 
   const [selected, setSelected] = useState([])
   const filterData = useCallback(
     route => {
-      const newData = data.filter(d => d.routStr_PID === route.routStr_ID)
+      const newData = data?.filter(d => d.routStr_PID === route.routStr_ID)
       if (setSelectedRoute) {
         if (!newData.length) {
           setSelectedRoute(route)

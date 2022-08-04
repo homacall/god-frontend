@@ -160,6 +160,7 @@ export const Roll = () => {
                 <Button
                   className="p-button-primary text-xs rtl ml-1 p-1 mt-1 mr-2 h-10"
                   onClick={() => {
+                    console.log(data)
                     setUserInfoForPermission(data)
                     setShowPermissions(perv => !perv)
                   }}

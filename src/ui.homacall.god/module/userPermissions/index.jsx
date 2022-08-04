@@ -105,7 +105,7 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
   useEffect(() => {
     GetAllRoutesGodByTypeRouteTree()
       .then(res => {
-        setRoutes(res.data)
+        if (res.data) setRoutes(res.data.routeStructures)
       })
       .catch(err => console.log(err))
   }, [])
