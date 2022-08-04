@@ -18,7 +18,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
       GetAllPermissionUserActions(formData)
         .then(res => {
           if (res.data || res.status === 200) {
-            setActions(res.data)
+            setActions(res.data.userRoleActions)
 
             const selected = []
             res.data.forEach(item => {

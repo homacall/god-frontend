@@ -70,7 +70,7 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
       .then(res => {
         if (res.data || res.status === 200) {
           const newData = []
-          res.data.forEach(item => {
+          res.data.userRoleActions.forEach(item => {
             newData.push({
               ...item,
               action: (
