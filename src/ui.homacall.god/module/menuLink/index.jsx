@@ -10,8 +10,9 @@ import TableActions from '../common/actionBody'
 import { serverConnectionColumns } from './constant/tableColumn'
 import { GetAllServerConnections, DeleteServerConnections } from '../../service/serverConnectionService'
 import { ToastAlert } from '../common/toastAlert'
+import { menu } from '../../utils/constants/routes/publicRoute'
 
-export const ServerConnection = () => {
+export const MenuLinks = () => {
   const [serverConnectionData, setServerConnectionData] = useState([])
   const [globalFilter, setGlobalFilter] = useState(null)
   const [fetchAgain, setFetchAgain] = useState(false)
@@ -27,7 +28,7 @@ export const ServerConnection = () => {
   const rightToolbarTemplate = () => {
     return (
       <>
-        <Link to="/server-connection/create">
+        <Link to={menu.create}>
           <Button label="ثبت جدید" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
         </Link>
       </>

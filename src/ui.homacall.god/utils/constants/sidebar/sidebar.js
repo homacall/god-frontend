@@ -41,11 +41,11 @@ const items = [
   //   label: 'تعریف مسیر فایل ها',
   //   url: `${sidebar.filePath}`,
   // },
-  // {
-  //   id: 9,
-  //   label: 'مدیریت پایگاه داده',
-  //   url: `${sidebar.serverConnection}`,
-  // },
+  {
+    id: 9,
+    label: 'تعریف منو',
+    url: `${sidebar.menu}`,
+  },
   {
     id: 10,
     label: 'آپلود لوگو سیستم ها',

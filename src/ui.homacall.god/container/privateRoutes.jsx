@@ -13,23 +13,14 @@ import { CreateTag } from '../module/tag/components/CreateTag'
 import LoginForm from '../module/auth/login/loginForm'
 import { Company } from '../module/company'
 import { CreateCompany } from '../module/company/components/CreateCompany'
-import {
-  language,
-  users,
-  rolls,
-  authRoutes,
-  routeStretcher,
-  tags,
-  manage,
-  serverConnection,
-  loginLogo,
-} from '../utils/constants/routes/publicRoute'
+import { language, users, rolls, authRoutes, routeStretcher, tags, manage, menu, loginLogo } from '../utils/constants/routes/publicRoute'
 import { RouteStretcher } from '../module/routeStretcher'
 import { CreateAndEditStretcher } from '../module/routeStretcher/components/CreateStretcher'
-import { ServerConnection } from '../module/serverConnection'
+import { MenuLinks } from '../module/menuLink'
 
 import LoginLogo from '../module/loginLogo'
 import CreateEditLoginLogo from '../module/loginLogo/components/CreateEditLoginLogo'
+import CreateEditMenuLink from '../module/menuLink/components/CreateEditMenuLink'
 
 export const PrivateRoutes = () => {
   return (
@@ -212,38 +203,38 @@ export const PrivateRoutes = () => {
           }
         />
         <Route
-          path={`${serverConnection.main}`}
+          path={`${menu.main}`}
           element={
             <>
               <Helmet>
-                <title>مدیریت پایگاه داده</title>
+                <title>تعریف منوها</title>
               </Helmet>
-              <ServerConnection />
-            </>
-          }
-        />
-        {/* <Route
-          path={`${serverConnection.create}`}
-          element={
-            <>
-              <Helmet>
-                <title>مدیریت پایگاه داده</title>
-              </Helmet>
-              <CreateEditServerConnection />
+              <MenuLinks />
             </>
           }
         />
         <Route
-          path={`${serverConnection.edit}`}
+          path={`${menu.create}`}
           element={
             <>
               <Helmet>
-                <title>مدیریت پایگاه داده</title>
+                <title>تعریف منوها</title>
               </Helmet>
-              <CreateEditServerConnection />
+              <CreateEditMenuLink />
             </>
           }
-        /> */}
+        />
+        <Route
+          path={`${menu.edit}`}
+          element={
+            <>
+              <Helmet>
+                <title>تعریف منوها</title>
+              </Helmet>
+              <CreateEditMenuLink />
+            </>
+          }
+        />
         {/* <Route
           path={`${serviceType.main}`}
           element={

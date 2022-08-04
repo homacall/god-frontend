@@ -8,4 +8,5 @@ export const createTagType = [
   { label: 'Archive', value: 6 },
   { label: 'Logo', value: 7 },
   { label: 'System', value: 8 },
+  { label: 'Link', value: 9 },
 ]
