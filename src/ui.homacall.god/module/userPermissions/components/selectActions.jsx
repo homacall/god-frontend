@@ -81,7 +81,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
         actions.map((action, index) => (
           <div className="mt-2" key={index}>
             <Checkbox
-              inputId="cb1"
+              inputId={`cb${index}`}
               value={action.routstructure_ID}
               onChange={e => {
                 if (e.checked) {
@@ -101,7 +101,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
               }}
               checked={!!selectedAction.find(selected => selected.rlUsrPer_RoutStrID === action.routstructure_ID)}
             ></Checkbox>
-            <label htmlFor="cb1" className="p-checkbox-label mr-5">
+            <label htmlFor={`cb${index}`} className="p-checkbox-label mr-5">
               {action.tag_Name}
             </label>
           </div>

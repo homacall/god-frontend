@@ -11,7 +11,7 @@ export const sidebar = {
   tag: '/tag',
   manage: '/company',
   routeStretcher: '/route-stretcher',
-  serverConnection: '/server-connection',
+  menu: '/menu',
   serviceType: '/service-types',
   systemPath: '/systems-path',
   filePath: '/files-path',
@@ -51,10 +51,10 @@ export const routeStretcher = {
   update: '/route-stretcher/update/:stretcherId',
 }
 
-export const serverConnection = {
-  main: '/server-connection',
-  create: '/server-connection/create',
-  edit: '/server-connection/edit/:ServerId',
+export const menu = {
+  main: '/menu',
+  create: '/menu/create',
+  edit: '/menu/edit/:linkId',
 }
 
 export const serviceType = {

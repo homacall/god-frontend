@@ -86,4 +86,8 @@ export const apiUrls = {
   roleMembersGetById: GodHOST.concat('/RoleMembersGod/GetByID'),
   roleMembersGetAll: GodHOST.concat('/RoleMembersGod/GetAll'),
   roleMembersDelete: GodHOST.concat('/RoleMembersGod/Delete'),
+  menuLinkGetAll: GodHOST.concat('/MenuLink/GetAll'),
+  menuLinkGetAllGrid: GodHOST.concat('/MenuLink/GetAllGrid'),
+  menuLinkInsert: GodHOST.concat('/MenuLink/Insert'),
+  menuLinkDelete: GodHOST.concat('/MenuLink/Delete'),
 }

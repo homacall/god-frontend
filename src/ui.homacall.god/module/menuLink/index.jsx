@@ -7,19 +7,41 @@ import { Button } from 'primereact/button'
 import { Toolbar } from 'primereact/toolbar'
 
 import TableActions from '../common/actionBody'
-import { serverConnectionColumns } from './constant/tableColumn'
-import { GetAllServerConnections, DeleteServerConnections } from '../../service/serverConnectionService'
+import { menuListColumns } from './constant/tableColumn'
 import { ToastAlert } from '../common/toastAlert'
+import { menu } from '../../utils/constants/routes/publicRoute'
+import { MenuLinkService } from '../../service'
 
-export const ServerConnection = () => {
-  const [serverConnectionData, setServerConnectionData] = useState([])
+export const MenuLinks = () => {
+  const [data, setData] = useState([])
   const [globalFilter, setGlobalFilter] = useState(null)
   const [fetchAgain, setFetchAgain] = useState(false)
 
   useEffect(() => {
-    GetAllServerConnections()
+    MenuLinkService.getAllGrid()
       .then(res => {
-        if (res.data) setServerConnectionData(res.data)
+        if (res.data) {
+          const newData = res.data.menuLinksGrid.map(menuLink => {
+            const currentData = menuLink
+            switch (menuLink.menuLink_TypeRouteID) {
+              case 0:
+                currentData.menuLink_TypeRouteID = 'مسیر'
+                break
+              case 1:
+                currentData.menuLink_TypeRouteID = 'فرم'
+                break
+              case 2:
+                currentData.menuLink_TypeRouteID = 'اکشن'
+                break
+              default:
+                break
+            }
+
+            return currentData
+          })
+
+          setData(newData)
+        }
       })
       .catch(e => console.log(e))
   }, [fetchAgain])
@@ -27,7 +49,7 @@ export const ServerConnection = () => {
   const rightToolbarTemplate = () => {
     return (
       <>
-        <Link to="/server-connection/create">
+        <Link to={menu.create}>
           <Button label="ثبت جدید" icon="pi pi-plus text-sm" className="p-button ml-2 text-sm rtl h-10" />
         </Link>
       </>
@@ -49,14 +71,14 @@ export const ServerConnection = () => {
 
   const handleDelete = id => {
     const formData = new FormData()
-    formData.append('ID', id)
-    DeleteServerConnections(formData)
+    formData.append('LinkId', id)
+    MenuLinkService.deleteLink(formData)
       .then(res => {
         if (res.data || res.status === 200) {
-          ToastAlert.success('حذف پایگاه داده با موفقیت انجام شد')
+          ToastAlert.success('حذف لینک منو با موفقیت انجام شد')
           fetchAgainHandler()
         } else {
-          ToastAlert.error('خطا در حذف پایگاه داده ')
+          ToastAlert.error('خطا در حذف لینک منو  ')
         }
       })
       .catch(err => console.log(err))
@@ -68,7 +90,7 @@ export const ServerConnection = () => {
         <div className="card">
           <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
           <DataTable
-            value={serverConnectionData}
+            value={data}
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
@@ -79,7 +101,7 @@ export const ServerConnection = () => {
             responsiveLayout="scroll"
             className="rtl"
           >
-            {serverConnectionColumns.map((col, index) => {
+            {menuListColumns.map((col, index) => {
               return (
                 <Column
                   field={col.field}
@@ -99,19 +121,13 @@ export const ServerConnection = () => {
                 <>
                   <TableActions
                     deleteAction={() => {
-                      handleDelete(data.serConn_ID)
+                      handleDelete(data.menuLink_ID)
                     }}
                     hasDelete={true}
                     hasUpdate={false}
-                    updateAction={() => {}}
                     deleteLabel="حذف"
-                    updateLabel="ویرایش"
-                    deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
-                    updateButtonClassName={'p-button-warning text-xs rtl h-10 w-25 p-1'}
+                    deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-[50px] p-1'}
                   />
-                  <Link to={'/server-connection/edit/' + data.serConn_ID}>
-                    <Button className="p-button-warning text-xs rtl h-10 w-25 p-1">ویرایش</Button>
-                  </Link>
                 </>
               )}
             ></Column>
