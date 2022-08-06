@@ -21,7 +21,7 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
             setActions(res.data.userRoleActions)
 
             const selected = []
-            res.data.forEach(item => {
+            res.data.userRoleActions.forEach(item => {
               if (item.action_State === true) {
                 selected.push({
                   rlUsrPer_RolID_UsrID: role ? user.rol_ID : user.usr_ID,

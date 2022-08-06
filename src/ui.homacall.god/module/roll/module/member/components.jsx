@@ -7,7 +7,6 @@ import { ToastAlert } from '../../../common/toastAlert'
 export const NewRoleMemberForm = ({ onCancel, roles, currentRole }) => {
   const [roleId, setRoleId] = useState('')
   const submitHandler = () => {
-    console.log(currentRole)
     if (!roleId || roleId === '') return ToastAlert.error('انتخاب زیرمجموعه اجباریست')
     const formData = new FormData()
     formData.append('RolMbrs_RolID', currentRole.rol_ID)

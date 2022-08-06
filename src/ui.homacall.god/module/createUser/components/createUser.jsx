@@ -216,7 +216,6 @@ const CreateAndEditUser = () => {
     } else {
       insertUser(formData)
         .then(res => {
-          //console.log('res: ', res)
           if (res.data || res.status === 200) {
             if (res.data.message === 'FoundUserName') {
               ToastAlert.error('نام کاذبری تکراری است ')
@@ -259,7 +258,7 @@ const CreateAndEditUser = () => {
 
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
-      <Breadcrumb item={editMode ? updateUserBreadcrumb:createUserBreadcrumb} />
+      <Breadcrumb item={editMode ? updateUserBreadcrumb : createUserBreadcrumb} />
       {/* <Dialog
         visible={showMessage}
         onHide={() => setShowMessage(false)}

@@ -32,7 +32,6 @@ export const Company = () => {
     GetAllCompanyInfo()
       .then(res => {
         if (res.data || res.status === 200) {
-          console.log(res.data)
           if (res.data.companyInfos.length) {
             var dateType = ''
             if (res.data.companyInfos[0].coIn_TypeDateTime === 1) {

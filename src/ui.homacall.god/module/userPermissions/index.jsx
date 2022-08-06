@@ -50,7 +50,6 @@ export const UserPermissions = ({ visible, onHide, user, role = false }) => {
       const formData = new FormData()
       formData.append('UserID', role ? user.rol_ID : user.usr_ID)
       formData.append('ParentID', parentId)
-      console.log(user, parentId)
       DeleteAllRoleUserPermission(formData).then(res => {
         if (res.data || res.status === 200) {
           fetchAgainHandler()
