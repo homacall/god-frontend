@@ -30,7 +30,7 @@ export const SetRoleUserDialog = ({ visible, onHide, userId }) => {
     formData.append('UserID', userId)
     GetRoleByUserId(formData).then(res => {
       if (res.data || res.status === 200) {
-        if (res.data.length) {
+        if (res.data.roles.length) {
           setHasRole(true)
         } else {
           setHasRole(false)

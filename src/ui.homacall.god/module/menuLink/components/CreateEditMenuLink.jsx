@@ -15,6 +15,7 @@ import { Checkbox } from 'primereact/checkbox'
 import { MenuLinkService } from '../../../service'
 import { useCallback } from 'react'
 import { menu } from '../../../utils/constants/routes/publicRoute'
+import { InputText } from 'primereact/inputtext'
 
 const CreateEditMenuLink = () => {
   const [loading, setLoading] = useState(false)
@@ -96,6 +97,8 @@ const CreateEditMenuLink = () => {
   // }, [location.pathname, serverConnectionById])
 
   const submitHandler = values => {
+    console.log(values)
+
     if (!isValid(values)) {
       return
     }
@@ -112,6 +115,12 @@ const CreateEditMenuLink = () => {
         formData.delete('MenuLnk_ParntID')
       }
       formData.append('MenuLnk_ParntID', 0)
+    }
+    if (!values.MenuLnk_ActnTagID) {
+      formData.append('MenuLnk_ActnTagID', '-1')
+    }
+    if (!values.MenuLnk_FrmTagID) {
+      formData.append('MenuLnk_FrmTagID', '-1')
     }
     MenuLinkService.insert(formData)
       .then(res => {
@@ -161,18 +170,20 @@ const CreateEditMenuLink = () => {
     if (!values?.MenuLnk_TagID) {
       error.MenuLnk_TagID = 'انتخاب تگ الزامی است'
     }
-    if (!values?.MenuLnk_FrmTagID) {
-      error.MenuLnk_FrmTagID = 'انتخاب فرم الزامی است'
-    }
-    if (!values?.MenuLnk_ActnTagID) {
-      error.MenuLnk_ActnTagID = 'انتخاب اکشن الزامی است'
-    }
+
     if (!values?.MenuLnk_TypRoutID?.toString()) {
       error.MenuLnk_TypRoutID = `انتخاب نوع مسیر الزامی است`
     }
     if (!values?.MenuLnk_ParntID && !isParent) {
       error.MenuLnk_ParntID = `انتخاب زیرمنو یا منوی اصلی الزامی است`
     }
+    if (values?.MenuLnk_TypRoutID?.toString() !== '0' && !values?.MenuLnk_NavigaPath) {
+      error.MenuLnk_NavigaPath = `انتخاب آدرس الزامی است`
+    }
+    if (!values?.MenuLnk_Icon) {
+      error.MenuLnk_Icon = `انتخاب آیکون الزامی است`
+    }
+    console.log(error)
     setErrors(error)
     if (Object.keys(error).length) {
       return false
@@ -182,7 +193,7 @@ const CreateEditMenuLink = () => {
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createMenuLinksBreadcrumb} />
       <form className="p-5 mt-10 " onSubmit={formik.handleSubmit}>
-        <section className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4  gap-y-10 rtl">
+        <section className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4  gap-y-10 rtl">
           <span className="p-float-label" dir="ltr">
             <Dropdown
               options={systemsTags}
@@ -192,7 +203,6 @@ const CreateEditMenuLink = () => {
               optionValue="tag_ID"
               value={formik.values.MenuLnk_SysTagID}
               placeholder="انتخاب  سیستم"
-              onBlur={formik.handleBlur}
               onChange={event => {
                 formik.handleChange(event)
                 setSystemId(event.value)
@@ -216,7 +226,6 @@ const CreateEditMenuLink = () => {
               optionValue="tag_ID"
               value={formik.values.MenuLnk_TagID}
               placeholder="انتخاب تگ"
-              onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               dir="rtl"
               style={{ width: '100%' }}
@@ -237,7 +246,6 @@ const CreateEditMenuLink = () => {
               optionValue="tag_ID"
               value={formik.values.MenuLnk_FrmTagID}
               placeholder="انتخاب  فرم"
-              onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               dir="rtl"
               style={{ width: '100%' }}
@@ -258,7 +266,6 @@ const CreateEditMenuLink = () => {
               optionValue="tag_ID"
               value={formik.values.MenuLnk_ActnTagID}
               placeholder="انتخاب  اکشن"
-              onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               dir="rtl"
               style={{ width: '100%' }}
@@ -278,10 +285,8 @@ const CreateEditMenuLink = () => {
               name="MenuLnk_TypRoutID"
               value={formik.values.MenuLnk_TypRoutID}
               placeholder="انتخاب نوع مسیر"
-              onBlur={formik.handleBlur}
               onChange={e => {
                 formik.handleChange(e)
-                console.log(e)
               }}
               dir="rtl"
               style={{ width: '100%' }}
@@ -302,7 +307,6 @@ const CreateEditMenuLink = () => {
               placeholder="انتخاب زیر منو"
               optionLabel="menuLink_TransTagName"
               optionValue="menuLnk_ID"
-              onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               dir="rtl"
               style={{ width: '100%' }}
@@ -319,6 +323,46 @@ const CreateEditMenuLink = () => {
             {errors.MenuLnk_ParntID ? (
               <div className="text-right">
                 <small className="p-error">{errors.MenuLnk_ParntID}</small>
+              </div>
+            ) : null}
+          </span>
+          <span className="p-float-label" dir="rtl">
+            <InputText
+              id="MenuLnk_NavigaPath"
+              name="MenuLnk_NavigaPath"
+              value={formik.values.MenuLnk_NavigaPath || ''}
+              placeholder="آدرس لینک"
+              onChange={formik.handleChange}
+              dir="rtl"
+              style={{ width: '100%' }}
+            />
+            {errors.MenuLnk_NavigaPath ? (
+              <div className="text-right">
+                <small className="p-error">{errors.MenuLnk_NavigaPath}</small>
+              </div>
+            ) : null}
+          </span>
+          <span className="p-float-label" dir="rtl">
+            <InputText
+              id="MenuLnk_Icon"
+              name="MenuLnk_Icon"
+              value={formik.values.MenuLnk_Icon || ''}
+              placeholder="آیکون"
+              onChange={formik.handleChange}
+              dir="rtl"
+              style={{ width: '100%' }}
+            />
+            <small>
+              نام آیکون را از آدرس{' '}
+              <a href="https://material.io/icons" target={'_blank'} className="text-blue-500	" rel="noreferrer">
+                {' '}
+                material.io/icons
+              </a>{' '}
+              وارد کنید.{' '}
+            </small>
+            {errors.MenuLnk_Icon ? (
+              <div className="text-right">
+                <small className="p-error">{errors.MenuLnk_Icon}</small>
               </div>
             ) : null}
           </span>

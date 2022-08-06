@@ -55,23 +55,25 @@ export const SelectActions = ({ selectedRoute, user, onHide, parentId, buttonCla
                 if (onHide) {
                   onHide()
                 }
+                if (fetchAgain) {
+                  fetchAgain()
+                }
                 ToastAlert.success(`${editMode ? 'ویرایش' : 'ثبت'} با موفقیت انجام شد`)
               }
             })
             .catch(err => console.log('error: ', err))
         } else {
+          if (fetchAgain) {
+            fetchAgain()
+          }
           if (onHide) {
             onHide()
-            fetchAgain()
             ToastAlert.success(`${editMode ? 'ویرایش' : 'ثبت'} با موفقیت انجام شد`)
           }
         }
       })
       .catch(err => console.log(err))
       .finally(() => {
-        if (fetchAgain) {
-          fetchAgain()
-        }
         setLoading(false)
       })
   }
