@@ -55,6 +55,7 @@ export const apiUrls = {
   updateServerConnections: GodHOST.concat('/ServerConnectionGod/Update'),
   getServerConnectionsById: GodHOST.concat('/ServerConnectionGod/GetByID'),
   getAllRoutesByParent: GodHOST.concat('/RouteStructureGod/GetAllByParent'),
+  getRSIDByTagID: GodHOST.concat('/RouteStructureGod/GetRSIDByTagID'),
   getAllServiceType: GodHOST.concat('/ServiceTypeGod/GetAll'),
   insertServiceType: GodHOST.concat('/ServiceTypeGod/Insert'),
   updateServiceType: GodHOST.concat('/ServiceTypeGod/Update'),

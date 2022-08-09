@@ -186,3 +186,26 @@ export const GetAllRoutesByParent = id => {
       console.log(err)
     })
 }
+export const GetRSIDByTagID = id => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.getRSIDByTagID, id, config)
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
+      } else {
+        return res
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}

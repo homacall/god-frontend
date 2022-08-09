@@ -13,12 +13,14 @@ import {
   CreateRouteStructure,
   GetAllRoutesGodByTypeRouteTree,
   GetByIdRouteStructure,
+  GetRSIDByTagID,
   UpdateRouteStructure,
 } from '../../../service/routeStretcherService'
 import { GetAllTagsTranslate } from '../../../service/translateService'
 import { ToastAlert } from '../../common/toastAlert'
 import { createTagType } from '../../tag/constant/createTagType'
 import { useMemo } from 'react'
+import { useCallback } from 'react'
 
 export const CreateAndEditStretcher = () => {
   const location = useLocation()
@@ -31,14 +33,14 @@ export const CreateAndEditStretcher = () => {
   const [showTreeView, setShowTreeView] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState(undefined)
   const [routes, setRoutes] = useState([])
-  const [tags, setTags] = useState([])
   const [editMode, setEditMode] = useState(location.pathname.includes('/route-stretcher/update/'))
-  const [selectedType, setSelectedType] = useState()
+  const [formTags, setFormTags] = useState([])
   const [systemsTags, setSystemsTags] = useState([])
-  const fetchTags = async type => {
+  const fetchTags = async (type, parentId) => {
     const formData = new FormData()
     formData.append('TagType', type)
-    GetAllTagsTranslate(formData)
+    formData.append('ParentID', parentId)
+    const result = GetAllTagsTranslate(formData)
       .then(res => {
         if (res.data || res.status === 200) {
           return res.data.tagsknowledges
@@ -46,8 +48,9 @@ export const CreateAndEditStretcher = () => {
       })
       .catch(error => {
         console.log(error)
-        return error
+        return []
       })
+    return result
   }
   const fetchRoutes = () => {
     GetAllRoutesGodByTypeRouteTree()
@@ -104,25 +107,45 @@ export const CreateAndEditStretcher = () => {
   }, [])
   const insertRoute = data => {
     const formData = new FormData()
-    formData.append('RoutStr_TypeRout', data.RoutStr_TypeRout === 8 ? 0 : data.RoutStr_TypeRout)
-    formData.append('RoutStr_Tag_ID', data.RoutStr_Tag_ID)
-    if (isParent && !selectedRoute) {
-      formData.append('RoutStr_PID', 0)
+    formData.append('RoutStr_TypeRout', data.RoutStr_TypeRout)
+    formData.append('RoutStr_Tag_ID', data.RoutStr_TypeRout === 1 ? data.RoutStr_FormTagId : data['RoutStr_'.concat(titleObject.key)])
+    if ((isParent && !selectedRoute) || data.RoutStr_TypeRout >= 2) {
+      const sysTagId = new FormData()
+      sysTagId.append('TagID', data.RoutStr_TypeRout >= 2 ? data.RoutStr_FormTagId : data.RoutStr_SystemName)
+      GetRSIDByTagID(sysTagId)
+        .then(res => {
+          if (res.data || res.status === 200) {
+            // formData.append('RoutStr_PID', res.data.rsid)
+            // CreateRouteStructure(formData)
+            //   .then(res => {
+            //     if (res.data || res.status === 200) {
+            //       fetchRoutes()
+            //       ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
+            //       setIsParent(false)
+            //       formik.resetForm()
+            //     } else {
+            //       ToastAlert.error('خطا در ثبت مسیر جدید')
+            //     }
+            //   })
+            //   .catch(err => console.log(err))
+          }
+        })
+        .catch(error => console.log(error))
     } else {
       formData.append('RoutStr_PID', selectedRoute.routStr_ID)
+      CreateRouteStructure(formData)
+        .then(res => {
+          if (res.data || res.status === 200) {
+            fetchRoutes()
+            ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
+            setIsParent(false)
+            formik.resetForm()
+          } else {
+            ToastAlert.error('خطا در ثبت مسیر جدید')
+          }
+        })
+        .catch(err => console.log(err))
     }
-    CreateRouteStructure(formData)
-      .then(res => {
-        if (res.data || res.status === 200) {
-          fetchRoutes()
-          ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
-          setIsParent(false)
-          formik.resetForm()
-        } else {
-          ToastAlert.error('خطا در ثبت مسیر جدید')
-        }
-      })
-      .catch(err => console.log(err))
   }
   const editRoute = data => {
     const formData = new FormData()
@@ -149,17 +172,17 @@ export const CreateAndEditStretcher = () => {
   }
   const formik = useFormik({
     initialValues,
-    validate: data => {
-      let errors = {}
+    // validate: data => {
+    //   let errors = {}
 
-      if (!data.RoutStr_Tag_ID) {
-        errors.RoutStr_Tag_ID = 'Tag id را انتخاب کنید.'
-      }
-      if (!data.RoutStr_TypeRout) {
-        errors.RoutStr_TypeRout = 'Type را انتخاب کنید.'
-      }
-      return errors
-    },
+    //   if (!data.RoutStr_Tag_ID) {
+    //     errors.RoutStr_Tag_ID = 'Tag id را انتخاب کنید.'
+    //   }
+    //   if (!data.RoutStr_TypeRout) {
+    //     errors.RoutStr_TypeRout = 'Type را انتخاب کنید.'
+    //   }
+    //   return errors
+    // },
     onSubmit: data => {
       if (editMode) {
         editRoute(data)
@@ -190,15 +213,15 @@ export const CreateAndEditStretcher = () => {
     }
   }, [isParent])
   useEffect(() => {
-    fetchTags(8).then(res => {
+    fetchTags(8, -1).then(res => {
       if (res) setSystemsTags(res)
     })
   }, [])
 
   const [currentTags, setCurrentTags] = useState([])
   useEffect(() => {
-    if (formik.values.RoutStr_TypeRout !== 1 && formik.values.RoutStr_TypeRout.toString()) {
-      fetchTags(formik.values.RoutStr_TypeRout).then(res => {
+    if (formik.values.RoutStr_TypeRout === 0 && formik.values.RoutStr_TypeRout.toString()) {
+      fetchTags(formik.values.RoutStr_TypeRout, formik.values.RoutStr_SystemName).then(res => {
         if (res) setCurrentTags(res)
       })
     }
@@ -230,7 +253,19 @@ export const CreateAndEditStretcher = () => {
         return {}
     }
   }, [formik.values.RoutStr_TypeRout])
-
+  const formTagsHandler = parentId => {
+    fetchTags(1, parentId).then(res => setFormTags(res))
+  }
+  useEffect(() => {
+    if (formik.values?.RoutStr_SystemName?.toString()) {
+      formTagsHandler(formik.values.RoutStr_SystemName)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formik.values.RoutStr_SystemName])
+  const formChangeHandler = formId => {
+    if (formik.values.RoutStr_TypeRout < 2) return
+    fetchTags(formik.values.RoutStr_TypeRout, formId).then(res => setCurrentTags(res))
+  }
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={routeBreadcrumb} />
@@ -244,7 +279,7 @@ export const CreateAndEditStretcher = () => {
               formik.handleChange(e)
             }}
             name="RoutStr_SystemName"
-            options={tags.filter(tag => tag.tag_Type === 8)}
+            options={systemsTags}
             optionLabel="tagTranslate_Name"
             optionValue="tag_ID"
             className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_SystemName'), 'w-[60%]': true })}
@@ -271,6 +306,7 @@ export const CreateAndEditStretcher = () => {
             className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_TypeRout'), 'w-[60%]': true })}
             filterBy="label"
             filter
+            disabled={!formik.values.RoutStr_SystemName}
           />
           <label
             htmlFor="RoutStr_TypeRout"
@@ -332,15 +368,17 @@ export const CreateAndEditStretcher = () => {
             <Dropdown
               id="RoutStr_FormTagId"
               value={formik.values.RoutStr_FormTagId}
-              onChange={formik.handleChange}
+              onChange={e => {
+                formik.handleChange(e)
+                formChangeHandler(e.value)
+              }}
               name="RoutStr_FormTagId"
               optionLabel="tagTranslate_Name"
               optionValue="tag_ID"
-              options={tags}
+              options={formTags}
               className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_FormTagId'), 'w-[60%]': true, 'rtl': true })}
               filterBy="tagTranslate_Name"
               filter
-              disabled={!selectedType?.toString()}
             />
             <label
               htmlFor="RoutStr_FormTagId"
@@ -356,7 +394,7 @@ export const CreateAndEditStretcher = () => {
         {formik.values.RoutStr_TypeRout !== 1 && formik.values.RoutStr_TypeRout.toString() ? (
           <span className="p-float-label">
             <Dropdown
-              id="'RoutStr_'.concat(titleObject.key)"
+              id={'RoutStr_'.concat(titleObject.key)}
               value={formik.values['RoutStr_'.concat(titleObject.key)]}
               onChange={formik.handleChange}
               name={'RoutStr_'.concat(titleObject.key)}
@@ -379,7 +417,7 @@ export const CreateAndEditStretcher = () => {
           <></>
         )}
 
-        <Button label="ثبت" className="p-button-primary relative text-sm mt-3 h-10 w-[100px] " />
+        <Button label="ثبت" className="p-button-primary relative text-sm mt-3 h-10 w-[100px] " type="submit " />
       </form>
     </div>
   )
