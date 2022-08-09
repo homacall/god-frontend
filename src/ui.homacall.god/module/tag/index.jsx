@@ -27,10 +27,12 @@ export const Tag = () => {
   const [data, setData] = useState([])
   const [fetchAgain, setFetchAgain] = useState(false)
   const [filterTagType, setFilterTagType] = useState('')
+  const [formId, setFormId] = useState(0)
   //Get Tags List from server with api
   useEffect(() => {
     const formData = new FormData()
     formData.append('TagType', '-1')
+    formData.append('ParentID', '-1')
     GetAllTagsTranslate(formData).then(res => {
       if (res.data) {
         setData(
@@ -147,6 +149,7 @@ export const Tag = () => {
     formData.append('Tag_ID', id)
     formData.append('Tag_Name', newTagName)
     formData.append('Tag_Type', newTagType.toString())
+    formData.append('Tag_PID', formId)
     UpdateTags(formData)
       .then(res => {
         if (res.data || res.status === 200) {
@@ -205,6 +208,7 @@ export const Tag = () => {
                         oldVal={data.title}
                         tagType={data.typeId}
                         setTagType={setTagType}
+                        setFormId={setFormId}
                       />
                     }
                     deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
