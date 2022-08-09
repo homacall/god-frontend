@@ -28,10 +28,11 @@ export const Tag = () => {
   const [fetchAgain, setFetchAgain] = useState(false)
   const [filterTagType, setFilterTagType] = useState('')
   const [formId, setFormId] = useState(0)
+
   //Get Tags List from server with api
   useEffect(() => {
     const formData = new FormData()
-    formData.append('TagType', '-1')
+    formData.append('TagType', filterTagType ? filterTagType.toString() : '-1')
     formData.append('ParentID', '-1')
     GetAllTagsTranslate(formData).then(res => {
       if (res.data) {
@@ -42,10 +43,12 @@ export const Tag = () => {
             type: createTagType.find(element => element.value === item.tag_Type).label,
             typeId: item.tag_Type,
             transTitle: item.tagTranslate_Name || '--',
+            formParentID: item.tag_ParentID,
           })),
         )
       }
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchAgain])
 
   const fetchAgainHandler = () => {
@@ -66,6 +69,7 @@ export const Tag = () => {
     if (id >= 0) {
       const formData = new FormData()
       formData.append('TagType', id.toString())
+      formData.append('ParentID', '-1')
       GetAllTagsTranslate(formData).then(res => {
         if (res.data) {
           setData(
@@ -75,6 +79,7 @@ export const Tag = () => {
               type: createTagType.find(element => element.value === item.tag_Type).label,
               typeId: item.tag_Type,
               transTitle: item.tagTranslate_Name || '--',
+              formParentID: item.tag_ParentID,
             })),
           )
         }
@@ -150,6 +155,7 @@ export const Tag = () => {
     formData.append('Tag_Name', newTagName)
     formData.append('Tag_Type', newTagType.toString())
     formData.append('Tag_PID', formId)
+    // alert(formId)
     UpdateTags(formData)
       .then(res => {
         if (res.data || res.status === 200) {
@@ -209,6 +215,7 @@ export const Tag = () => {
                         tagType={data.typeId}
                         setTagType={setTagType}
                         setFormId={setFormId}
+                        tagId={data.tag_ParentID}
                       />
                     }
                     deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
