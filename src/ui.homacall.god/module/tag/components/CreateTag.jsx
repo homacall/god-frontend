@@ -106,19 +106,22 @@ export const CreateTag = () => {
   }
 
   useEffect(() => {
-    const formData = new FormData()
-    formData.append('TagType', '8')
-    formData.append('ParentID', '0')
-    GetAllTagsTranslate(formData)
-      .then(res => {
-        if (res && res.data && res.data.status === 200) {
-          setAllSystems(res.data.tagsknowledges)
-        } else {
-          ToastAlert.error('خطا در دریافت نام سیستم ها')
-        }
-      })
-      .catch(() => console.log('خطا در دریافت نام سیستم ها'))
-  }, [])
+    if (valueType !== 3 && valueType !== 4 && valueType !== 8 && allSystems.length === 0) {
+      const formData = new FormData()
+      formData.append('TagType', '8')
+      formData.append('ParentID', '-1')
+      GetAllTagsTranslate(formData)
+        .then(res => {
+          if (res && res.data && res.data.status === 200) {
+            setAllSystems(res.data.tagsknowledges)
+          } else {
+            ToastAlert.error('خطا در دریافت نام سیستم ها')
+          }
+        })
+        .catch(() => console.log('خطا در دریافت نام سیستم ها'))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [valueType])
 
   useEffect(() => {
     if (valueType === 2 && systemName > 0) {
@@ -128,7 +131,6 @@ export const CreateTag = () => {
       GetAllTagsTranslate(formData)
         .then(res => {
           if (res && res.data && res.data.status === 200) {
-            console.log({ res })
             setAllForms(res.data.tagsknowledges)
           } else {
             ToastAlert.error('خطا در دریافت نام سیستم ها')
