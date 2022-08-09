@@ -6,15 +6,14 @@ import { createTagType } from '../constant/createTagType'
 import { GetAllTagsTranslate } from '../../../service/translateService'
 import { ToastAlert } from '../../common/toastAlert'
 
-export const UpdateTag = ({ oldVal, tagName, setTagName, tagType, setTagType }) => {
+export const UpdateTag = ({ oldVal, tagName, setTagName, tagType, setTagType, setFormId }) => {
   const [type, setType] = useState(tagType)
   const [allSystems, setAllSystems] = useState([])
   const [sysId, setSysId] = useState()
-  const [formId, setFormId] = useState()
+  const [selectedFormId, setSelectedFormId] = useState()
   const [errorSysName, setErrorSysName] = useState(false)
   const [errorFormName, setErrorFormName] = useState(false)
   const [showSystemName, setShowSystemName] = useState(false)
-  const [formIdForSend, setFormIdForSend] = useState()
 
   useEffect(() => {
     if (oldVal) {
@@ -84,7 +83,7 @@ export const UpdateTag = ({ oldVal, tagName, setTagName, tagType, setTagType }) 
   }
 
   const handleChangeFormName = type => {
-    setFormId(type.value)
+    setSelectedFormId(type.value)
     Number(type) === 2 && setFormId(type.value)
     setErrorFormName(false)
   }
@@ -136,7 +135,7 @@ export const UpdateTag = ({ oldVal, tagName, setTagName, tagType, setTagType }) 
               options={createTagType}
               id="formName"
               name="formName"
-              value={formId}
+              value={selectedFormId}
               onChange={handleChangeFormName}
               className={`h-9 w-96 ${classNames({ 'p-invalid': errorFormName, 'w-full': true })}`}
             />

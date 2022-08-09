@@ -178,9 +178,9 @@ export const CreateTag = () => {
               <Dropdown
                 options={allSystems}
                 id="tag_ID"
-                name="tag_Name"
+                name="tagTranslate_Name"
                 optionValue="tag_ID"
-                optionLabel="tag_Name"
+                optionLabel="tagTranslate_Name"
                 value={systemName}
                 onChange={handleChangeSysName}
                 className={`h-9 w-96 ${classNames({ 'p-invalid': errorSysName, 'w-full': true })}`}
@@ -197,11 +197,12 @@ export const CreateTag = () => {
             <span className="p-float-label">
               <Dropdown
                 options={allForms}
-                id="tag_ID"
-                name="tag_Name"
+                id="FormId"
+                name="FormId"
                 optionValue="tag_ID"
-                optionLabel="tag_Name"
+                optionLabel="tagTranslate_Name"
                 value={formName}
+                disabled={errorSysName}
                 onChange={handleChangeFormName}
                 className={`h-9 w-96 ${classNames({ 'p-invalid': errorFormName, 'w-full': true })}`}
               />
