@@ -90,4 +90,5 @@ export const apiUrls = {
   menuLinkGetAllGrid: GodHOST.concat('/MenuLinkGod/GetAllGrid'),
   menuLinkInsert: GodHOST.concat('/MenuLinkGod/Insert'),
   menuLinkDelete: GodHOST.concat('/MenuLinkGod/Delete'),
+  getAllLinkSubMenu: GodHOST.concat('/MenuLinkGod/GetAllLinkSubMenu'),
 }

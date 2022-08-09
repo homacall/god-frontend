@@ -31,50 +31,48 @@ const CreateEditMenuLink = () => {
   // const location = useLocation()
   let { ServerId } = useParams()
   const navigate = useNavigate()
-
-  const fetchTags = () => {
+  const tagTypes = {
+    form: 1,
+    action: 2,
+    system: 8,
+    link: 9,
+  }
+  const fetchTags = async (tagType, parentId) => {
     const formData = new FormData()
-    formData.append('TagType', '-1')
-    GetAllTagsTranslate(formData).then(res => {
-      if (res.data && res.status === 200 && res.data.tagsknowledges) {
-        const forms = []
-        const links = []
-        const actions = []
-        const systems = []
-        const tagTypes = {
-          form: 1,
-          action: 2,
-          system: 8,
-          link: 9,
-        }
-        res.data.tagsknowledges.forEach(tag => {
-          switch (tag.tag_Type) {
+    formData.append('TagType', tagType)
+    formData.append('PID', parentId)
+
+    GetAllTagsTranslate(formData)
+      .then(res => {
+        if (res.data && res.status === 200 && res.data.tagsknowledges) {
+          switch (tagType) {
             case tagTypes.link:
-              links.push(tag)
+              setLinkTags(res.data.tagsknowledges)
               break
             case tagTypes.form:
-              forms.push(tag)
+              setFormsTags(res.data.tagsknowledges)
+
               break
             case tagTypes.action:
-              actions.push(tag)
+              setActionTags(res.data.tagsknowledges)
               break
             case tagTypes.system:
-              systems.push(tag)
+              setSystemsTags(res.data.tagsknowledges)
               break
             default:
               break
           }
-        })
-        setLinkTags(links)
-        setFormsTags(forms)
-        setActionTags(actions)
-        setSystemsTags(systems)
-      }
-    })
+          return res.data.tagsknowledges
+        } else return []
+      })
+      .catch(err => {
+        console.log(err)
+        return []
+      })
   }
 
   useEffect(() => {
-    fetchTags()
+    fetchTags(8, -1)
   }, [])
 
   // useEffect(() => {
@@ -97,8 +95,6 @@ const CreateEditMenuLink = () => {
   // }, [location.pathname, serverConnectionById])
 
   const submitHandler = values => {
-    console.log(values)
-
     if (!isValid(values)) {
       return
     }
@@ -118,7 +114,11 @@ const CreateEditMenuLink = () => {
     }
     if (!values.MenuLnk_ActnTagID) {
       formData.append('MenuLnk_ActnTagID', '-1')
+      formData.append('MenuLnk_TypRoutID', '0')
+    } else {
+      formData.append('MenuLnk_TypRoutID', '2')
     }
+
     if (!values.MenuLnk_FrmTagID) {
       formData.append('MenuLnk_FrmTagID', '-1')
     }
@@ -143,7 +143,7 @@ const CreateEditMenuLink = () => {
   const fetchParentId = useCallback(() => {
     const formData = new FormData()
     formData.append('SysTagID', systemId)
-    MenuLinkService.getAll(formData)
+    MenuLinkService.getAllLinkSubMenu(formData)
       .then(res => {
         if (res.data || res.status === 200) {
           setMenuLinks(res.data.menuLinks)
@@ -168,16 +168,13 @@ const CreateEditMenuLink = () => {
       error.MenuLnk_SysTagID = 'انتخاب سیستم الزامی است'
     }
     if (!values?.MenuLnk_TagID) {
-      error.MenuLnk_TagID = 'انتخاب تگ الزامی است'
+      error.MenuLnk_TagID = 'انتخاب عنوان لینک الزامی است'
     }
 
-    if (!values?.MenuLnk_TypRoutID?.toString()) {
-      error.MenuLnk_TypRoutID = `انتخاب نوع مسیر الزامی است`
-    }
     if (!values?.MenuLnk_ParntID && !isParent) {
       error.MenuLnk_ParntID = `انتخاب زیرمنو یا منوی اصلی الزامی است`
     }
-    if (values?.MenuLnk_TypRoutID?.toString() !== '0' && !values?.MenuLnk_NavigaPath) {
+    if (!values?.MenuLnk_NavigaPath) {
       error.MenuLnk_NavigaPath = `انتخاب آدرس الزامی است`
     }
     if (!values?.MenuLnk_Icon) {
@@ -189,6 +186,7 @@ const CreateEditMenuLink = () => {
       return false
     } else return true
   }
+
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={createMenuLinksBreadcrumb} />
@@ -205,6 +203,8 @@ const CreateEditMenuLink = () => {
               placeholder="انتخاب  سیستم"
               onChange={event => {
                 formik.handleChange(event)
+                fetchTags(tagTypes.link, event.value)
+                fetchTags(tagTypes.form, event.value)
                 setSystemId(event.value)
               }}
               dir="rtl"
@@ -225,7 +225,7 @@ const CreateEditMenuLink = () => {
               optionLabel="tagTranslate_Name"
               optionValue="tag_ID"
               value={formik.values.MenuLnk_TagID}
-              placeholder="انتخاب تگ"
+              placeholder="عنوان لینک"
               onChange={formik.handleChange}
               dir="rtl"
               style={{ width: '100%' }}
@@ -239,6 +239,35 @@ const CreateEditMenuLink = () => {
           </span>
           <span className="p-float-label" dir="ltr">
             <Dropdown
+              options={menuLinks}
+              id="MenuLnk_ParntID"
+              name="MenuLnk_ParntID"
+              value={formik.values.MenuLnk_ParntID}
+              placeholder="انتخاب زیر منو"
+              optionLabel="menuLink_TransTagName"
+              optionValue="menuLnk_ID"
+              onChange={formik.handleChange}
+              dir="rtl"
+              style={{ width: '100%' }}
+              disabled={isParent}
+            />
+            <div dir="rtl " style={{ display: 'flex', marginTop: 16, justifyContent: 'end', gap: 8 }}>
+              <Checkbox
+                checked={isParent}
+                onChange={e => {
+                  setIsParent(e.checked)
+                }}
+              ></Checkbox>
+              <div style={{ fontSize: 12 }}>منو اصلی</div>
+            </div>
+            {errors.MenuLnk_ParntID ? (
+              <div className="text-right">
+                <small className="p-error">{errors.MenuLnk_ParntID}</small>
+              </div>
+            ) : null}
+          </span>
+          <span className="p-float-label" dir="ltr">
+            <Dropdown
               options={formsTags}
               id="MenuLnk_FrmTagID"
               name="MenuLnk_FrmTagID"
@@ -246,7 +275,10 @@ const CreateEditMenuLink = () => {
               optionValue="tag_ID"
               value={formik.values.MenuLnk_FrmTagID}
               placeholder="انتخاب  فرم"
-              onChange={formik.handleChange}
+              onChange={event => {
+                formik.handleChange(event)
+                fetchTags(tagTypes.action, event.value)
+              }}
               dir="rtl"
               style={{ width: '100%' }}
             />
@@ -278,54 +310,6 @@ const CreateEditMenuLink = () => {
             ) : null}
           </span>
 
-          <span className="p-float-label" dir="ltr">
-            <Dropdown
-              options={createTagType.slice(0, 3)}
-              id="MenuLnk_TypRoutID"
-              name="MenuLnk_TypRoutID"
-              value={formik.values.MenuLnk_TypRoutID}
-              placeholder="انتخاب نوع مسیر"
-              onChange={e => {
-                formik.handleChange(e)
-              }}
-              dir="rtl"
-              style={{ width: '100%' }}
-            />
-
-            {errors.MenuLnk_TypRoutID ? (
-              <div className="text-right">
-                <small className="p-error">{errors.MenuLnk_TypRoutID}</small>
-              </div>
-            ) : null}
-          </span>
-          <span className="p-float-label" dir="ltr">
-            <Dropdown
-              options={menuLinks}
-              id="MenuLnk_ParntID"
-              name="MenuLnk_ParntID"
-              value={formik.values.MenuLnk_ParntID}
-              placeholder="انتخاب زیر منو"
-              optionLabel="menuLink_TransTagName"
-              optionValue="menuLnk_ID"
-              onChange={formik.handleChange}
-              dir="rtl"
-              style={{ width: '100%' }}
-            />
-            <div dir="rtl " style={{ display: 'flex', marginTop: 16, justifyContent: 'end', gap: 8 }}>
-              <Checkbox
-                checked={isParent}
-                onChange={e => {
-                  setIsParent(e.checked)
-                }}
-              ></Checkbox>
-              <div style={{ fontSize: 12 }}>منو اصلی</div>
-            </div>
-            {errors.MenuLnk_ParntID ? (
-              <div className="text-right">
-                <small className="p-error">{errors.MenuLnk_ParntID}</small>
-              </div>
-            ) : null}
-          </span>
           <span className="p-float-label" dir="rtl">
             <InputText
               id="MenuLnk_NavigaPath"
@@ -334,7 +318,7 @@ const CreateEditMenuLink = () => {
               placeholder="آدرس لینک"
               onChange={formik.handleChange}
               dir="rtl"
-              style={{ width: '100%' }}
+              style={{ width: '100%', height: 38 }}
             />
             {errors.MenuLnk_NavigaPath ? (
               <div className="text-right">
@@ -350,7 +334,7 @@ const CreateEditMenuLink = () => {
               placeholder="آیکون"
               onChange={formik.handleChange}
               dir="rtl"
-              style={{ width: '100%' }}
+              style={{ width: '100%', height: 38 }}
             />
             <small>
               نام آیکون را از آدرس{' '}

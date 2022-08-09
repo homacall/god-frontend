@@ -25,6 +25,29 @@ export const getAll = systemId => {
       console.log(err)
     })
 }
+export const getAllLinkSubMenu = systemId => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.getAllLinkSubMenu, systemId, config)
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
+      } else {
+        return res
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
 
 export const getAllGrid = () => {
   const token = localStorage.getItem('token')

@@ -18,11 +18,11 @@ import {
 import { GetAllTagsTranslate } from '../../../service/translateService'
 import { ToastAlert } from '../../common/toastAlert'
 import { createTagType } from '../../tag/constant/createTagType'
+import { useMemo } from 'react'
 
 export const CreateAndEditStretcher = () => {
   const location = useLocation()
   const params = useParams()
-  const [showMessage, setShowMessage] = useState(false)
   const [initialValues, setInitialValue] = useState({
     RoutStr_Tag_ID: '',
     RoutStr_TypeRout: '',
@@ -34,15 +34,15 @@ export const CreateAndEditStretcher = () => {
   const [tags, setTags] = useState([])
   const [editMode, setEditMode] = useState(location.pathname.includes('/route-stretcher/update/'))
   const [selectedType, setSelectedType] = useState()
+  const [systemsTags, setSystemsTags] = useState([])
   const fetchTags = async type => {
     const formData = new FormData()
     formData.append('TagType', type)
     GetAllTagsTranslate(formData)
       .then(res => {
         if (res.data || res.status === 200) {
-          setTags(res.data.tagsknowledges)
-        }
-        return res
+          return res.data.tagsknowledges
+        } else return []
       })
       .catch(error => {
         console.log(error)
@@ -90,12 +90,15 @@ export const CreateAndEditStretcher = () => {
       routeBreadcrumb[1].url = `/route-stretcher/update/${params.stretcherId}`
       fetchRouteById(params.stretcherId)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.stretcherId, editMode])
-  useEffect(() => {
-    if (selectedType?.toString()) {
-      fetchTags(selectedType)
-    }
-  }, [selectedType])
+  // useEffect(() => {
+  //   if (selectedType?.toString()) {
+  //     fetchTags(selectedType).then(res => {
+  //       if (res) setTags(res)
+  //     })
+  //   }
+  // }, [selectedType])
   useEffect(() => {
     fetchRoutes()
   }, [])
@@ -170,11 +173,7 @@ export const CreateAndEditStretcher = () => {
   const getFormErrorMessage = name => {
     return isFormFieldValid(name) && <small className="p-error">{formik.errors[name]}</small>
   }
-  const dialogFooter = (
-    <div className="flex justify-content-center">
-      <Button label="باشه" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} />
-    </div>
-  )
+
   const treeViewDialogFooter = (
     <div className="flex justify-content-center">
       <Button label="بازگشت" className="p-button-text" autoFocus onClick={() => setShowTreeView(false)} />
@@ -190,34 +189,85 @@ export const CreateAndEditStretcher = () => {
       setShowTreeView(false)
     }
   }, [isParent])
+  useEffect(() => {
+    fetchTags(8).then(res => {
+      if (res) setSystemsTags(res)
+    })
+  }, [])
+
+  const [currentTags, setCurrentTags] = useState([])
+  useEffect(() => {
+    if (formik.values.RoutStr_TypeRout !== 1 && formik.values.RoutStr_TypeRout.toString()) {
+      fetchTags(formik.values.RoutStr_TypeRout).then(res => {
+        if (res) setCurrentTags(res)
+      })
+    }
+  }, [formik.values.RoutStr_TypeRout])
+
+  const titleObject = useMemo(() => {
+    switch (formik.values.RoutStr_TypeRout) {
+      case 0:
+        return {
+          title: 'انتخاب مسیر',
+          key: 'Route_ID',
+        }
+      case 2:
+        return {
+          title: 'انتخاب اکشن',
+          key: 'Action_ID',
+        }
+      case 3:
+        return {
+          title: 'انتخاب عناوین',
+          key: 'Title_ID',
+        }
+      case 4:
+        return {
+          title: 'انتخاب پیغام ها',
+          key: 'Alert_ID',
+        }
+      default:
+        return {}
+    }
+  }, [formik.values.RoutStr_TypeRout])
+
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={routeBreadcrumb} />
-      <Dialog
-        visible={showMessage}
-        onHide={() => setShowMessage(false)}
-        position="top"
-        footer={dialogFooter}
-        showHeader={false}
-        breakpoints={{ '960px': '80vw' }}
-        style={{ width: '30vw' }}
-      >
-        <div className="flex align-items-center flex-column pt-6 px-3">
-          <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
-          <h5>مسیر جدید با موفقیت انتساب داده شد!</h5>
-        </div>
-      </Dialog>
+
       <form className="grid grid-cols-1 gap-4 gap-y-10 p-5 mt-10" onSubmit={formik.handleSubmit}>
+        <span className="p-float-label">
+          <Dropdown
+            id="RoutStr_SystemName"
+            value={formik.values.RoutStr_SystemName}
+            onChange={e => {
+              formik.handleChange(e)
+            }}
+            name="RoutStr_SystemName"
+            options={tags.filter(tag => tag.tag_Type === 8)}
+            optionLabel="tagTranslate_Name"
+            optionValue="tag_ID"
+            className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_SystemName'), 'w-[60%]': true })}
+            filterBy="label"
+            filter
+          />
+          <label
+            htmlFor="RoutStr_SystemName"
+            className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_SystemName') })}`}
+          >
+            نام سیستم
+          </label>
+          {getFormErrorMessage('RoutStr_SystemName')}
+        </span>
         <span className="p-float-label">
           <Dropdown
             id="RoutStr_TypeRout"
             value={formik.values.RoutStr_TypeRout}
             onChange={e => {
               formik.handleChange(e)
-              setSelectedType(e.value)
             }}
             name="RoutStr_TypeRout"
-            options={createTagType}
+            options={createTagType.filter(tagType => tagType.value <= 4)}
             className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_TypeRout'), 'w-[60%]': true })}
             filterBy="label"
             filter
@@ -226,71 +276,109 @@ export const CreateAndEditStretcher = () => {
             htmlFor="RoutStr_TypeRout"
             className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_TypeRout') })}`}
           >
-            نوع ساختار
+            انتخاب ساختار
           </label>
           {getFormErrorMessage('RoutStr_TypeRout')}
         </span>
-        <span className="p-float-label">
-          <Dropdown
-            id="RoutStr_Tag_ID"
-            value={formik.values.RoutStr_Tag_ID}
-            onChange={formik.handleChange}
-            name="RoutStr_Tag_ID"
-            optionLabel="tagTranslate_Name"
-            optionValue="tag_ID"
-            options={tags}
-            className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_Tag_ID'), 'w-[60%]': true, 'rtl': true })}
-            filterBy="tagTranslate_Name"
-            filter
-            disabled={!selectedType?.toString()}
-          />
-          <label htmlFor="RoutStr_Tag_ID" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_Tag_ID') })}`}>
-            عنوان ساختار
-          </label>
-          {getFormErrorMessage('RoutStr_Tag_ID')}
-        </span>
-        <span className="p-float-label flex">
-          <div
-            className="outline-2 h-[50px] w-[60%] block border border-1 rounded-lg border-gray-300 hover:border-blue-600 	cursor-pointer	relative"
-            onClick={() => (!isParent ? setShowTreeView(perv => !perv) : {})}
-          >
-            <label
-              htmlFor="RoutStr_PID"
-              className={`right-2 text-sm  ${classNames({
-                'p-error': isFormFieldValid('RoutStr_PID'),
-                'text-[#ccc]': isParent,
-                'text-[#6f757d]': !isParent,
-              })}`}
+
+        {formik.values.RoutStr_TypeRout.toString() && formik.values.RoutStr_TypeRout <= 1 ? (
+          <span className="p-float-label flex">
+            <div
+              className="outline-2 h-[50px] w-[60%] block border border-1 rounded-lg border-gray-300 hover:border-blue-600 	cursor-pointer	relative"
+              onClick={() => (!isParent ? setShowTreeView(perv => !perv) : {})}
             >
-              {selectedRoute ? selectedRoute.routStr_Trans_Tag_Name : 'مسیر  والد'}
+              <label
+                htmlFor="RoutStr_PID"
+                className={`right-2 text-sm  ${classNames({
+                  'p-error': isFormFieldValid('RoutStr_PID'),
+                  'text-[#ccc]': isParent,
+                  'text-[#6f757d]': !isParent,
+                })}`}
+              >
+                {selectedRoute ? selectedRoute.routStr_Trans_Tag_Name : 'مسیر  والد'}
+              </label>
+            </div>
+            <div className="  mr-4">
+              <Checkbox
+                inputId="cb1"
+                value={isParent}
+                onChange={() => {
+                  setIsParent(perv => !perv)
+                }}
+                checked={isParent}
+                className={'top-[10px]'}
+              ></Checkbox>
+              <small htmlFor="cb1" className="p-checkbox-label mr-2 opacity-[75%] block mr-[30px]  mt-[-11px] w-[200px] ">
+                مسیر اصلی
+              </small>
+            </div>
+            <Dialog
+              visible={showTreeView}
+              onHide={() => setShowTreeView(false)}
+              position="center"
+              footer={treeViewDialogFooter}
+              showHeader={false}
+              breakpoints={{ '960px': '80vw' }}
+              style={{ width: '40vw' }}
+            >
+              <TreeView setSelectedRoute={setSelectedRoute} data={routes} />
+            </Dialog>
+          </span>
+        ) : (
+          <></>
+        )}
+        {formik.values.RoutStr_TypeRout ? (
+          <span className="p-float-label">
+            <Dropdown
+              id="RoutStr_FormTagId"
+              value={formik.values.RoutStr_FormTagId}
+              onChange={formik.handleChange}
+              name="RoutStr_FormTagId"
+              optionLabel="tagTranslate_Name"
+              optionValue="tag_ID"
+              options={tags}
+              className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_FormTagId'), 'w-[60%]': true, 'rtl': true })}
+              filterBy="tagTranslate_Name"
+              filter
+              disabled={!selectedType?.toString()}
+            />
+            <label
+              htmlFor="RoutStr_FormTagId"
+              className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_FormTagId') })}`}
+            >
+              انتخاب فرم
             </label>
-          </div>
-          <div className="  mr-4">
-            <Checkbox
-              inputId="cb1"
-              value={isParent}
-              onChange={() => {
-                setIsParent(perv => !perv)
-              }}
-              checked={isParent}
-              className={'top-[10px]'}
-            ></Checkbox>
-            <small htmlFor="cb1" className="p-checkbox-label mr-2 opacity-[75%] block mr-[30px]  mt-[-11px] w-[200px] ">
-              مسیر اصلی
-            </small>
-          </div>
-          <Dialog
-            visible={showTreeView}
-            onHide={() => setShowTreeView(false)}
-            position="center"
-            footer={treeViewDialogFooter}
-            showHeader={false}
-            breakpoints={{ '960px': '80vw' }}
-            style={{ width: '40vw' }}
-          >
-            <TreeView setSelectedRoute={setSelectedRoute} data={routes} />
-          </Dialog>
-        </span>
+            {getFormErrorMessage('RoutStr_FormTagId')}
+          </span>
+        ) : (
+          <></>
+        )}
+        {formik.values.RoutStr_TypeRout !== 1 && formik.values.RoutStr_TypeRout.toString() ? (
+          <span className="p-float-label">
+            <Dropdown
+              id="'RoutStr_'.concat(titleObject.key)"
+              value={formik.values['RoutStr_'.concat(titleObject.key)]}
+              onChange={formik.handleChange}
+              name={'RoutStr_'.concat(titleObject.key)}
+              optionLabel="tagTranslate_Name"
+              optionValue="tag_ID"
+              options={currentTags}
+              className={classNames({ 'p-invalid': isFormFieldValid('RoutStr_'.concat(titleObject.key)), 'w-[60%]': true, 'rtl': true })}
+              filterBy="tagTranslate_Name"
+              filter
+            />
+            <label
+              htmlFor="'RoutStr_'.concat(titleObject.key)"
+              className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('RoutStr_'.concat(titleObject.key)) })}`}
+            >
+              {titleObject.title}
+            </label>
+            {getFormErrorMessage('RoutStr_'.concat(titleObject.key))}
+          </span>
+        ) : (
+          <></>
+        )}
+
         <Button label="ثبت" className="p-button-primary relative text-sm mt-3 h-10 w-[100px] " />
       </form>
     </div>
