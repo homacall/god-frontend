@@ -115,19 +115,19 @@ export const CreateAndEditStretcher = () => {
       GetRSIDByTagID(sysTagId)
         .then(res => {
           if (res.data || res.status === 200) {
-            // formData.append('RoutStr_PID', res.data.rsid)
-            // CreateRouteStructure(formData)
-            //   .then(res => {
-            //     if (res.data || res.status === 200) {
-            //       fetchRoutes()
-            //       ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
-            //       setIsParent(false)
-            //       formik.resetForm()
-            //     } else {
-            //       ToastAlert.error('خطا در ثبت مسیر جدید')
-            //     }
-            //   })
-            //   .catch(err => console.log(err))
+            formData.append('RoutStr_PID', res.data.rsid)
+            CreateRouteStructure(formData)
+              .then(res => {
+                if (res.data || res.status === 200) {
+                  fetchRoutes()
+                  ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
+                  setIsParent(false)
+                  formik.resetForm()
+                } else {
+                  ToastAlert.error('خطا در ثبت مسیر جدید')
+                }
+              })
+              .catch(err => console.log(err))
           }
         })
         .catch(error => console.log(error))
