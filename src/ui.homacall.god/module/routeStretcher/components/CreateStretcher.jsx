@@ -20,7 +20,6 @@ import { GetAllTagsTranslate } from '../../../service/translateService'
 import { ToastAlert } from '../../common/toastAlert'
 import { createTagType } from '../../tag/constant/createTagType'
 import { useMemo } from 'react'
-import { useCallback } from 'react'
 
 export const CreateAndEditStretcher = () => {
   const location = useLocation()

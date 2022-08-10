@@ -40,7 +40,7 @@ const CreateEditMenuLink = () => {
   const fetchTags = async (tagType, parentId) => {
     const formData = new FormData()
     formData.append('TagType', tagType)
-    formData.append('PID', parentId)
+    formData.append('ParentID', parentId)
 
     GetAllTagsTranslate(formData)
       .then(res => {
