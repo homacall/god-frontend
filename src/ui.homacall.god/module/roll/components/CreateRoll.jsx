@@ -24,8 +24,8 @@ export const CreateRoll = () => {
   const fetchTags = () => {
     const formData = new FormData()
     formData.append('TagType', '5')
-    formData.append('ParentID', '-1')
-    getAllTagsTranslate(formData).then(res => {
+    //formData.append('ParentID', '-1')
+    GetAllTags(formData).then(res => {
       if (res.data || res.status === 200) {
         setTags(res.data.tagsknowledges)
       }
@@ -64,7 +64,7 @@ export const CreateRoll = () => {
         <span className="p-float-label">
           <Dropdown
             options={tags}
-            optionLabel={'tagTranslate_Name'}
+            optionLabel={'tag_TransName'}
             optionValue={'tag_ID'}
             id="Rol_TgID"
             value={value}

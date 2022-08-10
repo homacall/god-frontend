@@ -7,6 +7,7 @@ import { Toolbar } from 'primereact/toolbar'
 import { useCallback } from 'react'
 import { useState, useEffect } from 'react'
 import { RoleMemberService } from '../../../../service'
+import { DeleteRoleMember } from '../../../../service/roleMember'
 import TableActions from '../../../common/actionBody'
 import { ToastAlert } from '../../../common/toastAlert'
 import { roleMemberColumn } from '../../constant/tableColumn'
@@ -16,6 +17,7 @@ export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
   const [globalFilter, setGlobalFilter] = useState(null)
   const [data, setData] = useState([])
   const [newRoleMember, setNewRoleMember] = useState(false)
+  const [fetchAgain, setFetchAgain] = useState(false)
 
   const header = (
     <div className="table-header">
@@ -25,9 +27,15 @@ export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
       </span>
     </div>
   )
+
+  const fetchAgainHandler = () => {
+    setFetchAgain(prev => !prev)
+  }
+
   const newRoleMemberHandler = () => {
     setNewRoleMember(perv => !perv)
   }
+
   const rightToolbarTemplate = () => {
     return (
       <>
@@ -40,25 +48,43 @@ export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
       </>
     )
   }
+
   const fetchData = useCallback(() => {
     if (!currentRole?.rol_ID) return
     const formData = new FormData()
-    formData.append('ID', currentRole.rol_ID)
+    formData.append('RolID', currentRole.rol_ID)
     RoleMemberService.getById(formData)
       .then(res => {
-        if (res.data.role && res.status === 200 && res.data.message !== 'Null') {
-          setData(res.data.role)
+        if (res.data.roleMembers && res.status === 200) {
+          setData(res.data.roleMembers)
         }
       })
       .catch(err => {
-        console.log(err)
         ToastAlert.error('خطا در ارتباط با سرور')
       })
   }, [currentRole?.rol_ID])
+
   const currentRoleHeader = <div className="text-[14px] text-center "> {currentRole?.transTagText}</div>
+
+  const handleDeleteRoleMember = memberId => {
+    const formData = new FormData()
+    formData.append('RolMemID', memberId)
+    DeleteRoleMember(formData)
+      .then(res => {
+        if (res.data && res.data.status === 200) {
+          ToastAlert.success('حذف زیر مجموعه نقش با موفقیت انجام شد')
+          fetchAgainHandler()
+        } else {
+          ToastAlert.error('خطا در حذف زیر مجموعه نقش ')
+        }
+      })
+      .catch(() => ToastAlert.error('خطا در ارتباط با سرور '))
+  }
+
   useEffect(() => {
     fetchData()
-  }, [currentRole, fetchData])
+  }, [currentRole, fetchData, fetchAgain])
+
   return (
     <Dialog
       visible={visible}
@@ -71,7 +97,7 @@ export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
       className="w-[60vw]"
     >
       {newRoleMember ? (
-        <NewRoleMemberForm onCancel={newRoleMemberHandler} roles={roles} currentRole={currentRole} />
+        <NewRoleMemberForm onCancel={newRoleMemberHandler} roles={roles} currentRole={currentRole} setFetchAgain={setFetchAgain} />
       ) : (
         <>
           <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
@@ -96,9 +122,11 @@ export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
               header="عملیات"
               body={data => (
                 <TableActions
-                  deleteAction={() => {}}
+                  deleteAction={() => {
+                    handleDeleteRoleMember(data.roleMembers_ID)
+                  }}
                   hasDelete={true}
-                  hasUpdate={true}
+                  hasUpdate={false}
                   updateAction={() => {}}
                   deleteLabel="حذف"
                   updateLabel="ویرایش"

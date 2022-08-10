@@ -85,7 +85,7 @@ export const apiUrls = {
   userUpdateIFile: GodHOST.concat('/UserGod/UploadFile'),
   logOut: GodHOST.concat('/UserGod/LogOut'),
   roleMembersInsert: GodHOST.concat('/RoleMembersGod/Insert'),
-  roleMembersGetById: GodHOST.concat('/RoleMembersGod/GetByID'),
+  roleMembersGetById: GodHOST.concat('/RoleMembersGod/GetAllMember'),
   roleMembersGetAll: GodHOST.concat('/RoleMembersGod/GetAll'),
   roleMembersDelete: GodHOST.concat('/RoleMembersGod/Delete'),
   menuLinkGetAll: GodHOST.concat('/MenuLinkGod/GetAll'),
