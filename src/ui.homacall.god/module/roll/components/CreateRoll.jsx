@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Button } from 'primereact/button'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { InsertRole } from '../../../service/rolService'
-import { GetAllTags, getAllTagsTranslate } from '../../../service/tagManagerService'
+import { GetAllTags } from '../../../service/tagManagerService'
 import { Dropdown } from 'primereact/dropdown'
 import { useNavigate } from 'react-router'
 import { rolls } from '../../../utils/constants/routes/publicRoute'
 import { ToastAlert } from '../../common/toastAlert'
 import { Checkbox } from 'primereact/checkbox'
-import { createTagType } from '../../tag/constant/createTagType'
 
 export const CreateRoll = () => {
   const [value, setValue] = useState()
