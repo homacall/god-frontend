@@ -16,6 +16,7 @@ export const UpdateTag = ({ showUpdateDialog, setShowUpdateDialog, editProps, fe
   const [allForms, setAllForms] = useState([])
   const [tagName, setTagName] = useState(editProps.title)
   const [errorTagName, setErrorTagName] = useState(false)
+  const [updateLoading, setUpdateLoading] = useState(false)
 
   useEffect(() => {
     if (editProps) {
@@ -59,6 +60,7 @@ export const UpdateTag = ({ showUpdateDialog, setShowUpdateDialog, editProps, fe
   }
 
   const updateTags = () => {
+    setUpdateLoading(true)
     const formData = new FormData()
     formData.append('Tag_ID', editProps.id)
     formData.append('Tag_Name', tagName)
@@ -76,13 +78,14 @@ export const UpdateTag = ({ showUpdateDialog, setShowUpdateDialog, editProps, fe
         }
       })
       .catch(err => console.log(err))
+      .finally(() => setUpdateLoading(false))
   }
 
   const footer = () => {
     return (
       <>
         <Button
-          loading={false}
+          loading={updateLoading}
           label="ثبت"
           disabled={errorTagName || errorFormName ? true : false}
           onClick={updateTags}
