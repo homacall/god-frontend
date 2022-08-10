@@ -165,6 +165,8 @@ export const CreateTag = () => {
               id="tagType"
               name="tagType"
               value={valueType}
+              filterBy="label"
+              filter
               onChange={handleChangeType}
               className={`h-9 w-96 ${classNames({ 'p-invalid': errorType, 'w-full': true })}`}
             />
@@ -184,6 +186,8 @@ export const CreateTag = () => {
                 optionValue="tag_ID"
                 optionLabel="tagTranslate_Name"
                 value={systemName}
+                filterBy="tagTranslate_Name"
+                filter
                 onChange={handleChangeSysName}
                 className={`h-9 w-96 ${classNames({ 'p-invalid': errorSysName, 'w-full': true })}`}
               />
@@ -204,6 +208,8 @@ export const CreateTag = () => {
                 optionValue="tag_ID"
                 optionLabel="tagTranslate_Name"
                 value={formName}
+                filterBy="tagTranslate_Name"
+                filter
                 disabled={errorSysName}
                 onChange={handleChangeFormName}
                 className={`h-9 w-96 ${classNames({ 'p-invalid': errorFormName, 'w-full': true })}`}
