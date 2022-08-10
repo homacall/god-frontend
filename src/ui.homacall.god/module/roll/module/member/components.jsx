@@ -1,11 +1,21 @@
 import { Button } from 'primereact/button'
 import { Dropdown } from 'primereact/dropdown'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RoleMemberService } from '../../../../service'
 import { ToastAlert } from '../../../common/toastAlert'
 
-export const NewRoleMemberForm = ({ onCancel, roles, currentRole }) => {
+export const NewRoleMemberForm = ({ onCancel, roles, currentRole, setFetchAgain }) => {
   const [roleId, setRoleId] = useState('')
+  const [filteredRole, setFilteredRoles] = useState(roles)
+
+  useEffect(() => {
+    if (roles) {
+      const result = roles.filter(role => role.rol_ID !== currentRole.rol_ID)
+      setFilteredRoles(result)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roles])
+
   const submitHandler = () => {
     if (!roleId || roleId === '') return ToastAlert.error('انتخاب زیرمجموعه اجباریست')
     const formData = new FormData()
@@ -16,13 +26,14 @@ export const NewRoleMemberForm = ({ onCancel, roles, currentRole }) => {
         ToastAlert.success('زیرمجموعه جدید با موفقیت ثبت شد')
         setRoleId('')
         onCancel()
+        setFetchAgain(prev => !prev)
       }
     })
   }
   return (
     <div className="flex flex-col justify-center items-center gap-[32px]">
       <Dropdown
-        options={roles}
+        options={filteredRole}
         name="role_Member_Name"
         optionLabel="transTagText"
         optionValue="rol_ID"
