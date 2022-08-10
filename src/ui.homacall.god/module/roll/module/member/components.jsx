@@ -1,21 +1,11 @@
 import { Button } from 'primereact/button'
 import { MultiSelect } from 'primereact/multiselect'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { RoleMemberService } from '../../../../service'
 import { ToastAlert } from '../../../common/toastAlert'
 
-export const NewRoleMemberForm = ({ onCancel, roles, currentRole, setFetchAgain, data }) => {
-  const [filteredRole, setFilteredRoles] = useState(roles)
+export const NewRoleMemberForm = ({ onCancel, roles, currentRole, setFetchAgain }) => {
   const [selectedId, setSelectedId] = useState([])
-
-  useEffect(() => {
-    if (roles) {
-      const result = roles.filter(role => role.rol_ID !== currentRole.rol_ID)
-
-      setFilteredRoles(result)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roles])
 
   const submitHandler = () => {
     const result = selectedId.map(id => ({ rolMbrs_RolID: currentRole.rol_ID, rolMbrs_RolMberID: id }))
@@ -32,10 +22,10 @@ export const NewRoleMemberForm = ({ onCancel, roles, currentRole, setFetchAgain,
     <div className="flex flex-col justify-center items-center gap-[32px]">
       <MultiSelect
         maxSelectedLabels={2}
-        optionLabel="transTagText"
-        optionValue="rol_ID"
+        optionLabel="roleMembers_TransTagName"
+        optionValue="role_ID"
         value={selectedId}
-        options={filteredRole}
+        options={roles}
         onChange={e => setSelectedId(e.value)}
         className="w-96"
       />

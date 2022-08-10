@@ -47,6 +47,29 @@ export const getById = data => {
       console.log(err)
     })
 }
+export const getAllListMember = data => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.getAllListMember, data, config)
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
+      } else {
+        return res
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
 export const DeleteRoleMember = data => {
   const token = localStorage.getItem('token')
   let config = {

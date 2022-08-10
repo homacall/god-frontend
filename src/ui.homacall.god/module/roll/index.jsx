@@ -93,7 +93,7 @@ export const Roll = () => {
   return (
     <div className="w-[95%] mt-4 m-auto container">
       <div className="card">
-        <RoleMember onHide={roleMemberHandler} visible={showRoleMember} currentRole={currentRole} roles={dataL} />
+        <RoleMember onHide={roleMemberHandler} visible={showRoleMember} currentRole={currentRole} />
         <Toolbar className="mb-4" right={rightToolbarTemplate} />
 
         <DataTable

@@ -7,18 +7,17 @@ import { Toolbar } from 'primereact/toolbar'
 import { useCallback } from 'react'
 import { useState, useEffect } from 'react'
 import { RoleMemberService } from '../../../../service'
-import { DeleteRoleMember } from '../../../../service/roleMember'
 import TableActions from '../../../common/actionBody'
 import { ToastAlert } from '../../../common/toastAlert'
 import { roleMemberColumn } from '../../constant/tableColumn'
 import { NewRoleMemberForm } from './components'
 
-export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
+export const RoleMember = ({ visible, onHide, currentRole }) => {
   const [globalFilter, setGlobalFilter] = useState(null)
   const [data, setData] = useState([])
   const [newRoleMember, setNewRoleMember] = useState(false)
   const [fetchAgain, setFetchAgain] = useState(false)
-
+  const [roleList, setRoleList] = useState([])
   const header = (
     <div className="table-header">
       <span className="p-input-icon-left">
@@ -63,13 +62,31 @@ export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
         ToastAlert.error('خطا در ارتباط با سرور')
       })
   }, [currentRole?.rol_ID])
+  const fetchListMember = useCallback(() => {
+    if (!currentRole?.rol_ID) return
+    const formData = new FormData()
+    formData.append('RolID', currentRole.rol_ID)
+    RoleMemberService.getAllListMember(formData)
+      .then(res => {
+        if (res.data.roleMembers && res.status === 200) {
+          setRoleList(res.data.roleMembers)
+        }
+      })
+      .catch(err => {
+        ToastAlert.error('خطا در ارتباط با سرور')
+      })
+  }, [currentRole?.rol_ID])
+
+  useEffect(() => {
+    fetchListMember()
+  }, [fetchListMember])
 
   const currentRoleHeader = <div className="text-[14px] text-center "> {currentRole?.transTagText}</div>
 
   const handleDeleteRoleMember = memberId => {
     const formData = new FormData()
     formData.append('RolMemID', memberId)
-    DeleteRoleMember(formData)
+    RoleMemberService.DeleteRoleMember(formData)
       .then(res => {
         if (res.data && res.data.status === 200) {
           ToastAlert.success('حذف زیر مجموعه نقش با موفقیت انجام شد')
@@ -91,19 +108,14 @@ export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
       onHide={() => {
         onHide()
         setNewRoleMember(false)
+        setData([])
       }}
       header={currentRoleHeader}
       footer={null}
       className="w-[60vw]"
     >
       {newRoleMember ? (
-        <NewRoleMemberForm
-          onCancel={newRoleMemberHandler}
-          roles={roles}
-          currentRole={currentRole}
-          setFetchAgain={setFetchAgain}
-          data={data}
-        />
+        <NewRoleMemberForm onCancel={newRoleMemberHandler} roles={roleList} currentRole={currentRole} setFetchAgain={setFetchAgain} />
       ) : (
         <>
           <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
