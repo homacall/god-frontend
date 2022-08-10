@@ -23,7 +23,6 @@ export const CreateRoll = () => {
   const fetchTags = () => {
     const formData = new FormData()
     formData.append('TagType', '5')
-    //formData.append('ParentID', '-1')
     GetAllTags(formData).then(res => {
       if (res.data || res.status === 200) {
         setTags(res.data.tagsknowledges)
