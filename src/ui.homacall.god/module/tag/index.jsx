@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
@@ -11,7 +11,7 @@ import { UpdateTag } from './components/UpdateTag'
 import TableActions from '../common/actionBody'
 import { tagColumns } from './constant/tableColumn'
 import ShowTag from './components/ShowTag'
-import { DeleteTag, UpdateTags } from '../../service/tagManagerService'
+import { DeleteTag } from '../../service/tagManagerService'
 import { GetAllTagsTranslate } from '../../service/translateService'
 import { ToastAlert } from '../common/toastAlert'
 import { createTagType } from './constant/createTagType'
@@ -27,15 +27,20 @@ export const Tag = () => {
   const [data, setData] = useState([])
   const [fetchAgain, setFetchAgain] = useState(false)
   const [filterTagType, setFilterTagType] = useState('')
-  const [formId, setFormId] = useState(0)
+  const [dataLoading, setDataLoading] = useState(true)
+
+  const [dataTable, setDataTable] = useState([])
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false)
+  const [editProps, setEditProps] = useState({ formParentID: -1, id: -1, title: '', transTitle: '', type: '', typeId: -1 })
 
   //Get Tags List from server with api
-  useEffect(() => {
+  const fetchAllTags = () => {
     const formData = new FormData()
     formData.append('TagType', filterTagType ? filterTagType.toString() : '-1')
     formData.append('ParentID', '-1')
     GetAllTagsTranslate(formData).then(res => {
       if (res.data) {
+        setDataLoading(false)
         setData(
           res.data.tagsknowledges.map(item => ({
             id: item.tag_ID,
@@ -48,6 +53,9 @@ export const Tag = () => {
         )
       }
     })
+  }
+  useEffect(() => {
+    fetchAllTags()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchAgain])
 
@@ -66,12 +74,14 @@ export const Tag = () => {
   }
 
   const fetchTagByTypeId = id => {
+    setDataLoading(true)
     if (id >= 0) {
       const formData = new FormData()
       formData.append('TagType', id.toString())
       formData.append('ParentID', '-1')
       GetAllTagsTranslate(formData).then(res => {
         if (res.data) {
+          setDataLoading(false)
           setData(
             res.data.tagsknowledges.map(item => ({
               id: item.tag_ID,
@@ -112,6 +122,8 @@ export const Tag = () => {
             id="tagType"
             name="tagType"
             value={filterTagType}
+            filterBy="label"
+            filter
             onChange={handleFilterType}
             className="h-9 w-44 tag-filter-by-ty"
           />
@@ -134,7 +146,7 @@ export const Tag = () => {
     setOpenShow(false)
   }
 
-  const deleteTag = id => {
+  const deleteTag = useCallback(id => {
     const formData = new FormData()
     formData.append('ID', id)
     DeleteTag(formData)
@@ -147,36 +159,62 @@ export const Tag = () => {
         }
       })
       .catch(err => console.log(err))
-  }
+  }, [])
 
-  const updateTags = (id, newTagName, newTagType) => {
-    const formData = new FormData()
-    formData.append('Tag_ID', id)
-    formData.append('Tag_Name', newTagName)
-    formData.append('Tag_Type', newTagType.toString())
-    formData.append('Tag_PID', formId)
-    // alert(formId)
-    UpdateTags(formData)
-      .then(res => {
-        if (res.data || res.status === 200) {
-          ToastAlert.success('تگ مورد نظر با موفقیت ویرایش گردید')
-          fetchAgainHandler()
-        } else {
-          ToastAlert.error('خطا در ویرایش تگ')
-        }
-      })
-      .catch(err => console.log(err))
-  }
+  useEffect(() => {
+    const newData = []
+    data.forEach(item =>
+      newData.push({
+        ...item,
+        action: (
+          <TableActions
+            deleteAction={() => {
+              deleteTag(item.id)
+            }}
+            hasDelete={true}
+            hasUpdate={false}
+            deleteButtonClassName={' p-button-danger text-xs rtl h-10 w-25 py-1 px-3 ml-2'}
+            deleteLabel="حذف"
+            deleteIcon={false}
+          >
+            <Button
+              className="p-button-warning text-xs rtl h-10 w-25 py-1 px-3 ml-2"
+              label="ویرایش"
+              onClick={() => {
+                console.log({ item })
+                setEditProps({ ...item })
+                setShowUpdateDialog(prev => !prev)
+              }}
+            />
+            <Button
+              onClick={() => openShowTag(data.id, data.title, data.type)}
+              className="p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2"
+            >
+              ترجمه
+            </Button>
+          </TableActions>
+        ),
+      }),
+    )
+    setDataTable(newData)
+  }, [data, deleteTag])
 
   return (
     <>
       <ShowTag visible={openShow} tagId={id} onHide={closeShowTag} tagName={tagName} tagType={tagType} fetchAgain={fetchAgainHandler} />
+      <UpdateTag
+        showUpdateDialog={showUpdateDialog}
+        setShowUpdateDialog={setShowUpdateDialog}
+        fetchAgainHandler={fetchAgainHandler}
+        editProps={editProps}
+      />
       <div className="w-[95%] mt-4 m-auto container">
         <div className="card">
           <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
 
           <DataTable
-            value={data}
+            loading={dataLoading}
+            value={dataTable}
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
@@ -190,46 +228,6 @@ export const Tag = () => {
             {tagColumns.map((col, index) => (
               <Column field={col.field} header={col.header} sortable key={index} filterBy="#{data.name}" className={col.className}></Column>
             ))}
-
-            <Column
-              field="image"
-              header="عملیات"
-              body={data => (
-                <>
-                  <TableActions
-                    deleteAction={() => {
-                      deleteTag(data.id)
-                    }}
-                    hasDelete={true}
-                    hasUpdate={true}
-                    updateAction={() => {
-                      updateTags(data.id, tagName, tagType)
-                    }}
-                    deleteLabel="حذف"
-                    updateLabel="ویرایش"
-                    updateView={
-                      <UpdateTag
-                        tagName={tagName}
-                        setTagName={setTagName}
-                        oldVal={data.title}
-                        tagType={data.typeId}
-                        setTagType={setTagType}
-                        setFormId={setFormId}
-                        tagId={data.tag_ParentID}
-                      />
-                    }
-                    deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
-                    updateButtonClassName={'p-button-warning ml-2 text-xs rtl h-10 w-25 py-1 px-3'}
-                  />
-                  <Button
-                    onClick={() => openShowTag(data.id, data.title, data.type)}
-                    className=" p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2"
-                  >
-                    ترجمه
-                  </Button>
-                </>
-              )}
-            ></Column>
           </DataTable>
         </div>
       </div>

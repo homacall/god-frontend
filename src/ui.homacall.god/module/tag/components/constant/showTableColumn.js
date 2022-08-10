@@ -9,4 +9,9 @@ export const showTagTableColumns = [
     field: 'tranTg_LangName',
     className: 'text-sm',
   },
+  {
+    header: 'عملیات',
+    field: 'action',
+    className: 'text-xs',
+  },
 ]

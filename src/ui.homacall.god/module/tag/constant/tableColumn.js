@@ -14,4 +14,9 @@ export const tagColumns = [
     field: 'transTitle',
     className: 'text-sm',
   },
+  {
+    header: 'عملیات',
+    field: 'action',
+    className: 'text-xs',
+  },
 ]
