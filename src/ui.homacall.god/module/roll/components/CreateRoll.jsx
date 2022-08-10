@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Button } from 'primereact/button'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import { InsertRole } from '../../../service/rolService'
-import { GetAllTags } from '../../../service/tagManagerService'
+import { GetAllTags, getAllTagsTranslate } from '../../../service/tagManagerService'
 import { Dropdown } from 'primereact/dropdown'
 import { useNavigate } from 'react-router'
 import { rolls } from '../../../utils/constants/routes/publicRoute'
 import { ToastAlert } from '../../common/toastAlert'
 import { Checkbox } from 'primereact/checkbox'
+import { createTagType } from '../../tag/constant/createTagType'
 
 export const CreateRoll = () => {
   const [value, setValue] = useState()
@@ -22,8 +23,9 @@ export const CreateRoll = () => {
 
   const fetchTags = () => {
     const formData = new FormData()
-    formData.append('TagType', '4')
-    GetAllTags(formData).then(res => {
+    formData.append('TagType', '5')
+    formData.append('ParentID', '-1')
+    getAllTagsTranslate(formData).then(res => {
       if (res.data || res.status === 200) {
         setTags(res.data.tagsknowledges)
       }
@@ -62,7 +64,7 @@ export const CreateRoll = () => {
         <span className="p-float-label">
           <Dropdown
             options={tags}
-            optionLabel={'tag_Name'}
+            optionLabel={'tagTranslate_Name'}
             optionValue={'tag_ID'}
             id="Rol_TgID"
             value={value}

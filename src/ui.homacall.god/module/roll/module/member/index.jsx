@@ -44,10 +44,10 @@ export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
     if (!currentRole?.rol_ID) return
     const formData = new FormData()
     formData.append('ID', currentRole.rol_ID)
-    RoleMemberService.getById()
+    RoleMemberService.getById(formData)
       .then(res => {
-        if (res.data && res.status === 200) {
-          setData(res.data)
+        if (res.data.role && res.status === 200 && res.data.message !== 'Null') {
+          setData(res.data.role)
         }
       })
       .catch(err => {
