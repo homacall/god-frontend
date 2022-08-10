@@ -47,6 +47,29 @@ export const GetAllRoutesGodByTypeRouteTree = () => {
       console.log(err)
     })
 }
+export const GetAllRouteStructureTreeByTagID = tagId => {
+  const token = localStorage.getItem('token')
+  let config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }
+  return http
+    .post(apiUrls.getAllRouteStructureTreeByTagID, tagId, config)
+    .then(res => {
+      if (res.data.message === 'Unauthorized') {
+        LogoutUser().finally(() => {
+          localStorage.removeItem('token')
+          window.location.replace('/login/')
+        })
+      } else {
+        return res
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
 export const CreateRouteStructure = data => {
   const token = localStorage.getItem('token')
   let config = {

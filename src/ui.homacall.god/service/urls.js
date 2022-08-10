@@ -29,6 +29,7 @@ export const apiUrls = {
   getAllRoutes: GodHOST.concat('/RouteStructureGod/GetAll'),
   getAllRoutesByType: GodHOST.concat('/RouteStructureGod/GetAllByTypeRoute'),
   getAllRoutesByTypeForTree: GodHOST.concat('/RouteStructureGod/GetAllByTypeRouteForTree'),
+  getAllRouteStructureTreeByTagID: GodHOST.concat('/RouteStructureGod/GetAllRouteStructureTreeByTagID'),
   createRoteStructure: GodHOST.concat('/RouteStructureGod/Insert'),
   deleteRoteStructure: GodHOST.concat('/RouteStructureGod/Delete'),
   getAllTagsTranslate: GodHOST.concat('/TagsknowledgeGod/GetAllTagsTranslate'),

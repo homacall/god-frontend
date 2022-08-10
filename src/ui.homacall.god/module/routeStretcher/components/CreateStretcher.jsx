@@ -12,6 +12,7 @@ import { TreeView } from '../../userPermissions/components/treeView'
 import {
   CreateRouteStructure,
   GetAllRoutesGodByTypeRouteTree,
+  GetAllRouteStructureTreeByTagID,
   GetByIdRouteStructure,
   GetRSIDByTagID,
   UpdateRouteStructure,
@@ -35,6 +36,7 @@ export const CreateAndEditStretcher = () => {
   const [editMode, setEditMode] = useState(location.pathname.includes('/route-stretcher/update/'))
   const [formTags, setFormTags] = useState([])
   const [systemsTags, setSystemsTags] = useState([])
+  const [systemIdInEditMode, setSystemIdInEditMode] = useState()
   const fetchTags = async (type, parentId) => {
     const formData = new FormData()
     formData.append('TagType', type)
@@ -51,11 +53,13 @@ export const CreateAndEditStretcher = () => {
       })
     return result
   }
-  const fetchRoutes = () => {
-    GetAllRoutesGodByTypeRouteTree()
+  const fetchRoutes = tagId => {
+    const formData = new FormData()
+    formData.append('TagID', tagId)
+    GetAllRouteStructureTreeByTagID(formData)
       .then(res => {
-        if (res.data.routeStructures || res.status === 200) {
-          setRoutes(res.data.routeStructures)
+        if (res.data.routeStructuresTree || res.status === 200) {
+          setRoutes(res.data.routeStructuresTree)
         }
       })
       .catch(err => console.log(err))
@@ -70,6 +74,7 @@ export const CreateAndEditStretcher = () => {
 
           fetchTags(data.routStr_TypeRout).then(() => {
             setSelectedRoute(data)
+            setSystemIdInEditMode(data.find(str => str.routStr_PID === 0).routStr_PID)
             setInitialValue({
               RoutStr_Tag_ID: data.routStr_Tag_ID,
               RoutStr_TypeRout: data.routStr_TypeRout,
@@ -101,9 +106,7 @@ export const CreateAndEditStretcher = () => {
   //     })
   //   }
   // }, [selectedType])
-  useEffect(() => {
-    fetchRoutes()
-  }, [])
+
   const insertRoute = data => {
     const formData = new FormData()
     formData.append('RoutStr_TypeRout', data.RoutStr_TypeRout)
@@ -118,7 +121,7 @@ export const CreateAndEditStretcher = () => {
             CreateRouteStructure(formData)
               .then(res => {
                 if (res.data || res.status === 200) {
-                  fetchRoutes()
+                  // fetchRoutes()
                   ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
                   setIsParent(false)
                   formik.resetForm()
@@ -135,7 +138,7 @@ export const CreateAndEditStretcher = () => {
       CreateRouteStructure(formData)
         .then(res => {
           if (res.data || res.status === 200) {
-            fetchRoutes()
+            // fetchRoutes()
             ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
             setIsParent(false)
             formik.resetForm()
@@ -159,7 +162,7 @@ export const CreateAndEditStretcher = () => {
     UpdateRouteStructure(formData)
       .then(res => {
         if (res.data || res.status === 200) {
-          fetchRoutes()
+          // fetchRoutes()
           ToastAlert.success('مسیر جدید با موفقیت ثبت شد')
           setIsParent(false)
           formik.resetForm()
@@ -210,7 +213,10 @@ export const CreateAndEditStretcher = () => {
     if (isParent) {
       setShowTreeView(false)
     }
-  }, [isParent])
+    if (!formik.values.RoutStr_SystemName) {
+      setShowTreeView(false)
+    }
+  }, [isParent, formik.values.RoutStr_SystemName])
   useEffect(() => {
     fetchTags(8, -1).then(res => {
       if (res) setSystemsTags(res)
@@ -265,6 +271,17 @@ export const CreateAndEditStretcher = () => {
     if (formik.values.RoutStr_TypeRout < 2) return
     fetchTags(formik.values.RoutStr_TypeRout, formId).then(res => setCurrentTags(res))
   }
+  useEffect(() => {
+    if (editMode) {
+      if (systemIdInEditMode) {
+        fetchRoutes(systemIdInEditMode)
+      }
+    } else {
+      if (formik.values.RoutStr_SystemName) {
+        fetchRoutes(formik.values.RoutStr_SystemName)
+      }
+    }
+  }, [systemIdInEditMode, editMode, formik.values.RoutStr_SystemName])
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md m-auto container bg-white rtl">
       <Breadcrumb item={routeBreadcrumb} />
