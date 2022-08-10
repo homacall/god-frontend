@@ -97,7 +97,13 @@ export const RoleMember = ({ visible, onHide, currentRole, roles }) => {
       className="w-[60vw]"
     >
       {newRoleMember ? (
-        <NewRoleMemberForm onCancel={newRoleMemberHandler} roles={roles} currentRole={currentRole} setFetchAgain={setFetchAgain} />
+        <NewRoleMemberForm
+          onCancel={newRoleMemberHandler}
+          roles={roles}
+          currentRole={currentRole}
+          setFetchAgain={setFetchAgain}
+          data={data}
+        />
       ) : (
         <>
           <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
