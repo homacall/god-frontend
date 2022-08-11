@@ -10,7 +10,6 @@ import { ToastAlert } from '../../common/toastAlert'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
 import '../styles/menuLink.module.css'
 import { GetAllTagsTranslate } from '../../../service/translateService'
-import { createTagType } from '../../tag/constant/createTagType'
 import { Checkbox } from 'primereact/checkbox'
 import { MenuLinkService } from '../../../service'
 import { useCallback } from 'react'
@@ -29,7 +28,6 @@ const CreateEditMenuLink = () => {
   const [menuLinks, setMenuLinks] = useState([])
   const [errors, setErrors] = useState({})
   // const location = useLocation()
-  let { ServerId } = useParams()
   const navigate = useNavigate()
   const tagTypes = {
     form: 1,
