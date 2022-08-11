@@ -181,13 +181,12 @@ export const Tag = () => {
               className="p-button-warning text-xs rtl h-10 w-25 py-1 px-3 ml-2"
               label="ویرایش"
               onClick={() => {
-                console.log({ item })
                 setEditProps({ ...item })
                 setShowUpdateDialog(prev => !prev)
               }}
             />
             <Button
-              onClick={() => openShowTag(data.id, data.title, data.type)}
+              onClick={() => openShowTag(item.id, item.title, item.type)}
               className="p-button-success text-xs rtl h-10 w-25 py-1 px-3 ml-2"
             >
               ترجمه
