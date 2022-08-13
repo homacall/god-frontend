@@ -56,6 +56,11 @@ const items = [
     label: 'انتساب مسیر',
     url: `${sidebar.routeStretcher}`,
   },
+  {
+    id: 12,
+    label: 'تنظیمات بایگانی',
+    url: `${sidebar.annexSettings}`,
+  },
 ]
 
 export default items

@@ -94,4 +94,9 @@ export const apiUrls = {
   menuLinkInsert: GodHOST.concat('/MenuLinkGod/Insert'),
   menuLinkDelete: GodHOST.concat('/MenuLinkGod/Delete'),
   getAllLinkSubMenu: GodHOST.concat('/MenuLinkGod/GetAllLinkSubMenu'),
+  getAllAnnexSettings: GodHOST.concat('/AnnexSettingsGod/GetAll'),
+  getAnnexSettingsById: GodHOST.concat('/AnnexSettingsGod/GetById'),
+  createAnnexSettings: GodHOST.concat('/AnnexSettingsGod/Insert'),
+  updateAnnexSettings: GodHOST.concat('/AnnexSettingsGod/Update'),
+  deleteAnnexSettings: GodHOST.concat('/AnnexSettingsGod/Delete'),
 }
