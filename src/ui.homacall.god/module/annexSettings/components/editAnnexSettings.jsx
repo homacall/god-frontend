@@ -129,11 +129,9 @@ export const EditAnnexSettings = () => {
     fetchAllArchiveTags()
   }, [])
 
-  const fetchAnnexById = useCallback(() => {
-    if (annexSettingsId && annexSettingsId > 0) {
-      const formData = new FormData()
-      formData.append('AnexSetingID', annexSettingsId)
-      getAnnexById(formData)
+  const fetchAnnexById = useCallback(
+    annexID => {
+      getAnnexById(annexID)
         .then(res => {
           if (res && res.data && res.data.status === 200) {
             setInitialValue({
@@ -143,14 +141,25 @@ export const EditAnnexSettings = () => {
               RefComent: res.data.anexSeting.anxSeting_RefComent,
               description: res.data.anexSeting.anxSeting_Desc,
             })
+          } else {
+            ToastAlert.error('خطا در دریافت بایگانی')
+            navigate('/annexSettings')
           }
         })
-        .catch(() => ToastAlert.error('خطا در ارتباط با سرور'))
-    }
-  }, [annexSettingsId])
+        .catch(() => {
+          ToastAlert.error('خطا در ارتباط با سرور')
+          navigate('/annexSettings')
+        })
+    },
+    [navigate],
+  )
 
   useEffect(() => {
-    fetchAnnexById()
+    if (annexSettingsId && annexSettingsId > 0) {
+      const formData = new FormData()
+      formData.append('AnexSetingID', annexSettingsId)
+      fetchAnnexById(formData)
+    }
   }, [annexSettingsId, fetchAnnexById])
 
   return (
