@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useFormik } from 'formik'
-import { useParams, useLocation, useNavigate } from 'react-router'
+import { useParams, useNavigate } from 'react-router'
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import { InputTextarea } from 'primereact/inputtextarea'
@@ -15,6 +15,7 @@ import validate from '../constant/validate'
 import { GetAllLanguage } from '../../../service/languageService'
 import { GetCompanyById, InsertCompany, UpdateCompany } from '../../../service/companyService'
 import { dateTypes } from '../constant/dateTypes'
+import { getAllTagsTranslate } from '../../../service/tagManagerService'
 
 import '../style/company.css'
 
@@ -27,7 +28,7 @@ export const CreateCompany = () => {
   const [pervImageName, setPervImageName] = useState('')
   //const [logoPath, setLogoPath] = useState('')
   const [initialValues, setInitialValues] = useState({
-    CoIn_Name: '',
+    CoIn_TagID: '',
     CoIn_Address: '',
     CoIn_Fax: '',
     CoIn_Email: '',
@@ -40,8 +41,9 @@ export const CreateCompany = () => {
     CoIn_SmsNumber: '',
     CoIn_TypeDateTime: '',
   })
+  const [titleTags, setTitleTags] = useState([])
 
-  const location = useLocation()
+  //const location = useLocation()
   let { CompanyId } = useParams()
   const navigate = useNavigate()
 
@@ -67,29 +69,44 @@ export const CreateCompany = () => {
       })
   }, [CompanyId])
 
+  const fetchTags = useCallback(() => {
+    const formData = new FormData()
+    formData.append('TagType', '3')
+    formData.append('ParentID', '-1')
+    getAllTagsTranslate(formData)
+      .then(res => {
+        if (res.data || res.status === 200) {
+          setTitleTags(res.data.tagsknowledges.map(item => ({ id: item.tag_ID, name: item.tagTranslate_Name })))
+        }
+      })
+      .catch(() => ToastAlert.error('خطا در ارتباط با سرور'))
+  }, [])
+
   useEffect(() => {
     fetchLanguage()
+  }, [])
+
+  useEffect(() => {
+    fetchTags()
+  }, [fetchTags])
+
+  useEffect(() => {
     if (CompanyId) {
       fetchCompany()
     }
   }, [fetchCompany, CompanyId])
 
   useEffect(() => {
-    let path = location.pathname
-
-    if (path.split('/')[2] === 'new-company') {
-      //if company info is exist redirect to company index page
-      if (companyById.length > 0) {
-        navigate('/company')
-      }
-    } else if (path.split('/')[2] === 'edit') {
+    //let path = location.pathname
+    console.log('before: ', companyById)
+    if (CompanyId && companyById) {
+      console.log('after: ', companyById)
       //initialize for formik
       const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER.concat(companyById.coIn_Logo)
       setImageUrl(logoSrc)
       setPervImageName(companyById.coIn_Logo)
-
       setInitialValues({
-        CoIn_Name: companyById.coIn_Name,
+        CoIn_TagID: companyById.coIn_TagID,
         CoIn_Address: companyById.coIn_Address,
         CoIn_Fax: companyById.coIn_Fax,
         CoIn_Email: companyById.coIn_Email,
@@ -103,9 +120,9 @@ export const CreateCompany = () => {
         CoIn_TypeDateTime: companyById.coIn_TypeDateTime,
       })
     }
-  }, [location.pathname, navigate, companyById])
+  }, [CompanyId, companyById])
 
-  const handleInsetCompany = formData => {
+  const handleInsertCompany = formData => {
     InsertCompany(formData)
       .then(res => {
         if (res.status === 200 || res.data) {
@@ -160,14 +177,14 @@ export const CreateCompany = () => {
         formData.append(key, value)
       })
       setLoading(true)
+
       if (CompanyId) {
         formData.append('CoIn_ID', CompanyId)
         formData.append('CoIn_Logo', pervImageName)
         handleUpdateCompany(formData)
       } else {
-        handleInsetCompany(formData)
+        handleInsertCompany(formData)
       }
-
       setImageError(false)
     },
     enableReinitialize: true,
@@ -179,20 +196,22 @@ export const CreateCompany = () => {
       <form className="p-5 mt-10" onSubmit={formik.handleSubmit}>
         <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 gap-y-10 rtl">
           <span className="p-float-label rtl relative" dir="ltr">
-            <InputText
-              id="CoIn_Name"
-              name="CoIn_Name"
-              value={formik.values.CoIn_Name}
-              className="p-inputtext p-component w-full h-9  rtl text-xs"
-              onBlur={formik.handleBlur}
+            <Dropdown
+              filter
+              filterBy="name"
+              options={titleTags}
+              id="CoIn_TagID"
+              name="CoIn_TagID"
+              optionLabel="name"
+              optionValue="id"
+              value={formik.values.CoIn_TagID}
               onChange={formik.handleChange}
+              placeholder="انتخاب تگ"
+              className="rtl w-full h-9"
             />
-            <label htmlFor="CoIn_Name" className="text-sm">
-              نام
-            </label>
 
-            {formik.touched.CoIn_Name && formik.errors.CoIn_Name ? (
-              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_Name}</div>
+            {formik.touched.CoIn_TagID && formik.errors.CoIn_TagID ? (
+              <div className="absolute text-red-600 text-sm">{formik.errors.CoIn_TagID}</div>
             ) : null}
           </span>
 

@@ -1,11 +1,11 @@
 const validate = values => {
   const errors = {}
 
-  if (!values.CoIn_Name) {
-    errors.CoIn_Name = 'نام و نام خانوادگی الزامی است'
-  } else if (values.CoIn_Name.length < 5) {
-    errors.CoIn_Name = 'نام و نام خانوادگی باید بیشتر از 6 حرف باشد'
-  }
+  // if (!values.CoIn_TagID) {
+  //   errors.CoIn_Name = 'نام و نام خانوادگی الزامی است'
+  // } else if (values.CoIn_Name.length < 5) {
+  //   errors.CoIn_Name = 'نام و نام خانوادگی باید بیشتر از 6 حرف باشد'
+  // }
 
   if (!values.CoIn_Address) {
     errors.CoIn_Address = 'آدرس الزامی است'
