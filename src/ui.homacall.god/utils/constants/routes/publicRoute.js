@@ -16,6 +16,7 @@ export const sidebar = {
   systemPath: '/systems-path',
   filePath: '/files-path',
   loginLogo: '/login-logo',
+  annexSettings: '/annexSettings',
 }
 export const language = {
   languageTable: '/language',
@@ -81,4 +82,10 @@ export const loginLogo = {
   main: '/login-logo',
   create: '/login-logo/create',
   edit: '/login-logo/edit/:loginLogoId',
+}
+
+export const annexSettings = {
+  main: '/annexSettings',
+  create: '/annexSettings/create',
+  edit: '/annexSettings/edit/:annexSettingsId',
 }

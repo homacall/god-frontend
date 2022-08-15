@@ -13,14 +13,28 @@ import { CreateTag } from '../module/tag/components/CreateTag'
 import LoginForm from '../module/auth/login/loginForm'
 import { Company } from '../module/company'
 import { CreateCompany } from '../module/company/components/CreateCompany'
-import { language, users, rolls, authRoutes, routeStretcher, tags, manage, menu, loginLogo } from '../utils/constants/routes/publicRoute'
+import {
+  language,
+  users,
+  rolls,
+  authRoutes,
+  routeStretcher,
+  tags,
+  manage,
+  menu,
+  loginLogo,
+  annexSettings,
+} from '../utils/constants/routes/publicRoute'
 import { RouteStretcher } from '../module/routeStretcher'
 import { CreateAndEditStretcher } from '../module/routeStretcher/components/CreateStretcher'
 import { MenuLinks } from '../module/menuLink'
+import { AnnexSettings } from '../module/annexSettings'
 
 import LoginLogo from '../module/loginLogo'
 import CreateEditLoginLogo from '../module/loginLogo/components/CreateEditLoginLogo'
 import CreateEditMenuLink from '../module/menuLink/components/CreateEditMenuLink'
+import { CreateAnnexSettings } from '../module/annexSettings/components/createAnnexSettings'
+import { EditAnnexSettings } from '../module/annexSettings/components/editAnnexSettings'
 
 export const PrivateRoutes = () => {
   return (
@@ -364,6 +378,40 @@ export const PrivateRoutes = () => {
                 <title>آپلود لوگو ورود</title>
               </Helmet>
               <CreateEditLoginLogo />
+            </>
+          }
+        />
+
+        <Route
+          path={`${annexSettings.main}`}
+          element={
+            <>
+              <Helmet>
+                <title>تنظیمات بایگانی</title>
+              </Helmet>
+              <AnnexSettings />
+            </>
+          }
+        />
+        <Route
+          path={`${annexSettings.create}`}
+          element={
+            <>
+              <Helmet>
+                <title>ایجاد تنظیمات بایگانی</title>
+              </Helmet>
+              <CreateAnnexSettings />
+            </>
+          }
+        />
+        <Route
+          path={`${annexSettings.edit}`}
+          element={
+            <>
+              <Helmet>
+                <title>ویرایش تنظیمات بایگانی</title>
+              </Helmet>
+              <EditAnnexSettings />
             </>
           }
         />

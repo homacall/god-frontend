@@ -4,7 +4,7 @@ import { InputImage } from '../../common/fileUploader'
 import { Button } from 'primereact/button'
 import { Dropdown } from 'primereact/dropdown'
 import Breadcrumb from '../../../component/breadcrumb/breadcrumb'
-import { getAllTagsTranslate } from '../../../service/tagManagerService'
+import { getAllTagsTranslate, GetAllTags } from '../../../service/tagManagerService'
 import { BreadcrumbItem } from '../constant/BreadcampItem'
 import { ToastAlert } from '../../common/toastAlert'
 import { UpdateLoginLogo, InsertLoginLogo, GetLoginLogoById } from '../../../service/loginLogoService'
@@ -23,16 +23,25 @@ function CreateEditLoginLogo() {
   const location = useLocation()
   const params = useParams()
 
-  const fetchTags = () => {
+  const fetchSystems = () => {
     const formData = new FormData()
     formData.append('TagType', '-1')
     getAllTagsTranslate(formData).then(res => {
       if (res.data || res.status === 200) {
-        setTags(res.data.tagsknowledges.map(item => ({ id: item.tag_ID, name: item.tag_Name })))
         setSystems(res.data.tagsknowledges.filter(item => item.tag_Type === 8))
       }
     })
   }
+
+  const fetchTags = useCallback(() => {
+    const formData = new FormData()
+    formData.append('TagType', '7')
+    GetAllTags(formData).then(res => {
+      if (res.data || res.status === 200) {
+        setTags(res.data.tagsknowledges.map(item => ({ id: item.tag_ID, name: item.tag_Name })))
+      }
+    })
+  }, [])
 
   const fetchLoginLogo = useCallback(() => {
     if (params.loginLogoId) {
@@ -55,9 +64,13 @@ function CreateEditLoginLogo() {
   }, [params.loginLogoId])
 
   useEffect(() => {
-    fetchTags()
+    fetchSystems()
     fetchLoginLogo()
   }, [fetchLoginLogo])
+
+  useEffect(() => {
+    fetchTags()
+  }, [fetchTags])
 
   useEffect(() => {
     if (params.loginLogoId) {
