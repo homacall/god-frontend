@@ -16,12 +16,13 @@ function LoginLogo() {
   const [fetchAgain, setFetchAgain] = useState(false)
   const [dataL, setDataL] = useState([])
   const [globalFilter, setGlobalFilter] = useState(null)
+  const [dataLoading, setDataLoading] = useState(true)
 
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
 
-  useEffect(() => {
+  const fetchAllLogo = () => {
     GetAllLoginLogoBySP()
       .then(res => {
         const newData = []
@@ -45,7 +46,12 @@ function LoginLogo() {
           setDataL(newData)
         }
       })
-      .catch(e => console.log(e))
+      .catch(e => ToastAlert.error('خطا در ارتباط با سرور'))
+      .finally(() => setDataLoading(false))
+  }
+
+  useEffect(() => {
+    fetchAllLogo()
   }, [fetchAgain])
 
   const rightToolbarTemplate = () => {
@@ -90,6 +96,7 @@ function LoginLogo() {
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
         <DataTable
+          loading={dataLoading}
           value={dataL}
           paginator
           rows={10}

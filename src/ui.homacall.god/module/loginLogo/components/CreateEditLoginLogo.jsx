@@ -16,31 +16,37 @@ function CreateEditLoginLogo() {
   const [tags, setTags] = useState([])
   const [tagValue, setTagValue] = useState('')
   const [editMode, setEditMode] = useState(false)
-  const [systemValue, setSystemValue] = useState('')
-  const [systems, setSystems] = useState([])
+  //const [systemValue, setSystemValue] = useState('')
+  //const [systems, setSystems] = useState([])
+  const [fetchTagsLoading, setFetchTagsLoading] = useState(false)
 
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
 
-  const fetchSystems = () => {
-    const formData = new FormData()
-    formData.append('TagType', '-1')
-    getAllTagsTranslate(formData).then(res => {
-      if (res.data || res.status === 200) {
-        setSystems(res.data.tagsknowledges.filter(item => item.tag_Type === 8))
-      }
-    })
-  }
+  // const fetchSystems = () => {
+  //   const formData = new FormData()
+  //   formData.append('TagType', '-1')
+  //   getAllTagsTranslate(formData).then(res => {
+  //     if (res.data || res.status === 200) {
+  //       setSystems(res.data.tagsknowledges.filter(item => item.tag_Type === 8))
+  //     }
+  //   })
+  // }
 
   const fetchTags = useCallback(() => {
+    setFetchTagsLoading(true)
     const formData = new FormData()
     formData.append('TagType', '7')
-    GetAllTags(formData).then(res => {
-      if (res.data || res.status === 200) {
-        setTags(res.data.tagsknowledges.map(item => ({ id: item.tag_ID, name: item.tag_Name })))
-      }
-    })
+    //formData.append('ParentID', sysID)
+    GetAllTags(formData)
+      .then(res => {
+        if (res.data || res.status === 200) {
+          setTags(res.data.tagsknowledges.map(item => ({ id: item.tag_ID, name: item.tag_TransName })))
+        }
+      })
+      .catch(() => ToastAlert.error('خطا در ارتباط با سرور'))
+      .finally(() => setFetchTagsLoading(false))
   }, [])
 
   const fetchLoginLogo = useCallback(() => {
@@ -52,7 +58,7 @@ function CreateEditLoginLogo() {
           if (res.data && res.status === 200) {
             const imgUrl = process.env.REACT_APP_GOD_FTP_SERVER + res.data.logoCo_Name
             setTagValue(res.data.logoCo_TgID)
-            setSystemValue(res.data)
+            //setSystemValue(res.data)
             setImageUrl(imgUrl)
             setImagePervUrl(res.data.logoCo_Name)
           }
@@ -64,7 +70,7 @@ function CreateEditLoginLogo() {
   }, [params.loginLogoId])
 
   useEffect(() => {
-    fetchSystems()
+    //fetchSystems()
     fetchLoginLogo()
   }, [fetchLoginLogo])
 
@@ -110,10 +116,16 @@ function CreateEditLoginLogo() {
       .catch(e => ToastAlert.error('خطا در آپلود لوگو '))
   }
 
+  // const handleChangeSystem = e => {
+  //   setSystemValue(e.target.value)
+  //   fetchTags(e.target.value)
+  //   setTagValue('')
+  // }
+
   const handleLoginLogo = () => {
     const formData = new FormData()
     formData.append('TagName', tagValue)
-    formData.append('SysName', systemValue)
+    //formData.append('SysName', systemValue)
     if (typeof imageUrl !== 'string') {
       formData.append('IFileLogo', imageUrl)
     } else {
@@ -134,6 +146,22 @@ function CreateEditLoginLogo() {
     <section className="w-[80%]  mt-5 py-4 rounded-md  m-auto container bg-white rtl ">
       <Breadcrumb item={BreadcrumbItem} />
 
+      {/* <section className="flex mt-8 justify-center">
+        <span className="p-float-label rtl relative mt-10" dir="ltr">
+          <Dropdown
+            options={systems}
+            id="tag_ID"
+            name="tag_Name"
+            optionLabel="tagTranslate_Name"
+            optionValue="tag_ID"
+            value={systemValue}
+            onChange={handleChangeSystem}
+            placeholder="انتخاب سیستم"
+            className="rtl w-[80vw] sm:w-[50vw] md:w-[30vw] h-9 "
+          />
+        </span>
+      </section> */}
+
       <section className="flex mt-8 justify-center">
         <span className="p-float-label rtl relative mt-10" dir="ltr">
           <Dropdown
@@ -145,24 +173,9 @@ function CreateEditLoginLogo() {
             optionLabel="name"
             optionValue="id"
             value={tagValue}
+            loading={fetchTagsLoading}
             onChange={e => setTagValue(e.target.value)}
             placeholder="انتخاب تگ"
-            className="rtl w-[80vw] sm:w-[50vw] md:w-[30vw] h-9 "
-          />
-        </span>
-      </section>
-
-      <section className="flex mt-8 justify-center">
-        <span className="p-float-label rtl relative mt-10" dir="ltr">
-          <Dropdown
-            options={systems}
-            id="tag_ID"
-            name="tag_Name"
-            optionLabel="tagTranslate_Name"
-            optionValue="tag_ID"
-            value={systemValue}
-            onChange={e => setSystemValue(e.target.value)}
-            placeholder="انتخاب سیستم"
             className="rtl w-[80vw] sm:w-[50vw] md:w-[30vw] h-9 "
           />
         </span>
@@ -175,7 +188,7 @@ function CreateEditLoginLogo() {
       <section className="mt-8 flex justify-center justify-items-center">
         <Button
           type="submit"
-          disabled={imageUrl && tagValue && systemValue ? false : true}
+          disabled={imageUrl && tagValue ? false : true}
           className="bg-indigo-600 text-sm h-10 text-center min-w-[120px] max-w-[120px]"
           loading={loading}
           onClick={handleLoginLogo}

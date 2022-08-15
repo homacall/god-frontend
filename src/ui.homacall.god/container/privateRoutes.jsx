@@ -353,7 +353,7 @@ export const PrivateRoutes = () => {
           element={
             <>
               <Helmet>
-                <title>آپلود لوگو ورود</title>
+                <title>آپلود لوگو سیستم ها</title>
               </Helmet>
               <LoginLogo />
             </>
@@ -364,7 +364,7 @@ export const PrivateRoutes = () => {
           element={
             <>
               <Helmet>
-                <title>آپلود لوگو ورود</title>
+                <title>آپلود لوگو سیستم ها</title>
               </Helmet>
               <CreateEditLoginLogo />
             </>
@@ -375,7 +375,7 @@ export const PrivateRoutes = () => {
           element={
             <>
               <Helmet>
-                <title>آپلود لوگو ورود</title>
+                <title>آپلود لوگو سیستم ها</title>
               </Helmet>
               <CreateEditLoginLogo />
             </>
