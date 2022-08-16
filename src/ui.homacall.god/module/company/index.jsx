@@ -21,11 +21,8 @@ export const Company = () => {
   const [showAllData, setShowAllData] = useState(false)
   const [compId, setCompId] = useState(0)
   const [companyInfoObject, setCompanyInfoObject] = useState({})
+  const [dataLoading, setDataLoading] = useState(true)
   const navigate = useNavigate()
-
-  const renderImage = img => (
-    <Image src={img} template="نمایش" alt="تصویر" width={50} height={50} preview={true} className="w-[50px] h-[50px] rounded-full" />
-  )
 
   useEffect(() => {
     const newData = []
@@ -33,31 +30,6 @@ export const Company = () => {
       .then(res => {
         if (res.data || res.status === 200) {
           if (res.data.companyInfos.length) {
-            var dateType = ''
-            if (res.data.companyInfos[0].coIn_TypeDateTime === 1) {
-              dateType = 'شمسی'
-            } else if (res.data.companyInfos[0].coIn_TypeDateTime === 2) {
-              dateType = 'میلادی'
-            } else if (res.data.companyInfos[0].coIn_TypeDateTime === 3) {
-              dateType = 'قمری'
-            }
-            const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER + res.data.companyInfos[0].coIn_Logo
-            setCompanyInfoObject({
-              'نام': res.data.companyInfos[0].coIn_Name,
-              'لوگو': renderImage(logoSrc),
-              'تلفن': res.data.companyInfos[0].coIn_Phone,
-              'موبایل': res.data.companyInfos[0].coIn_Mobile,
-              'فکس': res.data.companyInfos[0].coIn_Fax,
-              'پنل پیامک': res.data.companyInfos[0].coIn_SmsNumber,
-              'ایمیل': res.data.companyInfos[0].coIn_Email,
-              'اینستاگرام': res.data.companyInfos[0].coIn_Instagram,
-              'سایت': res.data.companyInfos[0].coIn_Site,
-              'آدرس شرکت': res.data.companyInfos[0].coIn_Address,
-              'درباره شرکت': res.data.companyInfos[0].coIn_About,
-              'زبان پیشفرض': res.data.companyInfos[0].coIn_LangName,
-              'نوع تاریخ': dateType,
-            })
-
             res.data.companyInfos.forEach(comp =>
               newData.push({
                 ...comp,
@@ -72,7 +44,7 @@ export const Company = () => {
                     className="w-[50px] h-[50px] rounded-full"
                   />
                 ),
-                coIn_TypeDateTime: dateType,
+                coIn_TypeDateTime: comp.coIn_TypeDateTime === 1 ? 'شمسی' : comp.coIn_TypeDateTime === 2 ? 'میلادی' : 'قمری',
               }),
             )
           }
@@ -81,8 +53,9 @@ export const Company = () => {
         }
       })
       .catch(err => {
-        console.log('error: ', err)
+        ToastAlert.error('خطا در برقراری ارتباط با سرور')
       })
+      .finally(() => setDataLoading(false))
   }, [fetchAgain])
 
   const fetchAgainHandler = () => {
@@ -97,9 +70,27 @@ export const Company = () => {
       </span>
     </div>
   )
-
+  const handleShowAllObject = selectedID => {
+    const result = companyInfo.find(item => item.coIn_ID === selectedID)
+    setCompanyInfoObject({
+      'نام': result.transTag,
+      'لوگو': result.coIn_Logo,
+      'تلفن': result.coIn_Phone,
+      'موبایل': result.coIn_Mobile,
+      'فکس': result.coIn_Fax,
+      'پنل پیامک': result.coIn_SmsNumber,
+      'ایمیل': result.coIn_Email,
+      'اینستاگرام': result.coIn_Instagram,
+      'سایت': result.coIn_Site,
+      'آدرس شرکت': result.coIn_Address,
+      'درباره شرکت': result.coIn_About,
+      'زبان پیشفرض': result.coIn_LangName,
+      'نوع تاریخ': result.coIn_TypeDateTime,
+    })
+  }
   const handleOpenShowAll = id => {
     setCompId(id)
+    handleShowAllObject(id)
     setShowAllData(true)
   }
 
@@ -121,7 +112,6 @@ export const Company = () => {
         }
       })
       .catch(err => {
-        console.log(err)
         ToastAlert.error('خطا در حذف شرکت ')
       })
   }
@@ -144,6 +134,7 @@ export const Company = () => {
             buttonCallBack={() => navigate('/company/edit/' + compId)}
           />
           <DataTable
+            loading={dataLoading}
             value={companyInfo}
             paginator
             rows={10}

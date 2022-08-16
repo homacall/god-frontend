@@ -38,21 +38,24 @@ export const Tag = () => {
     const formData = new FormData()
     formData.append('TagType', filterTagType ? filterTagType.toString() : '-1')
     formData.append('ParentID', '-1')
-    GetAllTagsTranslate(formData).then(res => {
-      if (res.data) {
-        setDataLoading(false)
-        setData(
-          res.data.tagsknowledges.map(item => ({
-            id: item.tag_ID,
-            title: item.tag_Name,
-            type: createTagType.find(element => element.value === item.tag_Type).label,
-            typeId: item.tag_Type,
-            transTitle: item.tagTranslate_Name || '--',
-            formParentID: item.tag_ParentID,
-          })),
-        )
-      }
-    })
+    GetAllTagsTranslate(formData)
+      .then(res => {
+        if (res.data) {
+          setDataLoading(false)
+          setData(
+            res.data.tagsknowledges.map(item => ({
+              id: item.tag_ID,
+              title: item.tag_Name,
+              type: createTagType.find(element => element.value === item.tag_Type).label,
+              typeId: item.tag_Type,
+              transTitle: item.tagTranslate_Name || '--',
+              formParentID: item.tag_ParentID,
+            })),
+          )
+        }
+      })
+      .catch(() => ToastAlert.error('خطا در ارتباط با سرور'))
+      .finally(() => setDataLoading(false))
   }
   useEffect(() => {
     fetchAllTags()
