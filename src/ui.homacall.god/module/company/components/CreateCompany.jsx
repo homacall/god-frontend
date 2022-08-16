@@ -26,7 +26,6 @@ export const CreateCompany = () => {
   const [languages, setLanguages] = useState([])
   const [loading, setLoading] = useState(false)
   const [pervImageName, setPervImageName] = useState('')
-  //const [logoPath, setLogoPath] = useState('')
   const [initialValues, setInitialValues] = useState({
     CoIn_TagID: '',
     CoIn_Address: '',
@@ -98,9 +97,7 @@ export const CreateCompany = () => {
 
   useEffect(() => {
     //let path = location.pathname
-    console.log('before: ', companyById)
     if (CompanyId && companyById) {
-      console.log('after: ', companyById)
       //initialize for formik
       const logoSrc = process.env.REACT_APP_GOD_FTP_SERVER.concat(companyById.coIn_Logo)
       setImageUrl(logoSrc)
@@ -133,9 +130,8 @@ export const CreateCompany = () => {
           ToastAlert.error('ثبت شرکت جدید با خطا مواجه شد')
         }
       })
-      .catch(err => {
+      .catch(() => {
         ToastAlert.error('ثبت شرکت جدید با خطا مواجه شد')
-        console.log(err)
       })
       .finally(() => {
         setLoading(false)
@@ -152,9 +148,8 @@ export const CreateCompany = () => {
           ToastAlert.error('ویرایش شرکت با خطا مواجه شد')
         }
       })
-      .catch(err => {
+      .catch(() => {
         ToastAlert.error('ویرایش شرکت با خطا مواجه شد')
-        console.log(err)
       })
       .finally(() => {
         setLoading(false)

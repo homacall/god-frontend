@@ -24,10 +24,6 @@ export const Company = () => {
   const [dataLoading, setDataLoading] = useState(true)
   const navigate = useNavigate()
 
-  // const renderImage = img => (
-  //   <Image src={img} template="نمایش" alt="تصویر" width={50} height={50} preview={true} className="w-[50px] h-[50px] rounded-full" />
-  // )
-
   useEffect(() => {
     const newData = []
     GetAllCompanyInfo()
@@ -76,14 +72,6 @@ export const Company = () => {
   )
   const handleShowAllObject = selectedID => {
     const result = companyInfo.find(item => item.coIn_ID === selectedID)
-    // var dateType = ''
-    // if (result.coIn_TypeDateTime === 1) {
-    //   dateType = 'شمسی'
-    // } else if (result.coIn_TypeDateTime === 2) {
-    //   dateType = 'میلادی'
-    // } else if (result.coIn_TypeDateTime === 3) {
-    //   dateType = 'قمری'
-    // }
     setCompanyInfoObject({
       'نام': result.transTag,
       'لوگو': result.coIn_Logo,
@@ -124,7 +112,6 @@ export const Company = () => {
         }
       })
       .catch(err => {
-        console.log(err)
         ToastAlert.error('خطا در حذف شرکت ')
       })
   }
