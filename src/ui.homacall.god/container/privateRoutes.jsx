@@ -370,7 +370,7 @@ export const PrivateRoutes = () => {
             </>
           }
         />
-        <Route
+        {/* <Route
           path={`${loginLogo.edit}`}
           element={
             <>
@@ -380,7 +380,7 @@ export const PrivateRoutes = () => {
               <CreateEditLoginLogo />
             </>
           }
-        />
+        /> */}
 
         <Route
           path={`${annexSettings.main}`}
