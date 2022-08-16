@@ -10,28 +10,29 @@ import TableActions from '../common/actionBody'
 import { ToastAlert } from '../common/toastAlert'
 import { loginLogoColumn } from './constant/tableColumn'
 import { loginLogo } from '../../utils/constants/routes/publicRoute'
-import { GetAllLoginLogoBySP, DeleteLoginLogo } from '../../service/loginLogoService'
+import { GetAllLoginLogo, DeleteLoginLogo } from '../../service/loginLogoService'
 
 function LoginLogo() {
   const [fetchAgain, setFetchAgain] = useState(false)
   const [dataL, setDataL] = useState([])
   const [globalFilter, setGlobalFilter] = useState(null)
+  const [dataLoading, setDataLoading] = useState(true)
 
   const fetchAgainHandler = () => {
     setFetchAgain(perv => !perv)
   }
 
-  useEffect(() => {
-    GetAllLoginLogoBySP()
+  const fetchAllLogo = () => {
+    GetAllLoginLogo()
       .then(res => {
         const newData = []
         if (res.data && res.status === 200) {
-          res.data.logosCompanys.forEach(comp =>
+          res.data.annexes.forEach(comp =>
             newData.push({
               ...comp,
               logoCo_Name: (
                 <Image
-                  src={process.env.REACT_APP_GOD_FTP_SERVER + comp.logoCo_Name}
+                  src={process.env.REACT_APP_GOD_FTP_SERVER + comp.path}
                   template="نمایش"
                   alt={comp.coIn_Name}
                   width={50}
@@ -45,7 +46,12 @@ function LoginLogo() {
           setDataL(newData)
         }
       })
-      .catch(e => console.log(e))
+      .catch(e => ToastAlert.error('خطا در ارتباط با سرور'))
+      .finally(() => setDataLoading(false))
+  }
+
+  useEffect(() => {
+    fetchAllLogo()
   }, [fetchAgain])
 
   const rightToolbarTemplate = () => {
@@ -69,7 +75,7 @@ function LoginLogo() {
 
   const handleDeleteLoginLogo = loginLogoID => {
     const formData = new FormData()
-    formData.append('ID', loginLogoID)
+    formData.append('AnnexID', loginLogoID)
     DeleteLoginLogo(formData)
       .then(res => {
         if (res.data || res.status === 200) {
@@ -79,8 +85,7 @@ function LoginLogo() {
           ToastAlert.error('خطا در حذف لوگو  ')
         }
       })
-      .catch(err => {
-        console.log(err)
+      .catch(() => {
         ToastAlert.error('خطا در حذف لوگو  ')
       })
   }
@@ -90,6 +95,7 @@ function LoginLogo() {
       <div className="card">
         <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
         <DataTable
+          loading={dataLoading}
           value={dataL}
           paginator
           rows={10}
@@ -111,16 +117,16 @@ function LoginLogo() {
             body={data => (
               <TableActions
                 deleteAction={() => {
-                  handleDeleteLoginLogo(data.logoCo_ID)
+                  handleDeleteLoginLogo(data.annex_ID)
                 }}
                 hasDelete={true}
                 hasUpdate={false}
                 deleteLabel="حذف"
                 deleteButtonClassName={'p-button-danger ml-2 text-xs rtl h-10 w-25 p-1'}
               >
-                <Link to={'/login-logo/edit/' + data.logoCo_ID}>
+                {/* <Link to={'/login-logo/edit/' + data.logoCo_ID}>
                   <Button className="p-button-warning ml-2 rtl text-xs  h-10 w-25 p-1">ویرایش</Button>
-                </Link>
+                </Link> */}
               </TableActions>
             )}
           ></Column>

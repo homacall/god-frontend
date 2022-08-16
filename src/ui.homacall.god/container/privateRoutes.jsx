@@ -353,7 +353,7 @@ export const PrivateRoutes = () => {
           element={
             <>
               <Helmet>
-                <title>آپلود لوگو ورود</title>
+                <title>آپلود لوگو سیستم ها</title>
               </Helmet>
               <LoginLogo />
             </>
@@ -364,23 +364,23 @@ export const PrivateRoutes = () => {
           element={
             <>
               <Helmet>
-                <title>آپلود لوگو ورود</title>
+                <title>آپلود لوگو سیستم ها</title>
               </Helmet>
               <CreateEditLoginLogo />
             </>
           }
         />
-        <Route
+        {/* <Route
           path={`${loginLogo.edit}`}
           element={
             <>
               <Helmet>
-                <title>آپلود لوگو ورود</title>
+                <title>آپلود لوگو سیستم ها</title>
               </Helmet>
               <CreateEditLoginLogo />
             </>
           }
-        />
+        /> */}
 
         <Route
           path={`${annexSettings.main}`}
