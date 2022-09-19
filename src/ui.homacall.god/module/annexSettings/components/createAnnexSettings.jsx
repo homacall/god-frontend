@@ -17,7 +17,8 @@ export const CreateAnnexSettings = () => {
   const [loading, setLoading] = useState(false)
   const [systemNames, setSystemNames] = useState([])
   const [archiveNames, setArchiveNames] = useState([])
-
+  const [selectedSystem, setSelectedSystem] = useState()
+  const [filteredArchive, setFilteredArchive] = useState([])
   const navigate = useNavigate()
 
   const formik = useFormik({
@@ -102,6 +103,7 @@ export const CreateAnnexSettings = () => {
 
   useEffect(() => {
     fetchAllSystemTags()
+    fetchAllArchiveTags()
   }, [])
 
   const fetchAllArchiveTags = () => {
@@ -120,8 +122,12 @@ export const CreateAnnexSettings = () => {
   }
 
   useEffect(() => {
-    fetchAllArchiveTags()
-  }, [])
+    if (selectedSystem) {
+      console.log({ archiveNames, selectedSystem })
+      const newArchive = archiveNames.filter(item => item.tag_PID === selectedSystem)
+      setFilteredArchive(newArchive)
+    }
+  }, [archiveNames, selectedSystem])
 
   return (
     <div className="w-[80%] my-4 pb-4 rounded-md  m-auto container bg-white rtl ">
@@ -138,7 +144,10 @@ export const CreateAnnexSettings = () => {
             filterBy="tag_TransName"
             filter
             value={formik.values.systemId}
-            onChange={formik.handleChange}
+            onChange={event => {
+              formik.handleChange(event)
+              setSelectedSystem(event.value)
+            }}
             className={classNames({ 'p-invalid': isFormFieldValid('systemId'), 'w-full h-9': true })}
           />
           <label htmlFor="systemId" className={`right-2 text-sm ${classNames({ 'p-error': isFormFieldValid('systemId') })}`}>
@@ -148,13 +157,14 @@ export const CreateAnnexSettings = () => {
         </span>
         <span className="p-float-label mb-5 block w-full md:w-[50%] m-auto">
           <Dropdown
-            options={archiveNames}
+            options={filteredArchive}
             id="archiveId"
             value={formik.values.archiveId}
             optionLabel="tag_TransName"
             optionValue="tag_ID"
             filterBy="tag_TransName"
             filter
+            disabled={!selectedSystem}
             name="archiveId"
             onChange={formik.handleChange}
             className={classNames({ 'p-invalid': isFormFieldValid('archiveId'), 'w-full h-9': true })}

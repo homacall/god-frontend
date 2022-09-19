@@ -40,7 +40,11 @@ export const CreateAndEditStretcher = () => {
   const fetchTags = async (type, parentId) => {
     const formData = new FormData()
     formData.append('TagType', type)
-    formData.append('ParentID', parentId)
+    if (type === 3 || type === 4) {
+      formData.append('ParentID', -1)
+    } else {
+      formData.append('ParentID', parentId)
+    }
     const result = GetAllTagsTranslate(formData)
       .then(res => {
         if (res.data || res.status === 200) {
