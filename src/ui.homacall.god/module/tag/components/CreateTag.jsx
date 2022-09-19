@@ -46,6 +46,7 @@ export const CreateTag = () => {
         break
       case 3:
       case 4:
+      case 10:
       case 8:
         setShowSystemName(false)
         setErrorSysName(false)
@@ -62,7 +63,7 @@ export const CreateTag = () => {
   const handleChangeSysName = type => {
     setSystemName(type.value)
     setErrorSysName(false)
-    if (valueType !== 2 || valueType !== 3 || (valueType !== 4) | (valueType !== 8)) {
+    if (valueType !== 2 || valueType !== 3 || valueType !== 4 || valueType !== 8 || valueType !== 10) {
       setFormId(type.value)
     }
   }
