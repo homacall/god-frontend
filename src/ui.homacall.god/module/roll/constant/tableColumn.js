@@ -6,7 +6,12 @@ export const roleColumn = [
   },
   {
     header: 'کاربر سازمانی',
-    field: 'role_IsSystemRole',
+    field: 'rol_IsSystemRole',
+    className: 'text-sm',
+  },
+  {
+    header: 'غیرقابل تغییر',
+    field: 'rol_ReadOnly',
     className: 'text-sm',
   },
 ]

@@ -6,7 +6,6 @@ import { Checkbox } from 'primereact/checkbox'
 export const UpdateRoll = ({ oldVal, rollName, setRollName, setIsUserSysRole }) => {
   const [tags, setTags] = useState([])
   const [checked, setChecked] = useState(oldVal ? oldVal.role_IsSystemRole : false)
-
   useEffect(() => {
     fetchTags()
     if (oldVal) {

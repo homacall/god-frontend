@@ -61,11 +61,12 @@ export const Roll = () => {
       .catch(err => console.log(err))
   }
 
-  const updateRole = (rolId, rol_TagID, isUserSysRole) => {
+  const updateRole = (rolId, rol_TagID, isUserSysRole, rol_ReadOnly) => {
     const formData = {
       rol_ID: rolId,
       rol_TgID: rol_TagID,
       rol_IsSysRol: isUserSysRole,
+      rol_ReadOnly,
     }
     UpdateRole(formData)
       .then(res => {
@@ -109,7 +110,7 @@ export const Roll = () => {
           className="rtl"
         >
           {roleColumn.map((col, index) => {
-            if (col.field === 'role_IsSystemRole') {
+            if (col.field === 'rol_IsSystemRole') {
               return (
                 <Column
                   field={col.field}
@@ -118,9 +119,29 @@ export const Roll = () => {
                   key={index}
                   body={data => (
                     <InputSwitch
-                      checked={data.role_IsSystemRole}
+                      checked={data.rol_IsSystemRole}
                       onChange={e => {
-                        updateRole(data.rol_ID, data.rol_TagID, e.value)
+                        updateRole(data.rol_ID, data.rol_TagID, e.value, data.rol_ReadOnly)
+                      }}
+                    />
+                  )}
+                  style={{ width: '10%' }}
+                  filterBy="#{data.name}"
+                  className={col.className}
+                ></Column>
+              )
+            } else if (col.field === 'rol_ReadOnly') {
+              return (
+                <Column
+                  field={col.field}
+                  header={col.header}
+                  sortable
+                  key={index}
+                  body={data => (
+                    <InputSwitch
+                      checked={data.rol_ReadOnly}
+                      onChange={e => {
+                        updateRole(data.rol_ID, data.rol_TagID, data.rol_IsSystemRole, e.value)
                       }}
                     />
                   )}
@@ -138,7 +159,7 @@ export const Roll = () => {
                   key={index}
                   filterBy="#{data.name}"
                   className={col.className}
-                  style={{ width: '65%' }}
+                  style={{ width: '55%' }}
                 ></Column>
               )
           })}

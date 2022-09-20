@@ -14,6 +14,7 @@ export const CreateRoll = () => {
   const [loading, setLoading] = useState(false)
   const [tags, setTags] = useState([])
   const [checked, setChecked] = useState(false)
+  const [readOnly, setReadOnly] = useState(false)
   const navigate = useNavigate()
   const item = [
     { id: 1, label: 'مدیریت نقش', url: rolls.roll },
@@ -34,6 +35,7 @@ export const CreateRoll = () => {
     const formData = new FormData()
     formData.append('Rol_TgID', value)
     formData.append('Rol_IsSysRol', checked)
+    formData.append('Rol_RedOnly', readOnly)
     InsertRole(formData)
       .then(res => {
         if (res.data || res.status === 200) {
@@ -81,6 +83,13 @@ export const CreateRoll = () => {
 
           <span htmlFor="isSystemRole" className={`mr-2 text-sm w-full`}>
             کاربر سازمانی
+          </span>
+        </span>
+        <span className="p-float-label mr-2">
+          <Checkbox onChange={e => setReadOnly(e.checked)} checked={readOnly} id="isSystemRole" />
+
+          <span htmlFor="isSystemRole" className={`mr-2 text-sm w-full`}>
+            غیرقابل تغییر
           </span>
         </span>
       </div>
