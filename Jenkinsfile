@@ -1,30 +1,31 @@
-pipeline
-  agent { dockerfile true }
-  environment {
-     DOCKERHUB_CREDENTIALS=credentials('dockerhub')
-  }  
-  
-  stages {
-    stage('gitclone') {
-      steps {
-        git 'git@github.com:homacall/god-frontend.git'
+pipeline{
+    agent any
+    options{
+        buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5'))
+        timestamps()
+    }
+    environment{
+        
+        registry = "asetcoservice/test"
+        registryCredential = '<dockerhub>'        
+    }
+    
+    stages{
+       stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
       }
     }
-
-    stage('Build') {
-      steps {
-        sh 'docker build -t asetcoservice/test:latest .'
+       stage('Deploy Image') {
+      steps{
+         script {
+            docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
       }
     }
-    stage('login') {
-      steps {
-        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u DOCKERHUB_CREDENTIALS_USER --passwoed-stdin'
-      }
-    }
-    stage('push') {
-      steps {
-        sh 'docker push asetcoservice/test:latest'
-      }
-    }
-} 
+}
 
