@@ -27,6 +27,5 @@ pipeline
         sh 'docker push asetcoservice/test:latest'
       }
     }
-  }
 } 
 
