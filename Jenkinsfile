@@ -3,12 +3,12 @@ pipeline
     DOCKERHUB_CREDENTIALS=credentials('dockerhub')
   }  
 
-  stages {
-    stage('gitclone') {
-      steps {
-        git 'git@github.com:homacall/god-frontend.git'
-      }
-    }
+//   stages {
+//     stage('gitclone') {
+//       steps {
+//         git 'git@github.com:homacall/god-frontend.git'
+//       }
+//     }
 
     stage('Build') {
       steps {
