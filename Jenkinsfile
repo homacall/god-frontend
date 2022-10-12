@@ -1,8 +1,9 @@
 pipeline
-  agent any
+ 
   environment {
      DOCKERHUB_CREDENTIALS=credentials('dockerhub')
   }  
+  agent any
   stages {
     stage('gitclone') {
       steps {
@@ -12,17 +13,17 @@ pipeline
 
     stage('Build') {
       steps {
-        sh 'sudo docker build -t asetcoservice/test:latest .'
+        sh 'docker build -t asetcoservice/test:latest .'
       }
     }
     stage('login') {
       steps {
-        sh 'sudo echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u DOCKERHUB_CREDENTIALS_USER --passwoed-stdin'
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u DOCKERHUB_CREDENTIALS_USER --passwoed-stdin'
       }
     }
     stage('push') {
       steps {
-        sh 'sudo docker push asetcoservice/test:latest'
+        sh 'docker push asetcoservice/test:latest'
       }
     }
 } 
