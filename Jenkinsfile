@@ -12,17 +12,17 @@ pipeline
 
     stage('Build') {
       steps {
-        sh 'docker build -t asetcoservice/test:latest .'
+        sh 'sudo docker build -t asetcoservice/test:latest .'
       }
     }
     stage('login') {
       steps {
-       echo "$DOCKERHUB_CREDENTIALS_PSW | docker login -u DOCKERHUB_CREDENTIALS_USER --passwoed-stdin"
+        sh 'sudo echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u DOCKERHUB_CREDENTIALS_USER --passwoed-stdin'
       }
     }
     stage('push') {
       steps {
-        sh 'docker push asetcoservice/test:latest'
+        sh 'sudo docker push asetcoservice/test:latest'
       }
     }
 } 
