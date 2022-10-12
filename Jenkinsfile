@@ -1,17 +1,30 @@
-pipeline {
-    agent {
-        dockerfile {
-            filename 'Dockerfile'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
+pipeline
+  environment {
+    DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+  }    
+  stages {
+    stage('gitclone') {
+      steps {
+        // One or more steps need to be included within the steps block.
+      }
     }
-    stages {
-        stage('Build') { 
-            steps {
-              sh 'docker build -t asetcoservice/test:latest .'
-              sh 'docker push asetcoservice/test:latest'
-              echo "PUSH On DOCKER HUB..."
-            }
-        }
+
+    stage('Build') {
+      steps {
+        // One or more steps need to be included within the steps block.
+      }
     }
-}
+
+    stage('login') {
+      steps {
+        // One or more steps need to be included within the steps block.
+      }
+    }
+
+    stage('push') {
+      steps {
+        // One or more steps need to be included within the steps block.
+      }
+    }
+
+  }
