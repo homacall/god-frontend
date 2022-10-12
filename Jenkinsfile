@@ -3,7 +3,7 @@ pipeline
   environment {
      DOCKERHUB_CREDENTIALS=credentials('dockerhub')
   }  
-  agent any
+  agent { dockerfile true }
   stages {
     stage('gitclone') {
       steps {
