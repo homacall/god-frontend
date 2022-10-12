@@ -8,7 +8,9 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-                sh 'npm install' 
+                 docker build -t asetcoservice/asetcoyadak-frontend:latest .
+                 docker push asetcoservice/asetcoyadak-frontend:latest
+                 echo "PUSH On DOCKER HUB..."
             }
         }
     }
