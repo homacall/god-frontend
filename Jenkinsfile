@@ -7,7 +7,7 @@ pipeline{
     environment{
         
         registry = "asetcoservice/test"
-        registryCredential = '<dockerhub>'        
+        registryCredential = 'dockerhub'        
     }
     
     stages{
