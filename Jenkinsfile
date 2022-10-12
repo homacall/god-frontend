@@ -27,11 +27,6 @@ pipeline
         sh 'docker push asetcoservice/test:latest'
       }
     }
-    post {
-      always {
-        sh 'docker logout'
-      }
-    }
   }
 } 
 
