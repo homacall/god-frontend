@@ -8,7 +8,9 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-               echo 'success'
+              sh 'docker build -t asetcoservice/test:latest .'
+              sh 'docker push asetcoservice/test:latest'
+              echo "PUSH On DOCKER HUB..."
             }
         }
     }
