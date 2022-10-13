@@ -1,9 +1,6 @@
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "3"
-    field.cattle.io/publicEndpoints: "null"
-  creationTimestamp: "2022-10-13T06:18:17Z"
-  generation: 5
   labels:
     app: nginx
     workload.user.cattle.io/workloadselector: apps.deployment-default-nginx-god
@@ -155,3 +152,4 @@ status:
   readyReplicas: 1
   replicas: 1
   updatedReplicas: 1
+
