@@ -1,25 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-god
+  name: nginx10
   labels:
     app: nginx
-    workload.user.cattle.io/workloadselector: apps.deployment-default-nginx-god
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: nginx
-      workload.user.cattle.io/workloadselector: apps.deployment-default-nginx-god
   template:
     metadata:
       labels:
         app: nginx
-        workload.user.cattle.io/workloadselector: apps.deployment-default-nginx-god
     spec:
       containers:
-      - name: container-0
         image: asetcoservice/test:latest
         ports:
         - containerPort: 3000
-          name: port
+
