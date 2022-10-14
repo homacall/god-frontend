@@ -27,13 +27,20 @@ pipeline{
         }
       }
     }
-       stage('Deploying App to Kubernetes') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kuber")
-        }
-      }
-    }
-    }
+       stage('Deploy to K8s')
+  {
+   steps{
+    sshagent(['k8s-jenkins'])
+    {
+     sh 'scp -r -o StrictHostKeyChecking=no node-deployment.yaml username@102.10.16.23:/path'
+script{
+      try{
+       sh 'ssh username@102.10.16.23 kubectl apply -f /path/node-deployment.yaml --kubeconfig=/path/kube.yaml'
+}catch(error)
+       {
 }
+     }
+    }
+   }
+  }
 
