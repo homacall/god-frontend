@@ -38,7 +38,6 @@ pipeline{
            }catch(error)
          {
        }
-    }
-    }
+       }
 }
 
