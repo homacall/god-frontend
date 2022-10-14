@@ -27,19 +27,21 @@ pipeline{
         }
       }
     }
-       stage('Deploy to K8s') {
-        steps{
-         sshagent(['k8s-jenkins'])
-        {
-          sh 'scp -r -o StrictHostKeyChecking=no deploymentservice.yml root@95.216.63.203:/root'
-          script{
-           try{
-            sh 'ssh root@95.216.63.203 kubectl apply -f /root/deploymentservice.yml --kubeconfig=/root/kube_config_cluster.yml'
-           }
-          }
-        }
-       }
-      }
-    }    
+stage('Deploy to K8s')
+  {
+   steps{
+    sshagent(['k8s-jenkins'])
+    {
+     sh 'scp -r -o StrictHostKeyChecking=no node-deployment.yaml username@102.10.16.23:/path'
+script{
+      try{
+       sh 'ssh username@102.10.16.23 kubectl apply -f /path/node-deployment.yaml --kubeconfig=/path/kube.yaml'
+}catch(error)
+       {
 }
-
+     }
+    }
+   }
+  }
+  }
+}
