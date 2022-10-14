@@ -30,12 +30,12 @@ pipeline{
 stage('Deploy to K8s')
   {
    steps{
-    sshagent(['kuber'])
+    sshagent(['kuberstage'])
     {
 
 script{
       try{
-       sh 'ssh root@95.216.63.203 -p 3031 kubectl rollout restart deployment/nginx-god'
+       sh 'ssh stage@95.216.63.203 -p 3031 kubectl rollout restart deployment/nginx-god'
 }catch(error)
        {
 }
