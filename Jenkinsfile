@@ -35,7 +35,7 @@ stage('Deploy to K8s')
      sh 'scp -r -o StrictHostKeyChecking=no -P 3031 deploymentservice.yml  root@95.216.63.203:/root'
 script{
       try{
-       sh 'ssh root@95.216.63.203 -p 3031 kubectl apply -f /root/deploymentservice.ym --kubeconfig=/root/kube_config_cluster.yml'
+       sh 'ssh root@95.216.63.203 -p 3031 kubectl apply -f /root/deploymentservice.yml --kubeconfig=/root/kube_config_cluster.yml'
 }catch(error)
        {
 }
