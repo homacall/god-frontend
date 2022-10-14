@@ -35,9 +35,11 @@ pipeline{
           script{
            try{
             sh 'ssh root@95.216.63.203 kubectl apply -f /root/deploymentservice.yml --kubeconfig=/root/kube_config_cluster.yml'
-           }catch(error)
-         {
+           }
+          }
+        }
        }
-       }
+      }
+    }    
 }
 
