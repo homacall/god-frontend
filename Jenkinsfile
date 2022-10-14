@@ -22,7 +22,7 @@ pipeline{
       steps{
          script {
             docker.withRegistry( '', registryCredential ) {
-            dockerImage.push("10")
+            dockerImage.push("latest")
           }
         }
       }
@@ -32,7 +32,7 @@ stage('Deploy to K8s')
    steps{
     sshagent(['kuber'])
     {
-//      sh 'scp -r -o StrictHostKeyChecking=no -P 3031 deploymentservice.yml  root@95.216.63.203:/root'
+
 script{
       try{
        sh 'ssh root@95.216.63.203 -p 3031 kubectl rollout restart deployment/nginx-god'
