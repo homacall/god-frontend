@@ -35,7 +35,7 @@ stage('Deploy to K8s')
 
 script{
       try{
-       sh 'ssh stage@95.216.63.203 -p 3031 kubectl cluster-info'
+        
        sh 'ssh stage@95.216.63.203 -p 3031 kubectl rollout restart deployment/nginx-god'
        sh 'echo "DEPLOY On Kubernetes..."'
 }catch(error)
