@@ -30,7 +30,7 @@ pipeline{
 stage('Deploy to K8s')
   {
    steps{
-    sshagent(['k8s-jenkins'])
+    sshagent(['kuber'])
     {
      sh 'scp -r -o StrictHostKeyChecking=no deploymentservice.yml root@95.216.63.203:/root'
 script{
