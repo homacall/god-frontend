@@ -33,7 +33,4 @@ jobs:
         with:
           sarif_file: 'trivy-results-docker.sarif'
 
-      - name: DEBUG Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: 'debug-trivy-results.sarif'
+
